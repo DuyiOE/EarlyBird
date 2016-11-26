@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingEnd="20dp"
+    android:orientation="vertical"
+    android:weightSum="1"
+    android:background="@drawable/lineare">
+
+    <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+        android:layout_gravity="start|top"
+    android:textAppearance="?android:attr/textAppearanceLarge"
+    android:text="@string/alarmText"
+    android:id="@+id/text_weckzeit"
+        android:textColor="#ffffff"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:layout_weight="0.03"
+        android:layout_marginLeft="6dp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="90dp"
+        android:orientation="horizontal"
+        android:layout_margin="6dp">
+
+        <NumberPicker
+            android:layout_width="wrap_content"
+            android:id="@+id/numberPickerHourAlarm"
+            android:orientation="vertical"
+            android:layout_margin="2dp"
+            android:layout_height="90dp" />
+
+        <NumberPicker
+            android:layout_width="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/numberPickerMinuteAlarm"
+            android:layout_margin="2dp"
+            android:layout_height="90dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp">
+
+        <ToggleButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/toggleButtonMO"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:textOff="@string/button_MO"
+            android:textOn="@string/button_MO"
+            android:layout_weight="1" />
+
+        <ToggleButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/toggleButtonDI"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:textOff="@string/button_Tuesday"
+            android:textOn="@string/button_Tuesday"
+            android:layout_weight="1" />
+
+        <ToggleButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/toggleButtonMI"
+            android:textOff="@string/button_Wednesday"
+            android:textOn="@string/button_Wednesday"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:layout_weight="1" />
+
+        <ToggleButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/toggleButtoDO"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:textOff="@string/button_Thursday"
+            android:textOn="@string/button_Thursday"
+            android:layout_weight="1" />
+
+        <ToggleButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/toggleButtoFR"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:textOff="@string/button_Friday"
+            android:textOn="@string/button_Friday"
+            android:layout_weight="1" />
+
+        <ToggleButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/toggleButtoSA"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:textOff="@string/button_Saturday"
+            android:textOn="@string/button_Saturday"
+            android:layout_weight="1" />
+
+        <ToggleButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/toggleButtonSO"
+            tools:layout_width="wrap_content"
+            android:textOff="@string/button_SO"
+            android:textOn="@string/button_SO"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="6dp">
+
+        <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/chooseDirecton"
+            android:id="@+id/text_Route"
+            android:layout_gravity="center"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            android:textSize="18sp" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPostalAddress"
+            android:ems="10"
+            android:id="@+id/editText_startAddress"
+            android:text="@string/startAddress"
+            android:paddingTop="4dp"
+            tools:textSize="14sp"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPostalAddress"
+            android:ems="10"
+            android:id="@+id/editText_destinationAddress"
+            android:text="@string/destinationAddress"
+            tools:textSize="14sp"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/button_safeDirection"
+                android:id="@+id/buuton_SaveDirection"
+                android:textSize="14sp"
+                android:background="@drawable/buttoncolorr"
+                android:textColor="?attr/colorBackgroundFloating" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp">
+
+        <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/chooseAlarm"
+            android:id="@+id/text_vorbereitungszeit"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_gravity="bottom"
+            android:layout_margin="4dp" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="time"
+            android:text="@string/textTime"
+            android:ems="10"
+            android:id="@+id/editText_PrepTime" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="4dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/chooseDestinationTime"
+            android:id="@+id/text_chooseDestinationTime"
+            tools:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="13dp"
+            android:layout_weight="0.03" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="90dp">
+
+            <NumberPicker
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
+                android:orientation="vertical"
+                android:id="@+id/numberPicker3"
+                android:layout_margin="2dp" />
+
+            <NumberPicker
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:orientation="vertical"
+            android:id="@+id/numberPicker_MinDesTime"
+                android:layout_margin="2dp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+    android:layout_width="match_parent"
+    android:text="@string/infoTextPreparationTime"
+    android:id="@+id/textView"
+    android:visibility="visible"
+    style="@style/Base.AlertDialog.AppCompat.Light"
+    android:textColor="@color/eb_rosered"
+    android:textSize="14sp"
+        android:layout_weight="0.66"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:gravity="center_vertical" />
+
+
+</LinearLayout>
