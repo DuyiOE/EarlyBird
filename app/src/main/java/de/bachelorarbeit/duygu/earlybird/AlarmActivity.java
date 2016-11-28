@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -32,6 +33,7 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
     AlarmManager alarmManager;
     private PendingIntent pendingIntent;
     private TimePicker alarmTimePicker;
+    private TimePicker desTimePicker;
     private TextView alarmTextView;
     private AlarmReceiver alarm;
     private Context context;
@@ -62,6 +64,10 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
         final Calendar calendar = Calendar.getInstance();
         //calendar.add(Calendar.SECOND, 3);
         alarmTimePicker = (TimePicker) findViewById(R.id.TimePickerAlarm);
+        alarmTimePicker.setIs24HourView(true);
+
+        desTimePicker = (TimePicker) findViewById(R.id.TimePickerDes);
+        desTimePicker.setIs24HourView(true);
 
         ToggleButton alarmToggleMO = (ToggleButton) findViewById(R.id.toggleButtonMO);
         /** ToggleButton alarmToggleDI = (ToggleButton) findViewById(R.id.toggleButtonDI);
@@ -71,35 +77,35 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
          ToggleButton alarmToggleSA = (ToggleButton) findViewById(R.id.toggleButtonSA);
          ToggleButton alarmToggleSO = (ToggleButton) findViewById(R.id.toggleButtonSO);
          **/
-        alarmToggleMO.setOnClickListener(new View.OnClickListener() {
+        alarmToggleMO.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @TargetApi(Build.VERSION_CODES.M)
 
-            public void onClick(View v) {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
 
-                calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getHour());
-                calendar.set(Calendar.MINUTE, alarmTimePicker.getMinute());
+                    calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getHour());
+                    calendar.set(Calendar.MINUTE, alarmTimePicker.getMinute());
 
-                final int hour = alarmTimePicker.getHour();
-                final int minute = alarmTimePicker.getMinute();
+                    final int hour = alarmTimePicker.getHour();
+                    final int minute = alarmTimePicker.getMinute();
 
-                String minute_string = String.valueOf(minute);
-                String hour_string = String.valueOf(hour);
+                    String minute_string = String.valueOf(minute);
+                    String hour_string = String.valueOf(hour);
 
-                if (minute < 10) {
-                    minute_string = "0" + String.valueOf(minute);
+                    if (minute < 10) {
+                        minute_string = "0" + String.valueOf(minute);
+                    }
+
+
+
+                    myIntent.putExtra("extra", "yes");
+                    myIntent.putExtra("quote id", String.valueOf(i));
+                    pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+
+            //        setAlarmText("Alarm set to " + hour_string + ":" + minute_string);
                 }
-
-                if (hour > 12) {
-                    hour_string = String.valueOf(hour - 12);
-                }
-
-                myIntent.putExtra("extra", "yes");
-                myIntent.putExtra("quote id", String.valueOf(i));
-                pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-                alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-
-                setAlarmText("Alarm set to " + hour_string + ":" + minute_string);
             }
 
 
@@ -144,15 +150,15 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
             alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
         } else {
             alarmManager.cancel(pendingIntent);
-            setAlarmText("");
+      //      setAlarmText("");
             Log.d("AlarmActivity", "Alarm Off");
         }
     }
 
-    public void setAlarmText(String alarmText) {
+   /** public void setAlarmText(String alarmText) {
         alarmTextView.setText(alarmText);
     }
-
+**/
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
