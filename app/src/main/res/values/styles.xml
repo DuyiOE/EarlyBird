@@ -1,12 +1,12 @@
 <resources>
 
-<!--Base application Theme-->
-        <style name="base" parent="Base.Theme.AppCompat">
-            <item name="android:layout_width">wrap_content</item>
-            <item name="android:layout_height">fill_parent</item>
-            <item name="android:autoText">true</item>
-            <item name="android:background">@color/eb_white</item>
-            <item name="android:layout_weight">1</item>
-        </style>
+    <!--Base application Theme-->
+    <style name="base" parent="Base.Theme.AppCompat">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:autoText">true</item>
+        <item name="android:background">@color/eb_white</item>
+        <item name="android:layout_weight">1</item>
+    </style>
 
 </resources>

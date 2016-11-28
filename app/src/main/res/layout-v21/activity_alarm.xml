@@ -162,7 +162,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/chooseAlarm"
-            android:id="@+id/text_PrepTime"
+            android:id="@+id/text_vorbereitungszeit"
             android:textColor="#ffffff"
             android:textStyle="bold"
             android:textSize="14sp"
@@ -207,7 +207,7 @@
     <TextView
         android:layout_width="match_parent"
         android:text="@string/infoTextPreparationTime"
-        android:id="@+id/infoText"
+        android:id="@+id/textView"
         android:visibility="visible"
         style="@style/Base.AlertDialog.AppCompat.Light"
         android:textColor="@color/eb_rosered"
@@ -215,12 +215,6 @@
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
         android:gravity="center_vertical" />
-
-    <Button
-        android:text="@string/stop_alarm"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/stop_Alarm" />
 
 
 </LinearLayout>

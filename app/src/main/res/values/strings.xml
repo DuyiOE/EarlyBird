@@ -18,5 +18,6 @@
     <string name="alarmText">Wähle deine Weckzeit:</string>
     <string name="chooseDirecton">Wähle deine Route:</string>
     <string name="title_activity_maps">Map</string>
+    <string name="stop_alarm">Wach!</string>
 
 </resources>
