@@ -21,24 +21,14 @@
     android:id="@+id/text_weckzeit"
         android:textColor="#ffffff"
         android:textStyle="bold"
-        android:textSize="18sp"
-        android:layout_weight="0.03"
-        android:layout_marginLeft="6dp" />
+        android:textSize="14sp"/>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="100dp"
-        android:orientation="horizontal">
-
-        <TimePicker
-            android:layout_width="wrap_content"
-            android:timePickerMode="spinner"
-            android:id="@+id/TimePickerAlarm"
-            android:orientation="vertical"
-            android:layout_margin="2dp"
-            android:layout_height="90dp" />
-
-    </LinearLayout>
+    <TimePicker
+        android:layout_width="match_parent"
+        android:timePickerMode="spinner"
+        android:id="@+id/TimePickerAlarm"
+        android:orientation="vertical"
+        android:layout_height="90dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -47,74 +37,68 @@
 
         <ToggleButton
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:id="@+id/toggleButtonMO"
-            android:minHeight="0dp"
-            android:minWidth="0dp"
             android:textOff="@string/button_MO"
             android:textOn="@string/button_MO"
-            android:layout_weight="1" />
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:layout_weight="0" />
 
         <ToggleButton
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:id="@+id/toggleButtonDI"
             android:minWidth="0dp"
             android:minHeight="0dp"
             android:textOff="@string/button_Tuesday"
             android:textOn="@string/button_Tuesday"
-            android:layout_weight="1" />
+            android:layout_weight="0"/>
 
         <ToggleButton
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:id="@+id/toggleButtonMI"
             android:textOff="@string/button_Wednesday"
             android:textOn="@string/button_Wednesday"
             android:minWidth="0dp"
-            android:minHeight="0dp"
-            android:layout_weight="1" />
+            android:minHeight="0dp" />
 
         <ToggleButton
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:id="@+id/toggleButtonDO"
             android:minHeight="0dp"
             android:minWidth="0dp"
             android:textOff="@string/button_Thursday"
-            android:textOn="@string/button_Thursday"
-            android:layout_weight="1" />
+            android:textOn="@string/button_Thursday" />
 
         <ToggleButton
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:id="@+id/toggleButtonFR"
             android:minHeight="0dp"
             android:minWidth="0dp"
             android:textOff="@string/button_Friday"
-            android:textOn="@string/button_Friday"
-            android:layout_weight="1" />
+            android:textOn="@string/button_Friday" />
 
         <ToggleButton
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:id="@+id/toggleButtonSA"
             android:minHeight="0dp"
             android:minWidth="0dp"
             android:textOff="@string/button_Saturday"
-            android:textOn="@string/button_Saturday"
-            android:layout_weight="1" />
+            android:textOn="@string/button_Saturday" />
 
         <ToggleButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="55dp"
             android:id="@+id/toggleButtonSO"
-            tools:layout_width="wrap_content"
             android:textOff="@string/button_SO"
             android:textOn="@string/button_SO"
             android:minHeight="0dp"
             android:minWidth="0dp"
-            android:layout_weight="1" />
+            android:layout_height="50dp" />
 
     </LinearLayout>
 
@@ -133,7 +117,7 @@
             android:layout_gravity="center"
             android:textColor="#ffffff"
             android:textStyle="bold"
-            android:textSize="18sp" />
+            android:textSize="14sp" />
 
         <EditText
             android:layout_width="match_parent"
@@ -143,7 +127,7 @@
             android:id="@+id/editText_startAddress"
             android:text="@string/startAddress"
             android:paddingTop="4dp"
-            tools:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <EditText
             android:layout_width="match_parent"
@@ -152,23 +136,19 @@
             android:ems="10"
             android:id="@+id/editText_destinationAddress"
             android:text="@string/destinationAddress"
-            tools:textSize="14sp"/>
+            android:textSize="14sp" />
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <Button
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/button_safeDirection"
-                android:id="@+id/buuton_SaveDirection"
-                android:textSize="14sp"
-                android:background="@drawable/buttoncolorr"
-                android:textColor="?attr/colorBackgroundFloating" />
-        </LinearLayout>
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/button_safeDirection"
+            android:id="@+id/buuton_SaveDirection"
+            android:textSize="14sp"
+            android:background="@drawable/buttoncolorr"
+            android:textColor="?attr/colorBackgroundFloating"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp" />
 
     </LinearLayout>
 
@@ -186,7 +166,7 @@
             android:id="@+id/text_vorbereitungszeit"
             android:textColor="#ffffff"
             android:textStyle="bold"
-            android:textSize="18sp"
+            android:textSize="14sp"
             android:layout_gravity="bottom"
             android:layout_margin="4dp" />
 
@@ -196,7 +176,8 @@
             android:inputType="time"
             android:text="@string/textTime"
             android:ems="10"
-            android:id="@+id/editText_PrepTime" />
+            android:id="@+id/editText_PrepTime"
+            android:textSize="14sp" />
 
     </LinearLayout>
 
@@ -208,28 +189,19 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/chooseDestinationTime"
             android:id="@+id/text_chooseDestinationTime"
-            tools:textSize="18sp"
             android:textStyle="bold"
-            android:layout_marginBottom="13dp"
-            android:layout_weight="0.03" />
+            android:textSize="14sp" />
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="90dp">
-
-            <TimePicker
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:timePickerMode="spinner"
-                android:orientation="vertical"
-                android:id="@+id/TimePickerDes" />
-
-        </LinearLayout>
+        <TimePicker
+            android:layout_width="match_parent"
+            android:timePickerMode="spinner"
+            android:orientation="vertical"
+            android:id="@+id/TimePickerDes"
+            android:layout_height="80dp" />
 
     </LinearLayout>
 
@@ -240,8 +212,7 @@
     android:visibility="visible"
     style="@style/Base.AlertDialog.AppCompat.Light"
     android:textColor="@color/eb_rosered"
-    android:textSize="14sp"
-        android:layout_weight="0.66"
+    android:textSize="12sp"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
         android:gravity="center_vertical" />

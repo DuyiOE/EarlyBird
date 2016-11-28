@@ -22,8 +22,8 @@ public class AlarmActivity extends Activity {
     private static AlarmActivity inst;
     AlarmManager alarmManager;
     private PendingIntent pendingIntent;
-    private TimePicker alarmTimePickerHour;
-    private TimePicker alarmTimePickerMin;
+    private TimePicker alarmTimePicker;
+
     private TextView alarmTextView;
 
     public static AlarmActivity instance() {
@@ -39,26 +39,25 @@ public class AlarmActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        alarmTimePickerHour = (TimePicker) findViewById(R.id.TimePickerAlarm);
-        alarmTimePickerMin = (TimePicker) findViewById(R.id.TimePickerAlarm);
+        setContentView(R.layout.activity_alarm);
+        alarmTimePicker = (TimePicker) findViewById(R.id.TimePickerAlarm);
         alarmTextView = (TextView) findViewById(R.id.textView);
         ToggleButton alarmToggleMO = (ToggleButton) findViewById(R.id.toggleButtonMO);
-        ToggleButton alarmToggleDI = (ToggleButton) findViewById(R.id.toggleButtonDI);
+       /** ToggleButton alarmToggleDI = (ToggleButton) findViewById(R.id.toggleButtonDI);
         ToggleButton alarmToggleMI = (ToggleButton) findViewById(R.id.toggleButtonMI);
         ToggleButton alarmToggleDO = (ToggleButton) findViewById(R.id.toggleButtonDO);
         ToggleButton alarmToggleFR = (ToggleButton) findViewById(R.id.toggleButtonFR);
         ToggleButton alarmToggleSA = (ToggleButton) findViewById(R.id.toggleButtonSA);
         ToggleButton alarmToggleSO = (ToggleButton) findViewById(R.id.toggleButtonSO);
-        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        **/ alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
     }
 
     public void onToggleClicked(View view) {
         if (((ToggleButton) view).isChecked()) {
             Log.d("MainActivtiy", "Alarm On");
             Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.HOUR_OF_DAY, alarmTimePickerHour.getCurrentHour());
-            calendar.set(Calendar.MINUTE, alarmTimePickerMin.getCurrentMinute());
+            calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getCurrentHour());
+            calendar.set(Calendar.MINUTE, alarmTimePicker.getCurrentMinute());
             Intent myIntent = new Intent(AlarmActivity.this, AlarmReceiver.class);
             pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, 0);
             alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);

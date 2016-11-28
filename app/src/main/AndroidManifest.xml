@@ -9,16 +9,15 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.NoActionBar"
-        android:screenoriation ="portrait">
+        android:theme="@style/Theme.AppCompat.NoActionBar">
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".AlarmActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service android:name=".AlarmService"></service>
     </application>
 
 </manifest>

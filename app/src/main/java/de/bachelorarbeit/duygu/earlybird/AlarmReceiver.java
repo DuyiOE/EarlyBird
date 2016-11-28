@@ -8,13 +8,13 @@ package de.bachelorarbeit.duygu.earlybird;
         import android.media.RingtoneManager;
         import android.net.Uri;
         import android.support.v4.content.WakefulBroadcastReceiver;
+
 /**
  * Created by Duygu on 26.11.2016.
  */
 
 
-
-    public class AlarmReceiver extends WakefulBroadcastReceiver {
+class AlarmReceiver extends WakefulBroadcastReceiver {
 
         @Override
         public void onReceive(final Context context, Intent intent) {
@@ -39,4 +39,4 @@ package de.bachelorarbeit.duygu.earlybird;
             setResultCode(Activity.RESULT_OK);
         }
     }
-}
+
