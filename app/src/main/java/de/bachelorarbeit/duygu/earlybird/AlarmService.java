@@ -86,52 +86,51 @@ public class AlarmService extends Service {
                 Log.e("random number is ", String.valueOf(random_number));
 
                 if (random_number == 1) {
-                    mMediaPlayer = MediaPlayer.create(this, R.raw.frametraxx_Endless_Love);
+                    mMediaPlayer = MediaPlayer.create(this, R.raw.frametraxx_endless_love);
                 } else if (random_number == 2) {
-                    mMediaPlayer = MediaPlayer.create(this, R.raw.Dadadeedeedum);
+                    mMediaPlayer = MediaPlayer.create(this, R.raw.dadadeedeedum);
                 } else if (random_number == 3) {
-                    mMediaPlayer = MediaPlayer.create(this, R.raw.Dental_Forum_Band);
+                    mMediaPlayer = MediaPlayer.create(this, R.raw.dental_forum_band);
                 } else if (random_number == 4) {
-                    mMediaPlayer = MediaPlayer.create(this, R.raw.frametraxx_Endless_Love);
+                    mMediaPlayer = MediaPlayer.create(this, R.raw.frametraxx_endless_love);
                 } else if (random_number == 5) {
-                    mMediaPlayer = MediaPlayer.create(this, R.raw.frametraxx_My_Love);
+                    mMediaPlayer = MediaPlayer.create(this, R.raw.frametraxx_my_love);
                 } else if (random_number == 6) {
-                    mMediaPlayer = MediaPlayer.create(this, R.raw.frametraxx_Pure_Colours);
+                    mMediaPlayer = MediaPlayer.create(this, R.raw.frametraxx_pure_colours);
                 } else if (random_number == 7) {
-                    mMediaPlayer = MediaPlayer.create(this, R.raw.frametraxx_Silent_Spot);
+                    mMediaPlayer = MediaPlayer.create(this, R.raw.frametraxx_silent_spot);
                 } else if (random_number == 8) {
-                    mMediaPlayer = MediaPlayer.create(this, R.raw.Interceptor);
+                    mMediaPlayer = MediaPlayer.create(this, R.raw.interceptor);
                 } else if (random_number == 9) {
-                    mMediaPlayer = MediaPlayer.create(this, R.raw.White_Wolf);
+                    mMediaPlayer = MediaPlayer.create(this, R.raw.white_wolf);
                 } else if (random_number == 10) {
-                    mMediaPlayer = MediaPlayer.create(this, R.raw.Psychedelic_Rain);
+                    mMediaPlayer = MediaPlayer.create(this, R.raw.psychedelic_rain);
                 } else {
-                    mMediaPlayer = MediaPlayer.create(this, R.raw.White_Wolf);
+                    mMediaPlayer = MediaPlayer.create(this, R.raw.white_wolf);
                 }
             } else if (quoteID.equals("1")) {
-                mMediaPlayer = MediaPlayer.create(this, R.raw.frametraxx_Endless_Love);
+                mMediaPlayer = MediaPlayer.create(this, R.raw.frametraxx_endless_love);
             } else if (quoteID.equals("2")) {
-                mMediaPlayer = MediaPlayer.create(this, R.raw.Dadadeedeedum);
+                mMediaPlayer = MediaPlayer.create(this, R.raw.dadadeedeedum);
             } else if (quoteID.equals("3")) {
-                mMediaPlayer = MediaPlayer.create(this, R.raw.Dental_Forum_Band);
+                mMediaPlayer = MediaPlayer.create(this, R.raw.dental_forum_band);
             } else if (quoteID.equals("4")) {
-                mMediaPlayer = MediaPlayer.create(this, R.raw.frametraxx_Endless_Love);
+                mMediaPlayer = MediaPlayer.create(this, R.raw.frametraxx_endless_love);
             } else if (quoteID.equals("5")) {
-                mMediaPlayer = MediaPlayer.create(this, R.raw.frametraxx_My_Love);
+                mMediaPlayer = MediaPlayer.create(this, R.raw.frametraxx_my_love);
             } else if (quoteID.equals("6")) {
-                mMediaPlayer = MediaPlayer.create(this, R.raw.frametraxx_Pure_Colours);
+                mMediaPlayer = MediaPlayer.create(this, R.raw.frametraxx_pure_colours);
             } else if (quoteID.equals("7")) {
-                mMediaPlayer = MediaPlayer.create(this, R.raw.frametraxx_Silent_Spot);
+                mMediaPlayer = MediaPlayer.create(this, R.raw.frametraxx_silent_spot);
             } else if (quoteID.equals("8")) {
-                mMediaPlayer = MediaPlayer.create(this, R.raw.Interceptor);
+                mMediaPlayer = MediaPlayer.create(this, R.raw.interceptor);
             } else if (quoteID.equals("9")) {
-                mMediaPlayer = MediaPlayer.create(this, R.raw.White_Wolf);
+                mMediaPlayer = MediaPlayer.create(this, R.raw.white_wolf);
             } else if (quoteID.equals("10")) {
-                mMediaPlayer = MediaPlayer.create(this, R.raw.Psychedelic_Rain);
+                mMediaPlayer = MediaPlayer.create(this, R.raw.psychedelic_rain);
             } else {
-                mMediaPlayer = MediaPlayer.create(this, R.raw.White_Wolf);
+                mMediaPlayer = MediaPlayer.create(this, R.raw.white_wolf);
             }
-
 
             mMediaPlayer.start();
 
@@ -169,8 +168,7 @@ public class AlarmService extends Service {
     }
 
 
-    @Override
-    public void onDestroy() {
+        public void onDestroy() {
         Log.e("JSLog", "on destroy called");
         super.onDestroy();
 
