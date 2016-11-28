@@ -105,7 +105,7 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
 
         });
 
-        Button stop_alarm = (Button) findViewById(R.id.stop_Alarm);
+      /**  Button stop_alarm = (Button) findViewById(R.id.stop_Alarm);
         stop_alarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,9 +120,11 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
                 //setAlarmText("ID is " + i);
             }
         });
+
+
+**/
+
     }
-
-
     public void setSupportActionBar(Toolbar toolbar) {
     }
 

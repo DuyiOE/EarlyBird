@@ -27,7 +27,7 @@ public class AlarmService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        Log.e("MyActivity", "In the Richard service");
+        Log.e("AlarmActivity", "In service");
         return null;
     }
 
@@ -44,7 +44,6 @@ public class AlarmService extends Service {
         PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent1, 0);
 
         Notification mNotify = new Notification.Builder(this)
-                .setContentTitle("Richard Dawkins is talking" + "!")
                 .setContentText("Click me!")
                 .setSmallIcon(R.drawable.logo)
                 .setContentIntent(pIntent)
@@ -53,7 +52,7 @@ public class AlarmService extends Service {
 
         String state = intent.getExtras().getString("extra");
 
-        Log.e("what is going on here  ", state);
+        Log.e("", state);
 
         assert state != null;
         switch (state) {
@@ -68,7 +67,7 @@ public class AlarmService extends Service {
                 break;
         }
 
-        // get richard's thing
+        //
         String quoteID = intent.getExtras().getString("quote id");
         Log.e("Service: quote id is ", quoteID);
 
@@ -140,7 +139,7 @@ public class AlarmService extends Service {
             this.startId = 0;
 
         } else if (!this.isRunning && startId == 0) {
-            Log.e("if there was not sound ", " and you want end");
+            Log.e("if there was no sound ", " and you want end");
 
             this.isRunning = false;
             this.startId = 0;
@@ -162,7 +161,7 @@ public class AlarmService extends Service {
         }
 
 
-        Log.e("MyActivity", "In the service");
+        Log.e("AlarmActivity", "In the service");
 
         return START_NOT_STICKY;
     }
