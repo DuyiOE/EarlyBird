@@ -12,7 +12,7 @@
     <string name="textTime">00:00</string>
     <string name="chooseAlarm">Wähle deine Vorbereitungszeit in Minuten:</string>
     <string name="chooseDestinationTime">Wähle deine Ankunftszeit:</string>
-    <string name="infoTextPreparationTime">Nach der jetztigen Verkehrslage wirst du in %% Tagen, Â§Â§ Stunden und Â§% Miuten um $$ Uhr geweckt.</string>
+    <string name="infoTextPreparationTime"></string>
     <string name="button_safeDirection">Route Speichern</string>
     <string name="EarlyBird">EarlyBird</string>
     <string name="alarmText">Wähle deine Weckzeit:</string>
