@@ -23,6 +23,8 @@ import android.widget.ToggleButton;
 
 import java.util.Calendar;
 
+import de.bachelorarbeit.duygu.earlybird.de.bachelorarbeit.duygu.earlybird.ui.AlarmDate;
+
 /**
  * Created by Duygu on 26.11.2016.
  */
@@ -62,10 +64,11 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
 
         // set the alarm to the time that you picked
         final Calendar calendar = Calendar.getInstance();
-        //calendar.add(Calendar.SECOND, 3);
+        calendar.add(Calendar.SECOND, 3);
         alarmTimePicker = (TimePicker) findViewById(R.id.TimePickerAlarm);
         alarmTimePicker.setIs24HourView(true);
 
+        //Time choosen for Destination
         desTimePicker = (TimePicker) findViewById(R.id.TimePickerDes);
         desTimePicker.setIs24HourView(true);
 
@@ -82,23 +85,20 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
 
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (alarmToggleMO.isChecked()) {
-
+                    if (android.os.Build.VERSION.SDK_INT >= 23) {
                     calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getHour());
                     calendar.set(Calendar.MINUTE, alarmTimePicker.getMinute());
-
-
-                    final int day = calendar.get(Calendar.DAY_OF_WEEK);
-                    Log.d("AlarmActivity", "day");
-                    final int hour = alarmTimePicker.getHour();
-                    final int minute = alarmTimePicker.getMinute();
-
-                    String minute_string = String.valueOf(minute);
-                    String hour_string = String.valueOf(hour);
-
-                    if (minute < 10) {
-                        minute_string = "0" + String.valueOf(minute);
+                    } else {
+                        calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getCurrentHour());
+                        calendar.set(Calendar.MINUTE, alarmTimePicker.getCurrentMinute());
                     }
+                    final int hour = alarmTimePicker.getCurrentHour();
+                    final int minute = alarmTimePicker.getCurrentMinute();
 
+                    String hour_string = String.valueOf(hour);
+                    Log.e("AlarmActivity", hour_string);
+                    String minute_string = String.valueOf(minute);
+                    Log.e("AlarmActivity", minute_string);
 
 
                     myIntent.putExtra("extra", "yes");
