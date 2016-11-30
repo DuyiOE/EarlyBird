@@ -69,7 +69,7 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
         desTimePicker = (TimePicker) findViewById(R.id.TimePickerDes);
         desTimePicker.setIs24HourView(true);
 
-        ToggleButton alarmToggleMO = (ToggleButton) findViewById(R.id.toggleButtonMO);
+        final ToggleButton alarmToggleMO = (ToggleButton) findViewById(R.id.toggleButtonMO);
         /** ToggleButton alarmToggleDI = (ToggleButton) findViewById(R.id.toggleButtonDI);
          ToggleButton alarmToggleMI = (ToggleButton) findViewById(R.id.toggleButtonMI);
          ToggleButton alarmToggleDO = (ToggleButton) findViewById(R.id.toggleButtonDO);
@@ -81,11 +81,14 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
             @TargetApi(Build.VERSION_CODES.M)
 
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
+                if (alarmToggleMO.isChecked()) {
 
                     calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getHour());
                     calendar.set(Calendar.MINUTE, alarmTimePicker.getMinute());
 
+
+                    final int day = calendar.get(Calendar.DAY_OF_WEEK);
+                    Log.d("AlarmActivity", "day");
                     final int hour = alarmTimePicker.getHour();
                     final int minute = alarmTimePicker.getMinute();
 
@@ -104,37 +107,32 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
 
                     alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
 
-            //        setAlarmText("Alarm set to " + hour_string + ":" + minute_string);
+                    //        setAlarmText("Alarm set to " + hour_string + ":" + minute_string);
                 }
             }
 
 
         });
 
-      /**  Button stop_alarm = (Button) findViewById(R.id.stop_Alarm);
-        stop_alarm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                myIntent.putExtra("extra", "no");
-                myIntent.putExtra("quote id", String.valueOf(i));
-                sendBroadcast(myIntent);
-
-                alarmManager.cancel(pendingIntent);
-                setAlarmText("Alarm canceled");
-
-                //setAlarmText("ID is " + i);
-            }
+          Button stop_alarm = (Button) findViewById(R.id.stop_Alarm);
+         stop_alarm.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+        myIntent.putExtra("extra", "no");
+        myIntent.putExtra("quote id", String.valueOf(i));
+        sendBroadcast(myIntent);
+        alarmManager.cancel(pendingIntent);
+       // setAlarmText("Alarm canceled");
+        //setAlarmText("ID is " + i);
+        }
         });
 
-
-**/
 
     }
     public void setSupportActionBar(Toolbar toolbar) {
     }
 
-    public void onToggleClicked(View view) {
+ /**   public void onToggleClicked(View view) {
         if (((ToggleButton) view).isChecked()) {
             Log.d("AlarmActivtiy", "Alarm On");
             Calendar calendar = Calendar.getInstance();
@@ -150,15 +148,15 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
             alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
         } else {
             alarmManager.cancel(pendingIntent);
-      //      setAlarmText("");
+            //      setAlarmText("");
             Log.d("AlarmActivity", "Alarm Off");
         }
     }
-
-   /** public void setAlarmText(String alarmText) {
-        alarmTextView.setText(alarmText);
-    }
 **/
+    /** public void setAlarmText(String alarmText) {
+     alarmTextView.setText(alarmText);
+     }
+     **/
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
