@@ -12,13 +12,20 @@
         android:theme="@style/Theme.AppCompat.NoActionBar">
 
         <activity
-            android:name=".AlarmActivity"
-            android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:name=".SplashScreenActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
+        <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        </activity>
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        <activity
+            android:name=".AlarmActivity"
+            android:icon="@drawable/logo"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
         </activity>
 
         <receiver android:name=".AlarmReceiver" />

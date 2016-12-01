@@ -224,31 +224,7 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
     public void setSupportActionBar(Toolbar toolbar) {
     }
 
-    /**   public void onToggleClicked(View view) {
-     if (((ToggleButton) view).isChecked()) {
-     Log.d("AlarmActivtiy", "Alarm On");
-     Calendar calendar = Calendar.getInstance();
-     if (android.os.Build.VERSION.SDK_INT >= 23) {
-     calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getHour());
-     calendar.set(Calendar.MINUTE, alarmTimePicker.getMinute());
-     } else {
-     calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getCurrentHour());
-     calendar.set(Calendar.MINUTE, alarmTimePicker.getCurrentMinute());
-     }
-     Intent myIntent = new Intent(AlarmActivity.this, AlarmReceiver.class);
-     pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, 0);
-     alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
-     } else {
-     alarmManager.cancel(pendingIntent);
-     //      setAlarmText("");
-     Log.d("AlarmActivity", "Alarm Off");
-     }
-     }
-     **/
-    /** public void setAlarmText(String alarmText) {
-     alarmTextView.setText(alarmText);
-     }
-     **/
+
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
