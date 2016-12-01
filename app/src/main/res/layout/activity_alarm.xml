@@ -172,17 +172,6 @@
             android:text="@string/destinationAddress"
             android:textSize="14sp" />
 
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/button_safeDirection"
-            android:id="@+id/buuton_SaveDirection"
-            android:textSize="14sp"
-            android:background="@drawable/buttoncolorr"
-            android:textColor="?attr/colorBackgroundFloating"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp" />
 
     </LinearLayout>
 
@@ -237,13 +226,21 @@
             android:id="@+id/TimePickerDes"
             android:layout_height="80dp" />
 
+
     </LinearLayout>
+
+
+    <Button
+        android:text="@string/stop_alarm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/stop_Alarm" />
 
     <TextView
         android:layout_width="match_parent"
         android:text="@string/infoTextPreparationTime"
-        android:id="@+id/textView"
-        android:visibility="visible"
+        android:id="@+id/infoText"
+        android:visibility="invisible"
         style="@style/Base.AlertDialog.AppCompat.Light"
         android:textColor="@color/eb_rosered"
         android:textSize="12sp"
