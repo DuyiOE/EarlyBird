@@ -9,4 +9,24 @@
             <item name="android:layout_weight">1</item>
         </style>
 
+    <style name="UITextRegular" parent="@android:style/TextAppearance">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:typeface">sans</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="UITextRegularInverted" parent="@android:style/TextAppearance">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:typeface">sans</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="UIDayButtonText" parent="@android:style/TextAppearance.Small">
+        <item name="android:textSize">11sp</item>
+        <item name="android:typeface">sans</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
 </resources>
