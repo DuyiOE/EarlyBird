@@ -72,7 +72,7 @@ public class AlarmService extends Service {
         Log.e("Service: quote id is ", quoteID);
 
         if (!this.isRunning && startId == 1) {
-            Log.e("if there was not sound ", " and you want start");
+            Log.e("if there was no sound ", " and you want start");
 
             assert quoteID != null;
             if (quoteID.equals("0")) {
