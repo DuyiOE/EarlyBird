@@ -21,86 +21,120 @@
         android:id="@+id/text_weckzeit"
         android:textColor="#ffffff"
         android:textStyle="bold"
-        android:textSize="14sp" />
+        android:textSize="14sp"/>
 
     <TimePicker
-        android:layout_width="169dp"
+        android:layout_width="match_parent"
         android:timePickerMode="spinner"
         android:id="@+id/TimePickerAlarm"
         android:orientation="vertical"
-        android:layout_height="90dp"
-        android:clickable="true"
-        android:headerTimeTextAppearance="@style/TextAppearance.AppCompat"
-        android:onClick="onToggleClicked" />
+        android:layout_height="90dp" />
 
-    <GridLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="2dp">
+        android:layout_margin="2dp"
+        android:gravity="center_horizontal">
 
         <ToggleButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/toggleButtonMO"
-            android:textOff="@string/button_MO"
-            android:textOn="@string/button_MO"
+            android:textOn="@string/button_Monday"
+            android:textOff="@string/button_Monday"
+            android:checked="false"
+            android:background="@drawable/toggle_button_drawable"
             android:minWidth="0dp"
-            android:minHeight="0dp" />
+            android:minHeight="0dp"
+            android:padding="10dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            style="@style/UIDayButtonText"
+            android:layout_margin="@dimen/Tiny_Distance" />
 
         <ToggleButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/toggleButtonDI"
-            android:minWidth="0dp"
-            android:minHeight="0dp"
+            android:textOn="@string/button_Tuesday"
             android:textOff="@string/button_Tuesday"
-            android:textOn="@string/button_Tuesday" />
+            android:checked="false"
+            android:background="@drawable/toggle_button_drawable"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:padding="10dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            style="@style/UIDayButtonText"
+            android:layout_margin="@dimen/Tiny_Distance" />
 
         <ToggleButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/toggleButtonMI"
-            android:textOff="@string/button_Wednesday"
             android:textOn="@string/button_Wednesday"
+            android:textOff="@string/button_Wednesday"
+            android:checked="false"
+            android:background="@drawable/toggle_button_drawable"
             android:minWidth="0dp"
-            android:minHeight="0dp" />
+            android:minHeight="0dp"
+            android:padding="10dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            style="@style/UIDayButtonText"
+            android:layout_margin="@dimen/Tiny_Distance" />
 
         <ToggleButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/toggleButtonDO"
-            android:minHeight="0dp"
-            android:minWidth="0dp"
+            android:textOn="@string/button_Thursday"
             android:textOff="@string/button_Thursday"
-            android:textOn="@string/button_Thursday" />
+            android:checked="false"
+            android:background="@drawable/toggle_button_drawable"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:padding="10dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            style="@style/UIDayButtonText"
+            android:layout_margin="@dimen/Tiny_Distance" />
 
         <ToggleButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/toggleButtonFR"
-            android:minHeight="0dp"
-            android:minWidth="0dp"
+            android:textOn="@string/button_Friday"
             android:textOff="@string/button_Friday"
-            android:textOn="@string/button_Friday" />
-
-        <ToggleButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/toggleButtonSA"
-            android:minHeight="0dp"
+            android:checked="false"
+            android:background="@drawable/toggle_button_drawable"
             android:minWidth="0dp"
-            android:textOff="@string/button_Saturday"
-            android:textOn="@string/button_Saturday" />
+            android:minHeight="0dp"
+            android:padding="10dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            style="@style/UIDayButtonText"
+            android:layout_margin="@dimen/Tiny_Distance" />
 
         <ToggleButton
-            android:layout_width="wrap_content"
-            android:id="@+id/toggleButtonSO"
-            android:textOff="@string/button_SO"
-            android:textOn="@string/button_SO"
+            android:id="@+id/toggleButtonSA"
+            android:textOn="@string/button_Saturday"
+            android:textOff="@string/button_Saturday"
+            android:checked="false"
+            android:background="@drawable/toggle_button_drawable"
+            android:minWidth="0dp"
             android:minHeight="0dp"
-            android:minWidth="0dp" />
+            android:padding="10dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            style="@style/UIDayButtonText"
+            android:layout_margin="@dimen/Tiny_Distance" />
 
-    </GridLayout>
+        <ToggleButton
+            android:id="@+id/toggleButtonSO"
+            android:textOn="@string/button_Sunday"
+            android:textOff="@string/button_Sunday"
+            android:checked="false"
+            android:background="@drawable/toggle_button_drawable"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:padding="10dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            style="@style/UIDayButtonText"
+            android:layout_margin="@dimen/Tiny_Distance" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -138,6 +172,18 @@
             android:text="@string/destinationAddress"
             android:textSize="14sp" />
 
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/button_safeDirection"
+            android:id="@+id/buuton_SaveDirection"
+            android:textSize="14sp"
+            android:background="@drawable/buttoncolorr"
+            android:textColor="?attr/colorBackgroundFloating"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -151,7 +197,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/chooseAlarm"
-            android:id="@+id/text_PrepTime"
+            android:id="@+id/text_vorbereitungszeit"
             android:textColor="#ffffff"
             android:textStyle="bold"
             android:textSize="14sp"
@@ -185,7 +231,7 @@
             android:textSize="14sp" />
 
         <TimePicker
-            android:layout_width="166dp"
+            android:layout_width="match_parent"
             android:timePickerMode="spinner"
             android:orientation="vertical"
             android:id="@+id/TimePickerDes"
@@ -193,25 +239,17 @@
 
     </LinearLayout>
 
-
-    <Button
-        android:text="@string/stop_alarm"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/stop_Alarm" />
-
     <TextView
         android:layout_width="match_parent"
         android:text="@string/infoTextPreparationTime"
-        android:id="@+id/infoText"
-        android:visibility="invisible"
+        android:id="@+id/textView"
+        android:visibility="visible"
         style="@style/Base.AlertDialog.AppCompat.Light"
         android:textColor="@color/eb_rosered"
         android:textSize="12sp"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
         android:gravity="center_vertical" />
-
 
 
 </LinearLayout>
