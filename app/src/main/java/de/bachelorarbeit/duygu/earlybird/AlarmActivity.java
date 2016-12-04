@@ -1,6 +1,5 @@
 package de.bachelorarbeit.duygu.earlybird;
 
-import android.annotation.TargetApi;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -29,7 +28,7 @@ import de.bachelorarbeit.duygu.earlybird.de.bachelorarbeit.duygu.earlybird.ui.Al
 /**
  * Created by Duygu on 26.11.2016.
  */
-public class AlarmActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener,CompoundButton.OnCheckedChangeListener {
+public class AlarmActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, CompoundButton.OnCheckedChangeListener {
 
 
     private static AlarmActivity inst;
@@ -110,37 +109,36 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
         final ToggleButton alarmToggleSA = (ToggleButton) findViewById(R.id.toggleButtonSA);
         final ToggleButton alarmToggleSO = (ToggleButton) findViewById(R.id.toggleButtonSO);
 
-        for (int day=AlarmDate.getIntCurrentDay(); day>=6; day++){
-            if (alarmToggleSO.isChecked()&& day == 1) {
+        for (int day = AlarmDate.getIntCurrentDay(); day >= 6; day++) {
+            if (alarmToggleSO.isChecked() && day == 1) {
                 return alarmToggleSO;
-            } else if(alarmToggleMO.isChecked()&& day ==2) {
+            } else if (alarmToggleMO.isChecked() && day == 2) {
                 return alarmToggleMO;
-            } else if (alarmToggleDI.isChecked() && day==3){
+            } else if (alarmToggleDI.isChecked() && day == 3) {
                 return alarmToggleDI;
-            } else if (alarmToggleMI.isChecked()&& day==4) {
+            } else if (alarmToggleMI.isChecked() && day == 4) {
                 return alarmToggleMI;
-            } else if (alarmToggleDO.isChecked() && day==5){
+            } else if (alarmToggleDO.isChecked() && day == 5) {
                 return alarmToggleDO;
-            } else if (alarmToggleFR.isChecked()&& day==6) {
+            } else if (alarmToggleFR.isChecked() && day == 6) {
                 return alarmToggleFR;
-            } else if (alarmToggleSA.isChecked()&& day==7) {
+            } else if (alarmToggleSA.isChecked() && day == 7) {
                 return alarmToggleSA;
             }
-            }
-            this.alarmTextView.setText("Keine Tag wurde ausgewählt!");
-            return null;
+        }
+        this.alarmTextView.setText("Kein Tag wurde ausgewählt!");
+        return null;
     }
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         // AlarmDate.resetAlarm();
-        AlarmDate.setAlarm(alarmTimePicker,calendar);
+        AlarmDate.setAlarm(alarmTimePicker, calendar);
         alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
     }
 
     public void setSupportActionBar(Toolbar toolbar) {
     }
-
 
 
     @Override
@@ -193,5 +191,4 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
     }
 
 
-
-    }
+}
