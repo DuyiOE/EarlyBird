@@ -55,15 +55,15 @@ public class AlarmService extends Service {
         Log.e("", state);
 
         assert state != null;
-        switch (state) {
-            case "no":
-                startId = 0;
-                break;
-            case "yes":
+         switch (state) {
+                    case "no":
+                        startId = 0;
+                        break;
+                    case "yes":
+                        startId = 1;
+                        break;
+                     default:
                 startId = 1;
-                break;
-            default:
-                startId = 0;
                 break;
         }
 

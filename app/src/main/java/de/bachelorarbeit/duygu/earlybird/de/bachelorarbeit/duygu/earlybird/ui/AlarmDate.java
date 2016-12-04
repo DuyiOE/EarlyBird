@@ -20,15 +20,18 @@ import de.bachelorarbeit.duygu.earlybird.R;
 
 public class AlarmDate {
 
+    String today;
+    Calendar calendar;
+    ToggleButton togglebutton;
 
 
 
-    public static String getStringCurrentDay(){
+
+    public String getStringCurrentDay(){
 
         String daysArray[] = {"errorDay","Sonntag","Montag","Dienstag", "Mittwoch","Donnerstag","Freitag", "Samstag"};
-        Calendar calendar = Calendar.getInstance();
-        int day = calendar.get(Calendar.DAY_OF_WEEK);
-        String dayofWeek= daysArray[day];
+        int day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+        String dayofWeek = daysArray[day];
         Log.d("AlarmActivity", dayofWeek );
         Log.d("AlarmActivity",String.valueOf(day));
         return dayofWeek;
@@ -47,7 +50,8 @@ public class AlarmDate {
     }
 
 
-    public static void setAlarm(TimePicker timePicker, Calendar calendar){
+
+    public static void setAlarm(TimePicker timePicker, Calendar calendar,TextView alarmTextView, ToggleButton tg){
 
 
             if (android.os.Build.VERSION.SDK_INT >= 23) {
@@ -66,13 +70,17 @@ public class AlarmDate {
             String minute_string = String.valueOf(minute);
             Log.e("AlarmActivity", minute_string);
 
+            if (minute < 10) {
+                 minute_string = "0" + String.valueOf(minute);
+            }
 
+            setAlarmText(hour, minute, alarmTextView,tg);
     }
 
 
-    public static TextView setAlarmText(int hour,int minute, TextView text) {
-
-        text.setText("Der Wecker klingelt am "+ AlarmDate.getStringCurrentDay()+" um: " + hour + ":" +  minute);
+    public static TextView setAlarmText(int hour,int minute, TextView text,ToggleButton tg) {
+        text.setText("Der Wecker klingelt am " + (String)
+                tg.getText()+ " um: " + hour + ":" +  minute);
         text.setVisibility(View.VISIBLE);
 
         return text;
@@ -81,4 +89,48 @@ public class AlarmDate {
     public static void resetAlarm() {
     }
 
+
+
+      /**   if (alarmToggleSO.isChecked()) {
+         return alarmToggleSO;
+         } else if (alarmToggleMO.isChecked() && day == 2) {
+         return alarmToggleMO;
+         } else if (alarmToggleDI.isChecked() && day == 3) {
+         return alarmToggleDI;
+         } else if (alarmToggleMI.isChecked() && day == 4) {
+         return alarmToggleMI;
+         } else if (alarmToggleDO.isChecked() && day == 5) {
+         return alarmToggleDO;
+         } else if (alarmToggleFR.isChecked() && day == 6) {
+         return alarmToggleFR;
+         } else if (alarmToggleSA.isChecked() && day == 7) {
+         return alarmToggleSA;
+         }
+         }
+         }else {
+         for (day = AlarmDate.getIntCurrentDay() + 1; day >= 7; day++) {
+         if (alarmToggleSO.isChecked() && day == 1) {
+         return alarmToggleSO;
+         } else if (alarmToggleMO.isChecked() && day == 2) {
+         return alarmToggleMO;
+         } else if (alarmToggleDI.isChecked() && day == 3) {
+         return alarmToggleDI;
+         } else if (alarmToggleMI.isChecked() && day == 4) {
+         return alarmToggleMI;
+         } else if (alarmToggleDO.isChecked() && day == 5) {
+         return alarmToggleDO;
+         } else if (alarmToggleFR.isChecked() && day == 6) {
+         return alarmToggleFR;
+         } else if (alarmToggleSA.isChecked() && day == 7) {
+         return alarmToggleSA;
+         }else return null;
+
+         }
+         }
+         this.alarmTextView.setText("Kein Tag wurde ausgewählt!");
+         return null;
+
+        return alarmToggleDI;
+    }
+       **/
 }

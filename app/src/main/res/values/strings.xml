@@ -18,6 +18,19 @@
     <string name="alarmText">Wähle deine Weckzeit:</string>
     <string name="chooseDirecton">Wähle deine Route:</string>
     <string name="title_activity_maps">Map</string>
+    <string name="Montag">Montag</string>
+    <string name="Dienstag">Dienstag</string>
+    <string name="Mittwoch">Mittwoch</string>
+    <string name="Freitag">Freitag</string>
+    <string name="Donnerstag">Donnerstag</string>
+    <string name="Samstag">Samstag</string>
+    <string name="Sonntag">Sonntag</string>
     <string name="stop_alarm">Wach!</string>
+
+
+
+
+
+
 
 </resources>

@@ -1,5 +1,7 @@
 package de.bachelorarbeit.duygu.earlybird;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -28,9 +30,10 @@ import de.bachelorarbeit.duygu.earlybird.de.bachelorarbeit.duygu.earlybird.ui.Al
 /**
  * Created by Duygu on 26.11.2016.
  */
-public class AlarmActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, CompoundButton.OnCheckedChangeListener {
+public class AlarmActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
 
+    @SuppressLint("StaticFieldLeak")
     private static AlarmActivity inst;
     AlarmManager alarmManager;
     private PendingIntent pendingIntent;
@@ -42,7 +45,6 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
     Spinner spinner;
     int i = 0;
     final Calendar calendar = Calendar.getInstance();
-
     private ToggleButton toggleButton;
 
     public static AlarmActivity instance() {
@@ -58,11 +60,12 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
         this.context = this;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        final Intent myIntent = new Intent(this.context, AlarmReceiver.class);
+
 
 
         //alarm = new AlarmReceiver();
         alarmTextView = (TextView) findViewById(R.id.infoText);
+        final Intent myIntent = new Intent(this.context, AlarmReceiver.class);
         // set the alarm to the time that you picked
         alarmTimePicker = (TimePicker) findViewById(R.id.TimePickerAlarm);
         alarmTimePicker.setIs24HourView(true);
@@ -72,34 +75,6 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
         // Get the alarm manager service,
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
-        getNextCheckedToggleBtn().setOnCheckedChangeListener(this);
-        this.onCheckedChanged(getNextCheckedToggleBtn(), true);
-        myIntent.putExtra("extra", "yes");
-        myIntent.putExtra("quote id", String.valueOf(i));
-        pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmDate.setAlarmText(alarmTimePicker.getHour(), alarmTimePicker.getMinute(), alarmTextView);
-
-
-        Button stop_alarm = (Button) findViewById(R.id.stop_Alarm);
-        stop_alarm.setOnClickListener(new View.OnClickListener() {
-            Context context;
-
-            @Override
-            public void onClick(View v) {
-                final Intent myIntent = new Intent(this.context, AlarmReceiver.class);
-                myIntent.putExtra("extra", "no");
-                myIntent.putExtra("quote id", String.valueOf(i));
-                sendBroadcast(myIntent);
-                alarmManager.cancel(pendingIntent);
-                alarmTextView.setText("Alarm canceled!");
-                //setAlarmText("ID is " + i);
-            }
-        });
-
-    }
-
-
-    public ToggleButton getNextCheckedToggleBtn() {
 
         final ToggleButton alarmToggleMO = (ToggleButton) findViewById(R.id.toggleButtonMO);
         final ToggleButton alarmToggleDI = (ToggleButton) findViewById(R.id.toggleButtonDI);
@@ -109,34 +84,128 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
         final ToggleButton alarmToggleSA = (ToggleButton) findViewById(R.id.toggleButtonSA);
         final ToggleButton alarmToggleSO = (ToggleButton) findViewById(R.id.toggleButtonSO);
 
-        for (int day = AlarmDate.getIntCurrentDay(); day >= 6; day++) {
-            if (alarmToggleSO.isChecked() && day == 1) {
-                return alarmToggleSO;
-            } else if (alarmToggleMO.isChecked() && day == 2) {
-                return alarmToggleMO;
-            } else if (alarmToggleDI.isChecked() && day == 3) {
-                return alarmToggleDI;
-            } else if (alarmToggleMI.isChecked() && day == 4) {
-                return alarmToggleMI;
-            } else if (alarmToggleDO.isChecked() && day == 5) {
-                return alarmToggleDO;
-            } else if (alarmToggleFR.isChecked() && day == 6) {
-                return alarmToggleFR;
-            } else if (alarmToggleSA.isChecked() && day == 7) {
-                return alarmToggleSA;
+        alarmToggleMO.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @TargetApi(Build.VERSION_CODES.M)
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    if(AlarmDate.getIntCurrentDay()==2) {
+                        AlarmDate.setAlarm(alarmTimePicker, calendar, alarmTextView,alarmToggleMO);
+                        myIntent.putExtra("extra", "yes");
+                        myIntent.putExtra("quote id", String.valueOf(i));
+                        pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                    }
+                }
             }
-        }
-        this.alarmTextView.setText("Kein Tag wurde ausgewählt!");
-        return null;
-    }
+        });
+        alarmToggleDI.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @TargetApi(Build.VERSION_CODES.M)
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    if(AlarmDate.getIntCurrentDay()==3) {
+                        AlarmDate.setAlarm(alarmTimePicker, calendar, alarmTextView,alarmToggleDI);
+                        myIntent.putExtra("extra", "yes");
+                        myIntent.putExtra("quote id", String.valueOf(i));
+                        pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        // AlarmDate.resetAlarm();
-        AlarmDate.setAlarm(alarmTimePicker, calendar);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-    }
+                        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                    }
+                }
+            }
+        });
+        alarmToggleMI.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @TargetApi(Build.VERSION_CODES.M)
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    if(AlarmDate.getIntCurrentDay()==4) {
+                        AlarmDate.setAlarm(alarmTimePicker, calendar, alarmTextView,alarmToggleMI);
+                        myIntent.putExtra("extra", "yes");
+                        myIntent.putExtra("quote id", String.valueOf(i));
+                        pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
+                        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                    }
+                }
+            }
+        });
+        alarmToggleDO.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @TargetApi(Build.VERSION_CODES.M)
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    if(AlarmDate.getIntCurrentDay()==5) {
+                        AlarmDate.setAlarm(alarmTimePicker, calendar, alarmTextView,alarmToggleDO);
+                        myIntent.putExtra("extra", "yes");
+                        myIntent.putExtra("quote id", String.valueOf(i));
+                        pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                    }
+                }
+            }
+        });
+        alarmToggleFR.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @TargetApi(Build.VERSION_CODES.M)
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    if(AlarmDate.getIntCurrentDay()==6) {
+                        AlarmDate.setAlarm(alarmTimePicker, calendar, alarmTextView,alarmToggleFR);
+                        myIntent.putExtra("extra", "yes");
+                        myIntent.putExtra("quote id", String.valueOf(i));
+                        pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                    }
+                }
+            }
+        });
+        alarmToggleSA.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @TargetApi(Build.VERSION_CODES.M)
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    if(AlarmDate.getIntCurrentDay()==7) {
+                        AlarmDate.setAlarm(alarmTimePicker, calendar, alarmTextView,alarmToggleSA);
+                        myIntent.putExtra("extra", "yes");
+                        myIntent.putExtra("quote id", String.valueOf(i));
+                        pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                    }
+                }
+            }
+        });
+        alarmToggleSO.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @TargetApi(Build.VERSION_CODES.M)
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    if(AlarmDate.getIntCurrentDay()==1) {
+                        AlarmDate.setAlarm(alarmTimePicker, calendar, alarmTextView,alarmToggleSO);
+                        myIntent.putExtra("extra", "yes");
+                        myIntent.putExtra("quote id", String.valueOf(i));
+                        pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                    }
+                }
+            }
+        });
+
+            Button stop_alarm = (Button) findViewById(R.id.stop_Alarm);
+            stop_alarm.setOnClickListener(new View.OnClickListener(){
+                Context context;
+
+                @Override
+                public void onClick (View v){
+                myIntent.putExtra("extra", "no");
+                myIntent.putExtra("quote id", String.valueOf(i));
+                sendBroadcast(myIntent);
+                alarmManager.cancel(pendingIntent);
+                alarmTextView.setText("Alarm canceled!");
+                alarmManager.cancel(pendingIntent);
+                //setAlarmText("ID is " + i);
+                }
+        });
+    }
     public void setSupportActionBar(Toolbar toolbar) {
     }
 
@@ -190,5 +259,11 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
         i = (int) id;
     }
 
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
 
 }
