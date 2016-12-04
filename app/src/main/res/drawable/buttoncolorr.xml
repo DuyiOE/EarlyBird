@@ -14,7 +14,7 @@
     <!-- disabled -->
     <item>
         <shape>
-            <gradient android:centerColor="@color/eb_white" android:gradientRadius="500"  android:type="radial" android:endColor="#2e9720" android:startColor="#a8b3aa" />
+            <gradient android:centerColor="@color/eb_white" android:gradientRadius="500" android:type="radial" android:endColor="#2e9720" android:startColor="#a8b3aa" />
         </shape>
     </item>
     <!-- default -->

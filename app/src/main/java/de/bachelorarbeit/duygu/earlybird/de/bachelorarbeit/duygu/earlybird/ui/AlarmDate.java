@@ -47,9 +47,8 @@ public class AlarmDate {
     }
 
 
-    public static void setAlarm(TimePicker timePicker, Calendar calendar,ToggleButton tbutton){
+    public static void setAlarm(TimePicker timePicker, Calendar calendar){
 
-        if(tbutton.isChecked()){
 
             if (android.os.Build.VERSION.SDK_INT >= 23) {
                 calendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
@@ -67,7 +66,6 @@ public class AlarmDate {
             String minute_string = String.valueOf(minute);
             Log.e("AlarmActivity", minute_string);
 
-        }
 
     }
 

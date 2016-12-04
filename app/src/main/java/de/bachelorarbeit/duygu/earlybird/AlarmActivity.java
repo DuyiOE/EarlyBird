@@ -29,7 +29,7 @@ import de.bachelorarbeit.duygu.earlybird.de.bachelorarbeit.duygu.earlybird.ui.Al
 /**
  * Created by Duygu on 26.11.2016.
  */
-public class AlarmActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, CompoundButton.OnCheckedChangeListener {
+public class AlarmActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener,CompoundButton.OnCheckedChangeListener {
 
 
     private static AlarmActivity inst;
@@ -43,8 +43,8 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
     Spinner spinner;
     int i = 0;
     final Calendar calendar = Calendar.getInstance();
-    final Intent myIntent = new Intent(this.context, AlarmReceiver.class);
-    ToggleButton toggleButton;
+
+    private ToggleButton toggleButton;
 
     public static AlarmActivity instance() {
         return inst;
@@ -59,34 +59,35 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
         this.context = this;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        final Intent myIntent = new Intent(this.context, AlarmReceiver.class);
+
 
         //alarm = new AlarmReceiver();
         alarmTextView = (TextView) findViewById(R.id.infoText);
-
-
-        // Get the alarm manager service
-        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-
         // set the alarm to the time that you picked
-
         alarmTimePicker = (TimePicker) findViewById(R.id.TimePickerAlarm);
         alarmTimePicker.setIs24HourView(true);
         //Time choosen for Destination
         desTimePicker = (TimePicker) findViewById(R.id.TimePickerDes);
         desTimePicker.setIs24HourView(true);
-        //globel Togglebutten Listner
-        toggleButton.setOnCheckedChangeListener(this);
-        //get checked Togglebutton and set in toggleButton
-        nextCheckedToggleBtn();
-        onCheckedChanged(toggleButton,true);
+        // Get the alarm manager service,
+        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
-
+        getNextCheckedToggleBtn().setOnCheckedChangeListener(this);
+        this.onCheckedChanged(getNextCheckedToggleBtn(), true);
+        myIntent.putExtra("extra", "yes");
+        myIntent.putExtra("quote id", String.valueOf(i));
+        pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmDate.setAlarmText(alarmTimePicker.getHour(), alarmTimePicker.getMinute(), alarmTextView);
 
 
         Button stop_alarm = (Button) findViewById(R.id.stop_Alarm);
         stop_alarm.setOnClickListener(new View.OnClickListener() {
+            Context context;
+
             @Override
             public void onClick(View v) {
+                final Intent myIntent = new Intent(this.context, AlarmReceiver.class);
                 myIntent.putExtra("extra", "no");
                 myIntent.putExtra("quote id", String.valueOf(i));
                 sendBroadcast(myIntent);
@@ -96,10 +97,10 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
             }
         });
 
-
     }
 
-    public void nextCheckedToggleBtn(){
+
+    public ToggleButton getNextCheckedToggleBtn() {
 
         final ToggleButton alarmToggleMO = (ToggleButton) findViewById(R.id.toggleButtonMO);
         final ToggleButton alarmToggleDI = (ToggleButton) findViewById(R.id.toggleButtonDI);
@@ -109,25 +110,34 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
         final ToggleButton alarmToggleSA = (ToggleButton) findViewById(R.id.toggleButtonSA);
         final ToggleButton alarmToggleSO = (ToggleButton) findViewById(R.id.toggleButtonSO);
 
-        if(alarmToggleMO.isChecked()){
-            toggleButton=alarmToggleMO;
-        }else if (alarmToggleDI.isChecked()){
-            toggleButton= alarmToggleDI;
-        }else if(alarmToggleMI.isChecked()){
-            toggleButton=alarmToggleMI;
-        }else if(alarmToggleDO.isChecked()){
-            toggleButton=alarmToggleDO;
-        }else if(alarmToggleFR.isChecked()){
-            toggleButton=alarmToggleFR;
-        }else if(alarmToggleSA.isChecked()){
-            toggleButton=alarmToggleSA;
-        }else if(alarmToggleSO.isChecked()){
-            toggleButton=alarmToggleSO;
-        }else{
-            this.alarmTextView.setText("Alarm off!");
-        }
-
+        for (int day=AlarmDate.getIntCurrentDay(); day>=6; day++){
+            if (alarmToggleSO.isChecked()&& day == 1) {
+                return alarmToggleSO;
+            } else if(alarmToggleMO.isChecked()&& day ==2) {
+                return alarmToggleMO;
+            } else if (alarmToggleDI.isChecked() && day==3){
+                return alarmToggleDI;
+            } else if (alarmToggleMI.isChecked()&& day==4) {
+                return alarmToggleMI;
+            } else if (alarmToggleDO.isChecked() && day==5){
+                return alarmToggleDO;
+            } else if (alarmToggleFR.isChecked()&& day==6) {
+                return alarmToggleFR;
+            } else if (alarmToggleSA.isChecked()&& day==7) {
+                return alarmToggleSA;
+            }
+            }
+            this.alarmTextView.setText("Keine Tag wurde ausgewählt!");
+            return null;
     }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        // AlarmDate.resetAlarm();
+        AlarmDate.setAlarm(alarmTimePicker,calendar);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+    }
+
     public void setSupportActionBar(Toolbar toolbar) {
     }
 
@@ -183,20 +193,5 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        //Todo
-       // AlarmDate.resetAlarm();
-        AlarmDate.setAlarm(alarmTimePicker,calendar,toggleButton);
-
-        myIntent.putExtra("extra", "yes");
-        myIntent.putExtra("quote id", String.valueOf(i));
-        pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-
-        AlarmDate.setAlarmText(alarmTimePicker.getHour(), alarmTimePicker.getMinute(), alarmTextView);
 
     }
-}
