@@ -51,17 +51,19 @@ public class AlarmDate {
 
 
 
-    public static void setAlarm(TimePicker timePicker, Calendar calendar,TextView alarmTextView, ToggleButton tg){
+    public static void setAlarm(TimePicker timePicker, Calendar calendar,TextView alarmTextView, CharSequence tg){
 
 
-            if (android.os.Build.VERSION.SDK_INT >= 23) {
-                calendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
-                calendar.set(Calendar.MINUTE, timePicker.getMinute());
-            } else {
-                calendar.set(Calendar.MINUTE, timePicker.getCurrentMinute());
-                calendar.set(Calendar.HOUR_OF_DAY, timePicker.getCurrentHour());
+                if (android.os.Build.VERSION.SDK_INT >= 23) {
+                    calendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
+                    calendar.set(Calendar.MINUTE, timePicker.getMinute());
+                } else {
+                    calendar.set(Calendar.MINUTE, timePicker.getCurrentMinute());
+                    calendar.set(Calendar.HOUR_OF_DAY, timePicker.getCurrentHour());
 
-            }
+                }
+
+
             final int hour = timePicker.getCurrentHour();
             final int minute = timePicker.getCurrentMinute();
 
@@ -70,17 +72,18 @@ public class AlarmDate {
             String minute_string = String.valueOf(minute);
             Log.e("AlarmActivity", minute_string);
 
-            if (minute < 10) {
-                 minute_string = "0" + String.valueOf(minute);
-            }
 
-            setAlarmText(hour, minute, alarmTextView,tg);
+
+            setAlarmText(hour, minute, alarmTextView,(String) tg);
     }
 
 
-    public static TextView setAlarmText(int hour,int minute, TextView text,ToggleButton tg) {
-        text.setText("Der Wecker klingelt am " + (String)
-                tg.getText()+ " um: " + hour + ":" +  minute);
+    public static TextView setAlarmText(int hour,int minute, TextView text,String tg) {
+        String minuteS = String.valueOf(minute);
+        if (minute < 10) {
+            minuteS = "0" + String.valueOf(minute);
+        }
+        text.setText("Der Wecker klingelt am " + tg + " um: " + hour + ":" + minuteS);
         text.setVisibility(View.VISIBLE);
 
         return text;

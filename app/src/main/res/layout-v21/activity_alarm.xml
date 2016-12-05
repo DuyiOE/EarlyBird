@@ -27,7 +27,7 @@
         android:timePickerMode="spinner"
         android:id="@+id/TimePickerAlarm"
         android:orientation="vertical"
-        android:layout_height="90dp" />
+        android:layout_height="84dp" />
 
 
     <LinearLayout
@@ -184,13 +184,13 @@
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="4dp">
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/chooseAlarm"
             android:id="@+id/text_vorbereitungszeit"
@@ -202,10 +202,11 @@
 
         <EditText
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:inputType="time"
-            android:text="@string/textTime"
-            android:ems="10"
+            android:hint="@string/textTime"
+            android:maxLength="3"
+            android:ems="15"
             android:id="@+id/editText_PrepTime"
             android:textSize="14sp" />
 
@@ -231,7 +232,7 @@
             android:timePickerMode="spinner"
             android:orientation="vertical"
             android:id="@+id/TimePickerDes"
-            android:layout_height="80dp" />
+            android:layout_height="84dp" />
 
 
     </LinearLayout>

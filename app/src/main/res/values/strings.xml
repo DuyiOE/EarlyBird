@@ -1,18 +1,18 @@
 <resources>
     <string name="app_name">EarlyBird</string>
-    <string name="button_Monday">MO</string>
-    <string name="button_Sunday">SO</string>
-    <string name="button_Tuesday">DI</string>
-    <string name="button_Thursday">DO</string>
-    <string name="button_Friday">FR</string>
-    <string name="button_Wednesday">MI</string>
-    <string name="button_Saturday">SA</string>
+    <string name="button_Monday">Mo</string>
+    <string name="button_Sunday">So</string>
+    <string name="button_Tuesday">Di</string>
+    <string name="button_Thursday">Do</string>
+    <string name="button_Friday">Fr</string>
+    <string name="button_Wednesday">Mi</string>
+    <string name="button_Saturday">Sa</string>
     <string name="startAddress">Start</string>
     <string name="destinationAddress">Ziel</string>
-    <string name="textTime">00:00</string>
+    <string name="textTime">Bespiel: 30, für 30 Minuten Vorbereitungszeit!</string>
     <string name="chooseAlarm">Wähle deine Vorbereitungszeit in Minuten:</string>
     <string name="chooseDestinationTime">Wähle deine Ankunftszeit:</string>
-    <string name="infoTextPreparationTime">Nach der jetztigen Verkehrslage wirst du in %% Tagen, Â§Â§ Stunden und Â§% Miuten um $$ Uhr geweckt.</string>
+    <string name="infoTextPreparationTime"></string>
     <string name="button_safeDirection">Route Speichern</string>
     <string name="EarlyBird">EarlyBird</string>
     <string name="alarmText">Wähle deine Weckzeit:</string>
