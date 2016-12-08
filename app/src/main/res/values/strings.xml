@@ -27,10 +27,9 @@
     <string name="Sonntag">Sonntag</string>
     <string name="stop_alarm">Wach!</string>
 
-
-
-
-
+    <string name="alarm_set_no_day">Error, no alarm day was selected!</string>
+    <string name="alarm_set_time_today">Alarm is set at %1$02d:%2$02d</string>
+    <string name="alarm_set_time_other_day">Alarm is set at %1$02d:%2$02d in %3$d days</string>
 
 
 </resources>
