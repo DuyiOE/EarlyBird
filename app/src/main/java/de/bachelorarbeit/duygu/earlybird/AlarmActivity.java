@@ -106,8 +106,8 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
             @TargetApi(Build.VERSION_CODES.M)
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
+                    AlarmDate.setAlarm(alarmTimePicker, calendar, alarmTextView,setStringAlarmDay(alarmToggleMO));
                     if(AlarmDate.getIntCurrentDay()==2) {
-                        AlarmDate.setAlarm(alarmTimePicker, calendar, alarmTextView,alarmToggleMO.getText());
                         myIntent.putExtra("extra", "yes");
                         myIntent.putExtra("quote id", String.valueOf(i));
                         pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -121,8 +121,8 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
             @TargetApi(Build.VERSION_CODES.M)
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
+                    AlarmDate.setAlarm(alarmTimePicker, calendar, alarmTextView,setStringAlarmDay(alarmToggleDI));
                     if(AlarmDate.getIntCurrentDay()==3) {
-                        AlarmDate.setAlarm(alarmTimePicker, calendar, alarmTextView,alarmToggleDI.getText());
                         myIntent.putExtra("extra", "yes");
                         myIntent.putExtra("quote id", String.valueOf(i));
                         pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -136,8 +136,8 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
             @TargetApi(Build.VERSION_CODES.M)
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
+                    AlarmDate.setAlarm(alarmTimePicker, calendar, alarmTextView,setStringAlarmDay(alarmToggleMI));
                     if(AlarmDate.getIntCurrentDay()==4) {
-                        AlarmDate.setAlarm(alarmTimePicker, calendar, alarmTextView,alarmToggleMI.getText());
                         myIntent.putExtra("extra", "yes");
                         myIntent.putExtra("quote id", String.valueOf(i));
                         pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -151,8 +151,8 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
             @TargetApi(Build.VERSION_CODES.M)
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    if(AlarmDate.getIntCurrentDay()==5) {
-                        AlarmDate.setAlarm(alarmTimePicker, calendar, alarmTextView,alarmToggleDO.getText());
+                    AlarmDate.setAlarm(alarmTimePicker, calendar, alarmTextView,setStringAlarmDay(alarmToggleDO));
+                    if(AlarmDate.getIntCurrentDay()==5 ) {
                         myIntent.putExtra("extra", "yes");
                         myIntent.putExtra("quote id", String.valueOf(i));
                         pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -166,8 +166,8 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
             @TargetApi(Build.VERSION_CODES.M)
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
+                    AlarmDate.setAlarm(alarmTimePicker, calendar, alarmTextView,setStringAlarmDay(alarmToggleFR));
                     if(AlarmDate.getIntCurrentDay()==6) {
-                        AlarmDate.setAlarm(alarmTimePicker, calendar, alarmTextView,alarmToggleFR.getText());
                         myIntent.putExtra("extra", "yes");
                         myIntent.putExtra("quote id", String.valueOf(i));
                         pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -181,8 +181,8 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
             @TargetApi(Build.VERSION_CODES.M)
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
+                    AlarmDate.setAlarm(alarmTimePicker, calendar, alarmTextView,setStringAlarmDay(alarmToggleSA));
                     if(AlarmDate.getIntCurrentDay()==7) {
-                        AlarmDate.setAlarm(alarmTimePicker, calendar, alarmTextView,alarmToggleSA.getText());
                         myIntent.putExtra("extra", "yes");
                         myIntent.putExtra("quote id", String.valueOf(i));
                         pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -196,8 +196,8 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
             @TargetApi(Build.VERSION_CODES.M)
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
+                    AlarmDate.setAlarm(alarmTimePicker, calendar, alarmTextView,setStringAlarmDay(alarmToggleSA));
                     if(AlarmDate.getIntCurrentDay()==1) {
-                        AlarmDate.setAlarm(alarmTimePicker, calendar, alarmTextView,alarmToggleSO.getText());
                         myIntent.putExtra("extra", "yes");
                         myIntent.putExtra("quote id", String.valueOf(i));
                         pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -225,6 +225,7 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
         });
 
     }
+
 
 
 
@@ -288,4 +289,53 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
         super.onPause();
     }
 
+    public int setAlarmDay(ToggleButton tb){
+        int day = AlarmDate.getIntCurrentDay();
+        String dayS;
+        if(tb.getId()== R.id.toggleButtonMO){
+            day = 2;
+            dayS ="Montag";
+        }else if(tb.getId()== R.id.toggleButtonDI){
+            day = 3;
+            dayS ="Dienstag";
+        }else if(tb.getId()== R.id.toggleButtonMI){
+            day = 4;
+            dayS ="Mittwoch";
+        }else if(tb.getId()== R.id.toggleButtonDO){
+            day = 5;
+            dayS ="Donnerstag";
+        }else if(tb.getId()== R.id.toggleButtonFR){
+            day = 6;
+            dayS ="Freitag";
+        }else if(tb.getId()== R.id.toggleButtonSA) {
+            day = 7;
+            dayS ="Samstag";
+        } else if(tb.getId()== R.id.toggleButtonSO) {
+            day = 1;
+            dayS ="Sonntag";
+        }
+
+        return day;
+    }
+    public String setStringAlarmDay(ToggleButton tb){
+        String dayS = "Day";
+        if(tb.getId()== R.id.toggleButtonMO){
+            dayS ="Montag";
+        }else if(tb.getId()== R.id.toggleButtonDI){
+            dayS ="Dienstag";
+        }else if(tb.getId()== R.id.toggleButtonMI){
+            dayS ="Mittwoch";
+        }else if(tb.getId()== R.id.toggleButtonDO){
+            dayS ="Donnerstag";
+        }else if(tb.getId()== R.id.toggleButtonFR){
+            dayS ="Freitag";
+        }else if(tb.getId()== R.id.toggleButtonSA) {
+            dayS ="Samstag";
+        } else if(tb.getId()== R.id.toggleButtonSO) {
+            dayS ="Sonntag";
+        }
+        return dayS;
+    }
+
 }
+

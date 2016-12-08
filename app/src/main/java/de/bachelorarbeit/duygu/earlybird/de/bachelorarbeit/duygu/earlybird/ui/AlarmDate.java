@@ -3,16 +3,21 @@ package de.bachelorarbeit.duygu.earlybird.de.bachelorarbeit.duygu.earlybird.ui;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.util.Log;
+import android.util.TimeUtils;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.ToggleButton;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 import de.bachelorarbeit.duygu.earlybird.AlarmActivity;
 import de.bachelorarbeit.duygu.earlybird.R;
+
+import static android.support.v7.appcompat.R.id.home;
+import static android.support.v7.appcompat.R.id.time;
 
 /**
  * Created by Duygu on 30.11.2016.
@@ -78,12 +83,12 @@ public class AlarmDate {
     }
 
 
-    public static TextView setAlarmText(int hour,int minute, TextView text,String tg) {
+    public static TextView setAlarmText(int hour,int minute, TextView text,String day) {
         String minuteS = String.valueOf(minute);
         if (minute < 10) {
             minuteS = "0" + String.valueOf(minute);
         }
-        text.setText("Der Wecker klingelt am " + tg + " um: " + hour + ":" + minuteS);
+        text.setText("Der Wecker klingelt am " + day + " um: " + hour + ":" + minuteS);
         text.setVisibility(View.VISIBLE);
 
         return text;
@@ -92,7 +97,56 @@ public class AlarmDate {
     public static void resetAlarm() {
     }
 
+    public static int getHour(){
+        Date timestamp = new Date();
+        SimpleDateFormat simpleDateFormatH = new SimpleDateFormat("HH");
+        System.out.println("Zeit: " + simpleDateFormatH.format(timestamp));
+        String hour= timestamp.toString();
+        Integer xHour;
+        return xHour = Integer.valueOf(hour);
+    }
 
+    public static int getMiute(){
+        Date timestamp = new Date();
+        SimpleDateFormat simpleDateFormatM = new SimpleDateFormat("mm");
+        System.out.println("Zeit: " + simpleDateFormatM.format(timestamp));
+
+        String minute= timestamp.toString();
+        Integer xMinute;
+        return xMinute = Integer.valueOf(minute);
+    }
+
+    public static int getDay(){
+        int day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+        return day;
+}
+
+
+
+
+    public static int getHourOfTimePicker(TimePicker timePicker){
+
+        final int hour = timePicker.getCurrentHour();
+
+        return hour;
+    }
+
+    public static int getMiuteOfTimePicker(TimePicker timePicker){
+
+        final int minute = timePicker.getCurrentMinute();
+
+        return minute;
+    }
+
+    public static boolean pastTime(TimePicker tp) {
+        if (getHour() >= getHourOfTimePicker(tp)) {
+            if (getMiute() >= getMiuteOfTimePicker(tp)) {
+                return true;
+            }
+        }
+            return false;
+
+    }
 
       /**   if (alarmToggleSO.isChecked()) {
          return alarmToggleSO;
