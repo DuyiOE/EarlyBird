@@ -88,7 +88,7 @@ public class AlarmDate {
         if (minute < 10) {
             minuteS = "0" + String.valueOf(minute);
         }
-        text.setText("Der Wecker klingelt am " + day + " um: " + hour + ":" + minuteS);
+        text.setText("Der Wecker klingelt " + day + " um: " + hour + ":" + minuteS);
         text.setVisibility(View.VISIBLE);
 
         return text;

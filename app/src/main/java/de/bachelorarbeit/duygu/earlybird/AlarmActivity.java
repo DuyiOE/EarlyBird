@@ -213,55 +213,6 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
         super.onPause();
     }
 
-    public int setAlarmDay(ToggleButton tb){
-        int day = AlarmDate.getIntCurrentDay();
-        String dayS;
-        if(tb.getId()== R.id.toggleButtonMO){
-            day = 2;
-            dayS ="Montag";
-        }else if(tb.getId()== R.id.toggleButtonDI){
-            day = 3;
-            dayS ="Dienstag";
-        }else if(tb.getId()== R.id.toggleButtonMI){
-            day = 4;
-            dayS ="Mittwoch";
-        }else if(tb.getId()== R.id.toggleButtonDO){
-            day = 5;
-            dayS ="Donnerstag";
-        }else if(tb.getId()== R.id.toggleButtonFR){
-            day = 6;
-            dayS ="Freitag";
-        }else if(tb.getId()== R.id.toggleButtonSA) {
-            day = 7;
-            dayS ="Samstag";
-        } else if(tb.getId()== R.id.toggleButtonSO) {
-            day = 1;
-            dayS ="Sonntag";
-        }
-
-        return day;
-    }
-    public String setStringAlarmDay(ToggleButton tb){
-        String dayS = "Day";
-        if(tb.getId()== R.id.toggleButtonMO){
-            dayS ="Montag";
-        }else if(tb.getId()== R.id.toggleButtonDI){
-            dayS ="Dienstag";
-        }else if(tb.getId()== R.id.toggleButtonMI){
-            dayS ="Mittwoch";
-        }else if(tb.getId()== R.id.toggleButtonDO){
-            dayS ="Donnerstag";
-        }else if(tb.getId()== R.id.toggleButtonFR){
-            dayS ="Freitag";
-        }else if(tb.getId()== R.id.toggleButtonSA) {
-            dayS ="Samstag";
-        } else if(tb.getId()== R.id.toggleButtonSO) {
-            dayS ="Sonntag";
-        }
-        return dayS;
-    }
-
-
 
 
 
@@ -341,9 +292,12 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
                     String.format(getString(R.string.alarm_set_time_other_day), alarmHour, alarmMinute, alarmDaysInFuture ),
                     Toast.LENGTH_SHORT).show();
         }
+        final Intent myIntent = this.getIntent();
 
         /* Step 4: Set alarm to time with x days in future */
-        setAlarm(alarmHour, alarmMinute, alarmDaysInFuture);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            setAlarm(alarmHour, alarmMinute, alarmDaysInFuture, myIntent);
+        }
     }
 
     /** Determines whether the current day is checked.
@@ -438,11 +392,59 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
      * @param min minute of the alarm
      * @param daysInFuture days
      */
-    private void setAlarm(int hour, int min, int daysInFuture){
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private void setAlarm(int hour, int min, int daysInFuture, Intent myIntent) {
         /* TODO: Set the alarm here.
         * My first guess would be setting the date plus adding "daysInFuture" days (or x times 24 hours...)
         * If the day is today these days are 0 so adding this multiplication should never hurt!
         */
+        int today = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+
+        if (dayIsChecked(today) && timePassedToday(hour, min) == false) {
+            AlarmDate.setAlarmText(hour, min, alarmTextView, "heute");
+            myIntent.putExtra("extra", "yes");
+            myIntent.putExtra("quote id", String.valueOf(i));
+            pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        } else if (dayIsChecked(today) && timePassedToday(hour, min)) {
+            AlarmDate.setAlarmText(hour, min, alarmTextView, dayIsCheckedString(today + daysInFuture));
+            int day = getDaysToNextCheckedDay();
+            Log.e("AlarmActivity", String.valueOf(day));
+            myIntent.putExtra("extra", "yes");
+            myIntent.putExtra("quote id", String.valueOf(i));
+            pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + (day * 24), pendingIntent);
+
+        } else {
+            Log.e("AlarmActivity", "todo");
+        }
     }
+    private String dayIsCheckedString(int dayOfTheWeek) {
+
+        switch (dayOfTheWeek) {
+            case Calendar.MONDAY:
+                return "Montag";
+            case Calendar.TUESDAY:
+                return "Dienstag";
+            case Calendar.WEDNESDAY:
+                return "Mittwoch";
+            case Calendar.THURSDAY:
+                return "Donnerstag";
+            case Calendar.FRIDAY:
+                return "Freitag";
+            case Calendar.SATURDAY:
+                return "Samstag";
+            case Calendar.SUNDAY:
+                return "Sonntag";
+        }
+
+        Log.w(TAG, "Checking day " + dayOfTheWeek + " is no valid day!");
+        return "";
+    }
+
+            /*
+         Toast.makeText(TODO: Show Text of calculatet time based on values of AlarmTime, PreparationTime, TrafficTime and DestinationTime),
+                    Toast.LENGTH_SHORT).show();
+          */
 }
 
