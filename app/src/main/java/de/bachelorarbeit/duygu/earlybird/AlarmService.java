@@ -55,15 +55,15 @@ public class AlarmService extends Service {
         Log.e("", state);
 
         assert state != null;
-        switch (state) {
-            case "no":
-                startId = 0;
-                break;
-            case "yes":
+         switch (state) {
+                    case "no":
+                        startId = 0;
+                        break;
+                    case "yes":
+                        startId = 1;
+                        break;
+                     default:
                 startId = 1;
-                break;
-            default:
-                startId = 0;
                 break;
         }
 
@@ -107,28 +107,6 @@ public class AlarmService extends Service {
                 } else {
                     mMediaPlayer = MediaPlayer.create(this, R.raw.white_wolf);
                 }
-            } else if (quoteID.equals("1")) {
-                mMediaPlayer = MediaPlayer.create(this, R.raw.frametraxx_endless_love);
-            } else if (quoteID.equals("2")) {
-                mMediaPlayer = MediaPlayer.create(this, R.raw.dadadeedeedum);
-            } else if (quoteID.equals("3")) {
-                mMediaPlayer = MediaPlayer.create(this, R.raw.dental_forum_band);
-            } else if (quoteID.equals("4")) {
-                mMediaPlayer = MediaPlayer.create(this, R.raw.frametraxx_endless_love);
-            } else if (quoteID.equals("5")) {
-                mMediaPlayer = MediaPlayer.create(this, R.raw.frametraxx_my_love);
-            } else if (quoteID.equals("6")) {
-                mMediaPlayer = MediaPlayer.create(this, R.raw.frametraxx_pure_colours);
-            } else if (quoteID.equals("7")) {
-                mMediaPlayer = MediaPlayer.create(this, R.raw.frametraxx_silent_spot);
-            } else if (quoteID.equals("8")) {
-                mMediaPlayer = MediaPlayer.create(this, R.raw.interceptor);
-            } else if (quoteID.equals("9")) {
-                mMediaPlayer = MediaPlayer.create(this, R.raw.white_wolf);
-            } else if (quoteID.equals("10")) {
-                mMediaPlayer = MediaPlayer.create(this, R.raw.psychedelic_rain);
-            } else {
-                mMediaPlayer = MediaPlayer.create(this, R.raw.white_wolf);
             }
 
             mMediaPlayer.start();
