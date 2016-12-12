@@ -57,7 +57,6 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
     private TextView alarmTextView;
     private Context context;
     int i = 0;
-    final Calendar calendar = Calendar.getInstance();
     private EditText prepTime;
 
     public static AlarmActivity instance() {
@@ -192,18 +191,10 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
     }
 
 
-
     @Override
     public void onPause() {
         super.onPause();
     }
-
-
-
-
-    // ---------------------------------------------------------------------------
-    /* ------------------------- TOBI STUFF HERE ------------------------------ */
-    // ---------------------------------------------------------------------------
 
 
 
@@ -380,13 +371,19 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void setAlarm(int hour, int min, int daysInFuture) {
         final Intent myIntent = new Intent(this.context, AlarmReceiver.class);
+        Calendar alarmTime = Calendar.getInstance(); // no need for a field variable
+
         if (android.os.Build.VERSION.SDK_INT >= 23) {
-            calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getHour());
-            calendar.set(Calendar.MINUTE, alarmTimePicker.getMinute());
+            alarmTime.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getHour());
+            alarmTime.set(Calendar.MINUTE, alarmTimePicker.getMinute());
         } else {
-            calendar.set(Calendar.MINUTE, alarmTimePicker.getCurrentMinute());
-            calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getCurrentHour());
+            alarmTime.set(Calendar.MINUTE, alarmTimePicker.getCurrentMinute());
+            alarmTime.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getCurrentHour());
         }
+        Log.d(TAG, "Calendar day before rolling: " + alarmTime.get(Calendar.DAY_OF_YEAR));
+        alarmTime.roll(Calendar.DAY_OF_YEAR, daysInFuture);
+        Log.d(TAG, "Calendar day: " + alarmTime.get(Calendar.DAY_OF_YEAR));
+
         /* TODO: Set the alarm here.
         * My first guess would be setting the date plus adding "daysInFuture" days (or x times 24 hours...)
         * If the day is today these days are 0 so adding this multiplication should never hurt!
@@ -399,23 +396,25 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
             myIntent.putExtra("extra", "yes");
             myIntent.putExtra("quote id", String.valueOf(i));
             pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-            alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, alarmTime.getTimeInMillis(), pendingIntent);
         } else if (dayIsChecked(today) && timePassedToday(hour, min)) {
+
             AlarmDate.setAlarmText(hour, min, alarmTextView, dayIsCheckedString(today + daysInFuture));
             int day = getDaysToNextCheckedDay();
             Log.e("AlarmActivity", String.valueOf(day));
             myIntent.putExtra("extra", "yes");
             myIntent.putExtra("quote id", String.valueOf(i));
             pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-            alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + (day * 24), pendingIntent);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, alarmTime.getTimeInMillis() + (day * 24), pendingIntent);
         } else {
+
             AlarmDate.setAlarmText(hour, min, alarmTextView, dayIsCheckedString(today + daysInFuture));
             int day = getDaysToNextCheckedDay();
             Log.e("AlarmActivity", String.valueOf(day));
             myIntent.putExtra("extra", "yes");
             myIntent.putExtra("quote id", String.valueOf(i));
             pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-            alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + (day * 24), pendingIntent);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, alarmTime.getTimeInMillis() + (day * 24), pendingIntent);
             Log.e("AlarmActivity", "todo");
         }
 
