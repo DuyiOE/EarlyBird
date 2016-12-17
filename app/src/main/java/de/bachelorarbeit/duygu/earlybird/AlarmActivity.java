@@ -1,6 +1,6 @@
 package de.bachelorarbeit.duygu.earlybird;
 
-import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.method.TimeKeyListener;
 import android.util.Log;
@@ -27,16 +26,26 @@ import android.widget.ToggleButton;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlacePicker;
+
 import de.bachelorarbeit.duygu.earlybird.de.bachelorarbeit.duygu.earlybird.ui.AlarmDate;
 
 /**
  * Created by Duygu on 26.11.2016.
  */
-public class AlarmActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, CompoundButton.OnCheckedChangeListener {
+public class AlarmActivity extends Activity implements AdapterView.OnItemSelectedListener, CompoundButton.OnCheckedChangeListener, View.OnClickListener {
 
     private static final String TAG = AlarmActivity.class.getSimpleName();
 
     private static final int ERROR_NO_DAY_SET = -1;
+
+    /* PlacePicker IDs */
+    public static final int PLACE_PICKER_START = 1000;
+    public static final int PLACE_PICKER_DEST = 1001;
+
 
     private ToggleButton alarmToggleMO;
     private ToggleButton alarmToggleDI;
@@ -46,9 +55,13 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
     private ToggleButton alarmToggleSA;
     private ToggleButton alarmToggleSO;
 
+    private TextView startAddressTV;
+    private TextView destAddressTV;
+
+    private Place start;
+    private Place destination;
 
 
-    @SuppressLint("StaticFieldLeak")
     private static AlarmActivity inst;
     AlarmManager alarmManager;
     private PendingIntent pendingIntent;
@@ -130,7 +143,11 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
                 }
             }
         });*/
+        startAddressTV = (TextView) findViewById(R.id.startAddressTV);
+        startAddressTV.setOnClickListener(this);
 
+        destAddressTV = (TextView) findViewById(R.id.destAddressTV);
+        destAddressTV.setOnClickListener(this);
 
 
     }
@@ -458,9 +475,51 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
         return "";
     }
 
-            /*
-         Toast.makeText(TODO: Show Text of calculatet time based on values of AlarmTime, PreparationTime, TrafficTime and DestinationTime),
-                    Toast.LENGTH_SHORT).show();
-          */
+    /** Click listener for Start and Destination TextView
+     *
+     * @param v
+     */
+    @Override
+    public void onClick(View v) {
+        if (v == startAddressTV) {
+            PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+            try {
+                Intent i = builder.build(this);
+                this.startActivityForResult(i, AlarmActivity.PLACE_PICKER_START);
+            } catch (Exception e) {
+                Log.w(TAG, "Something went wrong with the place picker!" + e);
+            }
+        } else if (v == destAddressTV) {
+            PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+            try {
+                Intent i = builder.build(this);
+                startActivityForResult(i, AlarmActivity.PLACE_PICKER_DEST);
+            } catch (Exception e) {
+                Log.w(TAG, "Something went wrong with the place picker!" + e);
+            }
+        }
+    }
+
+    /** Will be called with a result from the PlacePicker
+     *
+     * @param resultCode Gives Ok or Fail
+     * @param requestCode The calling code in order to distinguish selecting start or destination
+     * @param data Intent data */
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != Activity.RESULT_OK) {
+            Log.d(TAG, "Problem picking a place. Try again!");
+            return;
+        }
+
+        if (requestCode == AlarmActivity.PLACE_PICKER_START) {
+            start = PlacePicker.getPlace(getBaseContext(), data);
+            startAddressTV.setText(start.getAddress());
+
+        } else if (requestCode == AlarmActivity.PLACE_PICKER_DEST) {
+            destination = PlacePicker.getPlace(getBaseContext(), data);
+            destAddressTV.setText(destination.getAddress());
+        }
+    }
+
 }
 
