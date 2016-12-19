@@ -389,36 +389,38 @@ public class AlarmActivity extends AppCompatActivity implements AdapterView.OnIt
         * If the day is today these days are 0 so adding this multiplication should never hurt!
         */
         int today = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
-
+        int i= 7;//setting the right day
+        if (today + daysInFuture- i==0){
+            i=0;
+        }
+        //Alarm is ringing today, if it is set today and time hasn't passed.
         if (dayIsChecked(today) && timePassedToday(hour, min) == false) {
-
             AlarmDate.setAlarmText(hour, min, alarmTextView, "heute");
             myIntent.putExtra("extra", "yes");
-            myIntent.putExtra("quote id", String.valueOf(i));
+            myIntent.putExtra("quote id", "0");
             pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             alarmManager.set(AlarmManager.RTC_WAKEUP, alarmTime.getTimeInMillis(), pendingIntent);
-        } else if (dayIsChecked(today) && timePassedToday(hour, min)) {
-
-            AlarmDate.setAlarmText(hour, min, alarmTextView, dayIsCheckedString(today + daysInFuture));
+            //Alarm is ringing today in one week, if it is set today and time has passed
+        }else if (dayIsChecked(today)&& timePassedToday(hour, min)== true) {
+            AlarmDate.setAlarmText(hour, min, alarmTextView, dayIsCheckedString(today));
             int day = getDaysToNextCheckedDay();
             Log.e("AlarmActivity", String.valueOf(day));
             myIntent.putExtra("extra", "yes");
-            myIntent.putExtra("quote id", String.valueOf(i));
+            myIntent.putExtra("quote id", "0");
             pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             alarmManager.set(AlarmManager.RTC_WAKEUP, alarmTime.getTimeInMillis() + (day * 24), pendingIntent);
-        } else {
-
-            AlarmDate.setAlarmText(hour, min, alarmTextView, dayIsCheckedString(today + daysInFuture));
+        } else { //Alarm is ringing on nest checked day of the week, if it isn't set today.
+            AlarmDate.setAlarmText(hour, min, alarmTextView, dayIsCheckedString(today + daysInFuture-i));
             int day = getDaysToNextCheckedDay();
             Log.e("AlarmActivity", String.valueOf(day));
             myIntent.putExtra("extra", "yes");
-            myIntent.putExtra("quote id", String.valueOf(i));
+            myIntent.putExtra("quote id", "0");
             pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             alarmManager.set(AlarmManager.RTC_WAKEUP, alarmTime.getTimeInMillis() + (day * 24), pendingIntent);
-            Log.e("AlarmActivity", "todo");
+            Log.e("AlarmActivity", String.valueOf(alarmTime.getTimeInMillis() + (day * 24)));
         }
 
-
+        // Stop the Alarm
         Button stop_alarm = (Button) findViewById(R.id.stop_Alarm);
         stop_alarm.setOnClickListener(new View.OnClickListener(){
             Context context;
