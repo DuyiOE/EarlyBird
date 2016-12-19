@@ -167,24 +167,25 @@
             android:textStyle="bold"
             android:textSize="14sp" />
 
-        <EditText
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPostalAddress"
-            android:ems="10"
-            android:id="@+id/editText_startAddress"
-            android:text="@string/startAddress"
-            android:paddingTop="4dp"
-            android:textSize="14sp" />
+            android:hint="@string/startAddress"
+            android:focusable="false"
+            android:id="@+id/startAddressTV"
+            style="@style/PlacePickerTextStyle"
+            android:layout_marginTop="@dimen/Medium_Distance"
+            android:background="@android:drawable/editbox_background_normal" />
 
-        <EditText
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPostalAddress"
-            android:ems="10"
-            android:id="@+id/editText_destinationAddress"
-            android:text="@string/destinationAddress"
-            android:textSize="14sp" />
+            android:id="@+id/destAddressTV"
+            android:focusable="false"
+            style="@style/PlacePickerTextStyle"
+            android:hint="@string/destinationAddress"
+            android:layout_marginTop="@dimen/Medium_Distance"
+            android:background="@android:drawable/editbox_background_normal" />
 
 
     </LinearLayout>
