@@ -1,9 +1,6 @@
 package de.bachelorarbeit.duygu.earlybird.de.bachelorarbeit.duygu.earlybird.ui;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.util.Log;
-import android.util.TimeUtils;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -12,12 +9,6 @@ import android.widget.ToggleButton;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
-import de.bachelorarbeit.duygu.earlybird.AlarmActivity;
-import de.bachelorarbeit.duygu.earlybird.R;
-
-import static android.support.v7.appcompat.R.id.home;
-import static android.support.v7.appcompat.R.id.time;
 
 /**
  * Created by Duygu on 30.11.2016.
@@ -30,60 +21,55 @@ public class AlarmDate {
     ToggleButton togglebutton;
 
 
+    public String getStringCurrentDay() {
 
-
-    public String getStringCurrentDay(){
-
-        String daysArray[] = {"errorDay","Sonntag","Montag","Dienstag", "Mittwoch","Donnerstag","Freitag", "Samstag"};
+        String daysArray[] = {"errorDay", "Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"};
         int day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
         String dayofWeek = daysArray[day];
-        Log.d("AlarmActivity", dayofWeek );
-        Log.d("AlarmActivity",String.valueOf(day));
+        Log.d("AlarmActivity", dayofWeek);
+        Log.d("AlarmActivity", String.valueOf(day));
         return dayofWeek;
 
 
     }
 
-    public static int getIntCurrentDay(){
+    public static int getIntCurrentDay() {
         Calendar calendar = Calendar.getInstance();
         int day = calendar.get(Calendar.DAY_OF_WEEK);
-        Log.d("AlarmActivity",String.valueOf(day));
+        Log.d("AlarmActivity", String.valueOf(day));
         return day;
 
 
-
     }
 
 
-
-    public static void setAlarm(TimePicker timePicker, Calendar calendar,TextView alarmTextView, CharSequence tg){
-
-
-                if (android.os.Build.VERSION.SDK_INT >= 23) {
-                    calendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
-                    calendar.set(Calendar.MINUTE, timePicker.getMinute());
-                } else {
-                    calendar.set(Calendar.MINUTE, timePicker.getCurrentMinute());
-                    calendar.set(Calendar.HOUR_OF_DAY, timePicker.getCurrentHour());
-
-                }
+    public static void setAlarm(TimePicker timePicker, Calendar calendar, TextView alarmTextView, CharSequence tg) {
 
 
-            final int hour = timePicker.getCurrentHour();
-            final int minute = timePicker.getCurrentMinute();
+        if (android.os.Build.VERSION.SDK_INT >= 23) {
+            calendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
+            calendar.set(Calendar.MINUTE, timePicker.getMinute());
+        } else {
+            calendar.set(Calendar.MINUTE, timePicker.getCurrentMinute());
+            calendar.set(Calendar.HOUR_OF_DAY, timePicker.getCurrentHour());
 
-            String hour_string = String.valueOf(hour);
-            Log.e("AlarmActivity", hour_string);
-            String minute_string = String.valueOf(minute);
-            Log.e("AlarmActivity", minute_string);
+        }
 
 
+        final int hour = timePicker.getCurrentHour();
+        final int minute = timePicker.getCurrentMinute();
 
-            setAlarmText(hour, minute, alarmTextView,(String) tg);
+        String hour_string = String.valueOf(hour);
+        Log.e("AlarmActivity", hour_string);
+        String minute_string = String.valueOf(minute);
+        Log.e("AlarmActivity", minute_string);
+
+
+        setAlarmText(hour, minute, alarmTextView, (String) tg);
     }
 
 
-    public static TextView setAlarmText(int hour,int minute, TextView text,String day) {
+    public static TextView setAlarmText(int hour, int minute, TextView text, String day) {
         String minuteS = String.valueOf(minute);
         if (minute < 10) {
             minuteS = "0" + String.valueOf(minute);
@@ -97,41 +83,39 @@ public class AlarmDate {
     public static void resetAlarm() {
     }
 
-    public static int getHour(){
+    public static int getHour() {
         Date timestamp = new Date();
         SimpleDateFormat simpleDateFormatH = new SimpleDateFormat("HH");
         System.out.println("Zeit: " + simpleDateFormatH.format(timestamp));
-        String hour= timestamp.toString();
+        String hour = timestamp.toString();
         Integer xHour;
         return xHour = Integer.valueOf(hour);
     }
 
-    public static int getMiute(){
+    public static int getMiute() {
         Date timestamp = new Date();
         SimpleDateFormat simpleDateFormatM = new SimpleDateFormat("mm");
         System.out.println("Zeit: " + simpleDateFormatM.format(timestamp));
 
-        String minute= timestamp.toString();
+        String minute = timestamp.toString();
         Integer xMinute;
         return xMinute = Integer.valueOf(minute);
     }
 
-    public static int getDay(){
+    public static int getDay() {
         int day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
         return day;
-}
+    }
 
 
-
-
-    public static int getHourOfTimePicker(TimePicker timePicker){
+    public static int getHourOfTimePicker(TimePicker timePicker) {
 
         final int hour = timePicker.getCurrentHour();
 
         return hour;
     }
 
-    public static int getMiuteOfTimePicker(TimePicker timePicker){
+    public static int getMiuteOfTimePicker(TimePicker timePicker) {
 
         final int minute = timePicker.getCurrentMinute();
 
@@ -144,50 +128,50 @@ public class AlarmDate {
                 return true;
             }
         }
-            return false;
+        return false;
 
     }
 
-      /**   if (alarmToggleSO.isChecked()) {
-         return alarmToggleSO;
-         } else if (alarmToggleMO.isChecked() && day == 2) {
-         return alarmToggleMO;
-         } else if (alarmToggleDI.isChecked() && day == 3) {
-         return alarmToggleDI;
-         } else if (alarmToggleMI.isChecked() && day == 4) {
-         return alarmToggleMI;
-         } else if (alarmToggleDO.isChecked() && day == 5) {
-         return alarmToggleDO;
-         } else if (alarmToggleFR.isChecked() && day == 6) {
-         return alarmToggleFR;
-         } else if (alarmToggleSA.isChecked() && day == 7) {
-         return alarmToggleSA;
-         }
-         }
-         }else {
-         for (day = AlarmDate.getIntCurrentDay() + 1; day >= 7; day++) {
-         if (alarmToggleSO.isChecked() && day == 1) {
-         return alarmToggleSO;
-         } else if (alarmToggleMO.isChecked() && day == 2) {
-         return alarmToggleMO;
-         } else if (alarmToggleDI.isChecked() && day == 3) {
-         return alarmToggleDI;
-         } else if (alarmToggleMI.isChecked() && day == 4) {
-         return alarmToggleMI;
-         } else if (alarmToggleDO.isChecked() && day == 5) {
-         return alarmToggleDO;
-         } else if (alarmToggleFR.isChecked() && day == 6) {
-         return alarmToggleFR;
-         } else if (alarmToggleSA.isChecked() && day == 7) {
-         return alarmToggleSA;
-         }else return null;
+    /**   if (alarmToggleSO.isChecked()) {
+     return alarmToggleSO;
+     } else if (alarmToggleMO.isChecked() && day == 2) {
+     return alarmToggleMO;
+     } else if (alarmToggleDI.isChecked() && day == 3) {
+     return alarmToggleDI;
+     } else if (alarmToggleMI.isChecked() && day == 4) {
+     return alarmToggleMI;
+     } else if (alarmToggleDO.isChecked() && day == 5) {
+     return alarmToggleDO;
+     } else if (alarmToggleFR.isChecked() && day == 6) {
+     return alarmToggleFR;
+     } else if (alarmToggleSA.isChecked() && day == 7) {
+     return alarmToggleSA;
+     }
+     }
+     }else {
+     for (day = AlarmDate.getIntCurrentDay() + 1; day >= 7; day++) {
+     if (alarmToggleSO.isChecked() && day == 1) {
+     return alarmToggleSO;
+     } else if (alarmToggleMO.isChecked() && day == 2) {
+     return alarmToggleMO;
+     } else if (alarmToggleDI.isChecked() && day == 3) {
+     return alarmToggleDI;
+     } else if (alarmToggleMI.isChecked() && day == 4) {
+     return alarmToggleMI;
+     } else if (alarmToggleDO.isChecked() && day == 5) {
+     return alarmToggleDO;
+     } else if (alarmToggleFR.isChecked() && day == 6) {
+     return alarmToggleFR;
+     } else if (alarmToggleSA.isChecked() && day == 7) {
+     return alarmToggleSA;
+     }else return null;
 
-         }
-         }
-         this.alarmTextView.setText("Kein Tag wurde ausgewählt!");
-         return null;
+     }
+     }
+     this.alarmTextView.setText("Kein Tag wurde ausgewählt!");
+     return null;
 
-        return alarmToggleDI;
-    }
-       **/
+     return alarmToggleDI;
+     }
+     **/
 }

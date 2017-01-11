@@ -7,13 +7,11 @@
             <corners android:radius="3dip" />
             <stroke android:width="1dip" android:color="#000000" />
 
-            <gradient android:angle="-90" android:startColor="#e7ff17" android:endColor="#06d80d" />
+            <gradient android:angle="-90" android:color="#000000" />
         </shape>
     </item>
 
-    <!-- Zustand gedrückt. Mit drawable -->
-    <item android:state_checked="true" android:drawable="@drawable/togglebutton_enabled" />
 
     <!-- Zustand NICHT gedrückt. Mit drawable -->
-    <item android:state_checked="false" android:drawable="@drawable/togglebutton_disabled" />
+    <item android:state_checked="false" android:drawable="@drawable/icon_car" />
 </selector>

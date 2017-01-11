@@ -7,8 +7,8 @@
     <string name="button_Friday">Fr</string>
     <string name="button_Wednesday">Mi</string>
     <string name="button_Saturday">Sa</string>
-    <string name="startAddress">Start</string>
-    <string name="destinationAddress">Ziel</string>
+    <string name="startAddress">Startadresse, Hausnummer, Stadt</string>
+    <string name="destinationAddress">Zieladresse, Hausnummer, Stadt</string>
     <string name="textTime">Bespiel: 30, für 30 Minuten Vorbereitungszeit!</string>
     <string name="chooseAlarm">Wähle deine Vorbereitungszeit in Minuten:</string>
     <string name="chooseDestinationTime">Wähle deine Ankunftszeit:</string>
@@ -30,6 +30,14 @@
     <string name="alarm_set_no_day">Error, no alarm day was selected!</string>
     <string name="alarm_set_time_today">Alarm is set at %1$02d:%2$02d</string>
     <string name="alarm_set_time_other_day">Alarm is set at %1$02d:%2$02d in %3$d days</string>
+    <string name="title_activity_scrolling">ScrollingActivity</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="default_info_title" />
+    <string name="default_info_snippet" />
+    <string name="google_place_API">AIzaSyDt9jlNiNfCvnOVNDtUt-8pRtgketBNkyw</string>
+    <string name="OK">Öffentliche Verkehrsmittel</string>
+    <string name="PKW">Ich fahre mit dem Auto</string>
 
 
 </resources>

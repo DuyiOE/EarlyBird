@@ -14,5 +14,8 @@
     <dimen name="Icon_Size">32dp</dimen>
     <dimen name="Large_Icon_Size">50dp</dimen>
     <dimen name="Double_Icon_Size">62dp</dimen>
+    <dimen name="app_bar_height">180dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
 
 </resources>

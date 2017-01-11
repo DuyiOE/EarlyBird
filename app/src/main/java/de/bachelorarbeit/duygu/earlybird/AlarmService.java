@@ -55,14 +55,14 @@ public class AlarmService extends Service {
         Log.e("", state);
 
         assert state != null;
-         switch (state) {
-                    case "no":
-                        startId = 0;
-                        break;
-                    case "yes":
-                        startId = 1;
-                        break;
-                     default:
+        switch (state) {
+            case "no":
+                startId = 0;
+                break;
+            case "yes":
+                startId = 1;
+                break;
+            default:
                 startId = 1;
                 break;
         }
@@ -145,7 +145,7 @@ public class AlarmService extends Service {
     }
 
 
-        public void onDestroy() {
+    public void onDestroy() {
         Log.e("JSLog", "on destroy called");
         super.onDestroy();
 
