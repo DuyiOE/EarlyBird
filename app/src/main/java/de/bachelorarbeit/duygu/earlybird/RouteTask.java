@@ -93,7 +93,7 @@ public class RouteTask extends AsyncTask<String, Void, String> {
                 JSONObject object_start = object_legs.getJSONObject("start_location");
                 Log.d("JSON", "start_location:" + object_start);
 
-                return object_end.getString("value") + "," + object_start.getString("value");
+                return object_end.getString("lat") + "," + object_end.getString("lng");
                 //Fehler bei der Ausgabe, kommt nicht an die Zieadresse ran TODO
             }
 
