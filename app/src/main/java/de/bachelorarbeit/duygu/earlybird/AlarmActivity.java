@@ -2,6 +2,8 @@ package de.bachelorarbeit.duygu.earlybird;
 
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -61,10 +64,11 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
     AlarmManager alarmManager;
     private PendingIntent pendingIntent;
     TimePicker alarmTimePicker;
-    TimePicker desTimePicker;
+    TimePicker arrivelTimePicker;
     private TextView alarmTextView;
     private Context context;
     int i = 0;
+
     //private EditText prepTime;
 
     Button btn_getPublic;
@@ -76,10 +80,18 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
     private EditText startET;
     Double start_lat;
     Double start_lng;
+    Switch onOff;
+
+
 
     public static AlarmActivity instance() {
         return inst;
+
+
+
+
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,12 +102,54 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
         setSupportActionBar(toolbar);
 
         initialize();
-        // set the alarm to the time that you picked
+
+
+
         alarmTimePicker.setIs24HourView(true);
         //Time choosen for Destination
-        desTimePicker.setIs24HourView(true);
+        arrivelTimePicker.setIs24HourView(true);
         // Get the alarm manager service,
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        onOff.setChecked(true);
+        // set the alarm to the time that you picked
+        onOff.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Log.v("Switch State=", "" + isChecked);
+                if (onOff.isChecked()) {
+                    alarmToggleDI.setClickable(true);
+                    alarmToggleMO.setClickable(true);
+                    alarmToggleDI.setClickable(true);
+                    alarmToggleMI.setClickable(true);
+                    alarmToggleDO.setClickable(true);
+                    alarmToggleFR.setClickable(true);
+                    alarmToggleSA.setClickable(true);
+                    alarmToggleSO.setClickable(true);
+                }
+                Log.v("Switch State=", "" + isChecked);
+                if (!onOff.isChecked()) {
+                    alarmToggleMO.setClickable(false);
+                    alarmToggleDI.setClickable(false);
+                    alarmToggleMI.setClickable(false);
+                    alarmToggleDO.setClickable(false);
+                    alarmToggleFR.setClickable(false);
+                    alarmToggleSA.setClickable(false);
+                    alarmToggleSO.setClickable(false);
+                    alarmToggleMO.setChecked(false);
+                    alarmToggleDI.setChecked(false);
+                    alarmToggleMI.setChecked(false);
+                    alarmToggleDO.setChecked(false);
+                    alarmToggleFR.setChecked(false);
+                    alarmToggleSA.setChecked(false);
+                    alarmToggleSO.setChecked(false);
+
+                    Toast.makeText(context, "Alarm is off.", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
 
         // set all toggle-buttons to the same listener (this) -> @see onCheckedChanged (line 275)
         alarmToggleMO.setOnCheckedChangeListener(this);
@@ -105,7 +159,6 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
         alarmToggleFR.setOnCheckedChangeListener(this);
         alarmToggleSA.setOnCheckedChangeListener(this);
         alarmToggleSO.setOnCheckedChangeListener(this);
-
        /* prepTime.setKeyListener(new TimeKeyListener() {
             public final char[] CHARS = new char[]{
                     '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
@@ -117,62 +170,94 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
             }
         });
         */
-        // startET.setOnClickListener(this);
-        //destET.setOnClickListener(this);
 
         /**Called when butten get clicked.
-         * This will
+         *  This will
          * - make a URL Rsponse for Google MAP Distance Matrix
          * - find the new next alarm time.
-         **/
+         */
+
         btn_getCar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                String str_from_for_maps = startET.getText().toString();
+                String str_to_for_maps = destET.getText().toString();
                 //Removing "space" and "-" from Address Text
-                String str_from_for_maps =startET.getText().toString();
-                String str_to_for_maps =destET.getText().toString();
                 str_from = removeSpace(startET.getText().toString());
                 str_to = removeSpace(destET.getText().toString());
+
+                // get the Distance
                 String url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + str_from + "&destinations=" + str_to + "&mode=driving&language=de-DE&avoid=tolls&key=AIzaSyDj5-Q_k24sZQPipJLFlqRM72rsY7PfFmY";
                 new DistanceTask(AlarmActivity.this).execute(url);
+
+                // get the Route
                 String urlR = "https://maps.googleapis.com/maps/api/directions/json?origin=" + str_from + "&destination=" + str_to + "&waypoints=" + str_from + "|" + str_to + "&key=AIzaSyAAD5gqRAcoj8bImHJzmSEJpxbS05KK6Cg";
                 new RouteTask(AlarmActivity.this).execute(urlR);
-               // new ActivityMap(AlarmActivity.this);
-                Uri gmmIntentUri = Uri.parse("http://maps.google.com/maps?saddr="+ str_from_for_maps+"&daddr="+str_to_for_maps+"&mode=d");
+
+                //show the map
+                Uri gmmIntentUri = Uri.parse("http://maps.google.com/maps?saddr=" + str_from_for_maps + "&daddr=" + str_to_for_maps + "&mode=d");
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                 mapIntent.setPackage("com.google.android.apps.maps");
                 startActivity(mapIntent);
-                mapIntent.getAction();
-
-
             }
-
         });
 
+ /*TODO funktionniert nicht, laut Consolse Fehler in der XML Datei acticity_map
+                @Override
+                public void onClick(final View v) {
+                    if("".equals(startET.getText().toString().trim())) {
+                        Toast.makeText(AlarmActivity.this, "Enter the starting point", Toast.LENGTH_SHORT).show();
+                    }
+                    else if("".equals(destET.getText().toString().trim())) {
+                        Toast.makeText(AlarmActivity.this, "Enter the destination point", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        Intent mapIntent = new Intent(AlarmActivity.this, MapActivity.class);
+                        mapIntent.putExtra("FROM", startET.getText().toString().trim());
+                        mapIntent.putExtra("TO", destET.getText().toString().trim());
+                        AlarmActivity.this.startActivity(mapIntent);
+                    }
+                }
+
+
+
+    **/
         btn_getPublic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Removing "space" and "-" from Address Text
-                String str_to_for_maps =destET.getText().toString();
-                String str_from_for_maps =startET.getText().toString();
+                String str_to_for_maps = destET.getText().toString();
+                String str_from_for_maps = startET.getText().toString();
                 str_from = removeSpace(startET.getText().toString());
                 str_to = removeSpace(destET.getText().toString());
+                // get the Distance
                 String url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + str_from + "&destinations=" + str_to + "&mode=transit&language=de-DE&avoid=tolls&key=AIzaSyDj5-Q_k24sZQPipJLFlqRM72rsY7PfFmY";
                 new DistanceTask(AlarmActivity.this).execute(url);
+
+                // get the Route
                 String urlR = "https://maps.googleapis.com/maps/api/directions/json?origin=" + str_from + "&destination=" + str_to + "&waypoints=" + str_from + "|" + str_to + "&key=AIzaSyAAD5gqRAcoj8bImHJzmSEJpxbS05KK6Cg";
                 new RouteTask(AlarmActivity.this).execute(urlR);
 
-                Uri gmmIntentUri = Uri.parse("http://maps.google.com/maps?saddr="+ str_from_for_maps+"&daddr="+str_to_for_maps+"&mode=transit");
+                //show the map
+                Uri gmmIntentUri = Uri.parse("http://maps.google.com/maps?saddr=" + str_from_for_maps + "&daddr=" + str_to_for_maps + "&mode=transit");
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                 mapIntent.setPackage("com.google.android.apps.maps");
                 startActivity(mapIntent);
-                mapIntent.getAction();
 
-
+                /*Intent mapIntent = new Intent(getApplicationContext(), MapActivity.class);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                mapIntent.putExtra("FROM",str_from);
+                mapIntent.putExtra("TO",str_to);
+                startActivity(mapIntent);
+                */
 
             }
         });
+
     }
+
+
 
 
     public void setSupportActionBar(Toolbar toolbar) {
@@ -235,6 +320,7 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         /* Called when ever a button got changed.
@@ -253,8 +339,10 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
         *           determine next checked day
         *   else (must be another day)
         *       determine next checked day
-        *
+        *Check if the arrival time is befor alarm time
+        * if arrival time > than alarmtime
         *   setAlarmTo(AlarmTime, daysInFuture)
+        *   else makeToast
         **/
 
         int dayOfTheWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
@@ -263,6 +351,11 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
         int alarmDaysInFuture;  // Delta for "how many days in the future"
         int alarmHour;          // Hour for the alarm
         int alarmMinute;        // Minute for the alarm
+        int arrHour;            // Hour for the Destination time
+        int arrMinute;         // Minute for the Destination time
+
+
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             // TODO: Set the alarmPicker to a resonable time (e.g. last set alarm)
@@ -274,44 +367,67 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
         }
         Log.i(TAG, "Alarm time set to: " + alarmHour + " : " + alarmMinute);
 
-        /* Step 2: Check if today was set, and if not, how many days in the future it is. */
-        if (dayIsChecked(dayOfTheWeek)) {   // Today was checked -> Check if time passed
-            if (!timePassedToday(alarmHour, alarmMinute)) {
-                Log.i(TAG, "Alarm time did not pass today: Set alarm to today");
-                alarmDaysInFuture = 0;
-            } else {
-                alarmDaysInFuture = getDaysToNextCheckedDay();
-                Log.i(TAG, "Alarm time already passed today. Next Alarm is " + alarmDaysInFuture + " days in the future");
-            }
-
-        } else {                            // Today was not checked. See which day is next available
-            alarmDaysInFuture = getDaysToNextCheckedDay();
-            Log.i(TAG, "Alarm is " + alarmDaysInFuture + " days in the future");
+         /*Step 2 Prepare Time of Destination
+       */
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // TODO: Set the alarmPicker to a resonable time (e.g. last set alarm)
+            arrHour = arrivelTimePicker.getHour();
+            arrMinute = arrivelTimePicker.getMinute();
+        } else {    // deprecated call for Android API < 23
+            arrHour = arrivelTimePicker.getCurrentHour();
+            arrMinute = arrivelTimePicker.getCurrentMinute();
         }
 
+        Log.i(TAG, "Arrival time time set to: " + arrHour + " : " + arrMinute);
+        /* Step 3: Check if today was set, and if not, how many days in the future it is. */
+                if (dayIsChecked(dayOfTheWeek)) {   // Today was checked -> Check if time passed
+                    if (!timePassedToday(alarmHour, alarmMinute)) {
+                        Log.i(TAG, "Alarm time did not pass today: Set alarm to today");
+                        alarmDaysInFuture = 0;
+                    } else {
+                        alarmDaysInFuture = getDaysToNextCheckedDay();
+                        Log.i(TAG, "Alarm time already passed today. Next Alarm is " + alarmDaysInFuture + " days in the future");
+                    }
 
-        /* Step 3: Notify the user about the next set alarm! */
-        if (alarmDaysInFuture == ERROR_NO_DAY_SET) {    // No day was set
-            Toast.makeText(this, getString(R.string.alarm_set_no_day), Toast.LENGTH_SHORT).show();
-            return;
+                } else {                            // Today was not checked. See which day is next available
+                    alarmDaysInFuture = getDaysToNextCheckedDay();
+                    Log.i(TAG, "Alarm is " + alarmDaysInFuture + " days in the future");
+                }
 
-        } else if (alarmDaysInFuture == 0) {            // Alarm is today
-            Toast.makeText(this,
-                    String.format(getString(R.string.alarm_set_time_today), alarmHour, alarmMinute),
-                    Toast.LENGTH_SHORT).show();
 
-        } else {                                        // Alarm is another day
-            Toast.makeText(this,
-                    String.format(getString(R.string.alarm_set_time_other_day), alarmHour, alarmMinute, alarmDaysInFuture),
-                    Toast.LENGTH_SHORT).show();
-        }
-        final Intent myIntent = this.getIntent();
+        /* Step 4: Notify the user about the next set alarm! */
+                if (alarmDaysInFuture == ERROR_NO_DAY_SET) {    // No day was set
+                    Toast.makeText(this, getString(R.string.alarm_set_no_day), Toast.LENGTH_SHORT).show();
+                    return;
 
-        /* Step 4: Set alarm to time with x days in future */
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            setAlarm(alarmHour, alarmMinute, alarmDaysInFuture);
-        }
+                } else if (alarmDaysInFuture == 0) {            // Alarm is today
+                    Toast.makeText(this,
+                            String.format(getString(R.string.alarm_set_time_today), alarmHour, alarmMinute),
+                            Toast.LENGTH_SHORT).show();
+
+                } else {                                        // Alarm is another day
+                    Toast.makeText(this,
+                            String.format(getString(R.string.alarm_set_time_other_day), alarmHour, alarmMinute, alarmDaysInFuture),
+                            Toast.LENGTH_SHORT).show();
+                }
+
+
+        /* Step 5: Set alarm to time with x days in future */
+                    if (arrHour >= alarmHour) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                            setAlarm(alarmHour, alarmMinute, alarmDaysInFuture);
+                        }
+
+                    } else {
+                        Toast.makeText(this, "The arrival time is before the alarm time. Pleace Check your Alarm.",
+                                Toast.LENGTH_SHORT).show();
+                    }
+
+
+
     }
+
+
 
     /**
      * Determines whether the current day is checked.
@@ -405,14 +521,32 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
      * If the date is the current day, daysInFuture has to be 0.</strong>
      * <p>
      * uses: https://developer.android.com/reference/java/util/Calendar.html#roll(int,%20int)
-     *
-     * @param hour         hour of the alarm in 24 hour format
+     *  @param hour         hour of the alarm in 24 hour format
      * @param min          minute of the alarm
      * @param daysInFuture days
+     *
      */
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void setAlarm(int hour, int min, int daysInFuture) {
         final Intent myIntent = new Intent(this.context, AlarmReceiver.class);
+        final Intent myIntent2 = new Intent(this.context, WakeUpActivity.class);
+        //final Intent myIntent3 = this.getIntent();
+
+        //Notifikation that the Alarm clock is on. Turned back to AlarmAktivity if clicked
+        Intent intent1 = new Intent(this.context, AlarmActivity.class);
+        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent1, 0);
+
+        Notification mNotify = new Notification.Builder(this)
+                .setContentText("Early Bird alarm clock is on!")
+                .setSmallIcon(R.drawable.logo)
+                .setContentIntent(pIntent)
+                .setAutoCancel(true)
+                .build();
+
+
+        final NotificationManager mNM = (NotificationManager)
+                getSystemService(NOTIFICATION_SERVICE);
+
         Calendar alarmTime = Calendar.getInstance(); // no need for a field variable
 
         if (android.os.Build.VERSION.SDK_INT >= 23) {
@@ -442,6 +576,7 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
             myIntent.putExtra("quote id", "0");
             pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             alarmManager.set(AlarmManager.RTC_WAKEUP, alarmTime.getTimeInMillis(), pendingIntent);
+            mNM.notify(0, mNotify);
             //Alarm is ringing today in one week, if it is set today and time has passed
         } else if (dayIsChecked(today) && timePassedToday(hour, min) == true) {
             AlarmDate.setAlarmText(hour, min, alarmTextView, dayIsCheckedString(today));
@@ -451,6 +586,7 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
             myIntent.putExtra("quote id", "0");
             pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             alarmManager.set(AlarmManager.RTC_WAKEUP, alarmTime.getTimeInMillis() + (day * 24), pendingIntent);
+            mNM.notify(0, mNotify);
         } else { //Alarm is ringing on nest checked day of the week, if it isn't set today.
             AlarmDate.setAlarmText(hour, min, alarmTextView, dayIsCheckedString(today + daysInFuture - i));
             int day = getDaysToNextCheckedDay();
@@ -460,26 +596,13 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
             pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             alarmManager.set(AlarmManager.RTC_WAKEUP, alarmTime.getTimeInMillis() + (day * 24), pendingIntent);
             Log.e("AlarmActivity", String.valueOf(alarmTime.getTimeInMillis() + (day * 24)));
+            mNM.notify(0, mNotify);
         }
 
-        // Stop the Alarm
-        Button stop_alarm = (Button) findViewById(R.id.stop_Alarm);
-        final int finalI = i;
-        stop_alarm.setOnClickListener(new View.OnClickListener() {
-            Context context;
 
-            @Override
-            public void onClick(View v) {
-                myIntent.putExtra("extra", "no");
-                myIntent.putExtra("quote id", String.valueOf(finalI));
-                sendBroadcast(myIntent);
-                alarmManager.cancel(pendingIntent);
-                alarmTextView.setText("Alarm canceled!");
-                alarmManager.cancel(pendingIntent);
-                //setAlarmText("ID is " + i);
-            }
-        });
+
     }
+
 
     private String dayIsCheckedString(int dayOfTheWeek) {
 
@@ -522,7 +645,7 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
      * final PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
      * <p>
      * try {
-     * startActivity(new Intent( AlarmActivity.this,ActivityMap.class));
+     * startActivity(new Intent( AlarmActivity.this,MapActivity.class));
      * startET.setText(str_from);
      * } catch (Exception e) {
      * Log.w(TAG, "Something went wrong with the place picker!" + e);
@@ -530,7 +653,7 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
      * } else if (v == destET) {
      * PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
      * try {
-     * startActivity(new Intent( AlarmActivity.this,ActivityMap.class));
+     * startActivity(new Intent( AlarmActivity.this,MapActivity.class));
      * } catch (Exception e) {
      * Log.w(TAG, "Something went wrong with the place picker!" + e);
      * }
@@ -562,7 +685,9 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
         //alarm = new AlarmReceiver();
         alarmTextView = (TextView) findViewById(R.id.infoText);
         alarmTimePicker = (TimePicker) findViewById(R.id.TimePickerAlarm);
-        desTimePicker = (TimePicker) findViewById(R.id.TimePickerDes);
+        arrivelTimePicker = (TimePicker) findViewById(R.id.TimePickerDes);
+
+        onOff = (Switch) findViewById(R.id.switchONOFF);
         // Find all toggle-buttons
         alarmToggleMO = (ToggleButton) findViewById(R.id.toggleButtonMO);
         alarmToggleDI = (ToggleButton) findViewById(R.id.toggleButtonDI);

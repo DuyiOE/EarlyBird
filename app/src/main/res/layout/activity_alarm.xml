@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="de.bachelorarbeit.duygu.earlybird.AlarmActivity">
+    tools:context="de.bachelorarbeit.duygu.earlybird.AlarmActivity"
+    android:clipToPadding="true"
+    tools:paddingLeft="0dp">
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -19,16 +21,34 @@
         android:weightSum="1"
         android:background="@drawable/lineare">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <Switch
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="start|top"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/alarmText"
-            android:id="@+id/text_weckzeit"
-            android:textColor="#ffffff"
-            android:textStyle="bold"
-            android:textSize="14sp" />
+            android:id="@+id/switchONOFF"
+            android:switchMinWidth="75dip"
+            android:layout_gravity="end" />
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:gravity="center_horizontal"
+            android:weightSum="1">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|left|start"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/alarmText"
+                android:id="@+id/text_weckzeit"
+                android:textColor="#ffffff"
+                android:textStyle="bold"
+                android:textSize="14sp" />
+
+        </LinearLayout>
 
         <TimePicker
             android:layout_width="wrap_content"
@@ -36,6 +56,8 @@
             android:id="@+id/TimePickerAlarm"
             android:orientation="vertical"
             android:layout_height="120dp" />
+
+
 
 
         <LinearLayout
@@ -229,7 +251,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="4dp">
 
-            <!--   <TextView
+            <TextView
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:textAppearance="?android:attr/textAppearanceLarge"
@@ -250,7 +272,7 @@
                android:id="@+id/editText_PrepTime"
                android:textSize="14sp"
                android:maxLength="3" />
-               -->
+
 
         </LinearLayout>
 
@@ -280,11 +302,7 @@
         </LinearLayout>
 
 
-        <Button
-            android:text="@string/stop_alarm"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/stop_Alarm" />
+
 
         <TextView
             android:layout_width="match_parent"
