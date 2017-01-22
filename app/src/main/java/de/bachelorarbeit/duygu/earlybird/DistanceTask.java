@@ -86,13 +86,13 @@ public class DistanceTask extends AsyncTask<String, Void, String> {
                 JSONObject object_elements = array_elements.getJSONObject(0);
                 Log.d("JSON", "object_elements:" + object_elements);
 
-                JSONObject object_duration_in_traffic = object_elements.getJSONObject("duration_in_traffic");
+                JSONObject object_duration = object_elements.getJSONObject("duration");
                 JSONObject object_distance = object_elements.getJSONObject("distance");
 
-                Log.d("JSON", "object_duration_in_traffic:" + object_duration_in_traffic);
+                Log.d("JSON", "object_duration:" + object_duration);
                 Log.d("JSON", "object_distance:" + object_distance);
 
-                return object_duration_in_traffic.getString("value") + "," + object_distance.getString("value");
+                return object_duration.getString("value") + "," + object_distance.getString("value");
 
             }
         } catch (MalformedURLException e) {

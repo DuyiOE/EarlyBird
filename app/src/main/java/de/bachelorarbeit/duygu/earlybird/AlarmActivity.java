@@ -188,7 +188,7 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
                 str_to = removeSpace(destET.getText().toString());
 
                 // get the Distance
-                String url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + str_from + "&destinations=" + str_to + "&mode=driving&language=de-DE&avoid=tolls&key=AIzaSyDj5-Q_k24sZQPipJLFlqRM72rsY7PfFmY";
+                String url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + str_from + "&destinations=" + str_to + "&mode=driving&language=de-DE&avoid=tolls&traffic_model=duration_in_traffic&key=AIzaSyDj5-Q_k24sZQPipJLFlqRM72rsY7PfFmY";
                 new DistanceTask(AlarmActivity.this).execute(url);
 
                 // get the Route
@@ -232,7 +232,7 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
                 str_from = removeSpace(startET.getText().toString());
                 str_to = removeSpace(destET.getText().toString());
                 // get the Distance
-                String url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + str_from + "&destinations=" + str_to + "&mode=transit&language=de-DE&avoid=tolls&key=AIzaSyDj5-Q_k24sZQPipJLFlqRM72rsY7PfFmY";
+                String url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + str_from + "&destinations=" + str_to + "&mode=transit&language=de-DE&avoid=tolls&traffic_model=duration_in_traffic&key=AIzaSyDj5-Q_k24sZQPipJLFlqRM72rsY7PfFmY";
                 new DistanceTask(AlarmActivity.this).execute(url);
 
                 // get the Route

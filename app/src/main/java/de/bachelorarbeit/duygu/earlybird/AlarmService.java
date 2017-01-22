@@ -1,6 +1,7 @@
 package de.bachelorarbeit.duygu.earlybird;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -35,20 +36,6 @@ public class AlarmService extends Service {
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
-
-        final NotificationManager mNM = (NotificationManager)
-                getSystemService(NOTIFICATION_SERVICE);
-
-        Intent intent1 = new Intent(this.getApplicationContext(), AlarmActivity.class);
-        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent1, 0);
-
-        Notification mNotify = new Notification.Builder(this)
-                .setContentText("Click me!")
-                .setSmallIcon(R.drawable.logo)
-                .setContentIntent(pIntent)
-                .setAutoCancel(true)
-                .build();
 
         String state = intent.getExtras().getString("extra");
 
@@ -111,7 +98,7 @@ public class AlarmService extends Service {
 
             mMediaPlayer.start();
 
-            mNM.notify(0, mNotify);
+
 
             this.isRunning = true;
             this.startId = 0;
@@ -143,7 +130,6 @@ public class AlarmService extends Service {
 
         return START_NOT_STICKY;
     }
-
 
     public void onDestroy() {
         Log.e("JSLog", "on destroy called");
