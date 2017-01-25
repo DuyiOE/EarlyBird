@@ -24,6 +24,7 @@ public class AlarmService extends Service {
     private boolean isRunning;
     private Context context;
     MediaPlayer mMediaPlayer;
+    WakeUpActivity wUActivity;
     private int startId;
 
     @Override
@@ -31,6 +32,8 @@ public class AlarmService extends Service {
         Log.e("AlarmActivity", "In service");
         return null;
     }
+
+
 
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)

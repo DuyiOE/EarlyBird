@@ -89,8 +89,8 @@ public class DistanceTask extends AsyncTask<String, Void, String> {
                 JSONObject object_duration = object_elements.getJSONObject("duration");
                 JSONObject object_distance = object_elements.getJSONObject("distance");
 
-                Log.d("JSON", "object_duration:" + object_duration);
-                Log.d("JSON", "object_distance:" + object_distance);
+                Log.v("JSON", "object_duration:" + object_duration);
+                Log.v("JSON", "object_distance:" + object_distance);
 
                 return object_duration.getString("value") + "," + object_distance.getString("value");
 

@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+import android.widget.EditText;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -17,12 +18,18 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
     private GoogleMap map;
+    EditText from;
+    EditText to;
+
+
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
+        from = (EditText) findViewById(R.id.editText_startAddress);
+        to = (EditText) findViewById(R.id.editText_destAddress);
 
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);

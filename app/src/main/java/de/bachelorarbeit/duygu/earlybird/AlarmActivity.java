@@ -2,7 +2,6 @@ package de.bachelorarbeit.duygu.earlybird;
 
 import android.app.Activity;
 import android.app.AlarmManager;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -11,6 +10,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -26,8 +26,6 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.google.android.gms.location.places.Place;
-
 import java.util.Calendar;
 
 import de.bachelorarbeit.duygu.earlybird.de.bachelorarbeit.duygu.earlybird.ui.AlarmDate;
@@ -42,10 +40,6 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
 
     private static final int ERROR_NO_DAY_SET = -1;
 
-    /* PlacePicker IDs */
-    public static final int PLACE_PICKER_START = 1000;
-    public static final int PLACE_PICKER_DEST = 1001;
-
 
     private ToggleButton alarmToggleMO;
     private ToggleButton alarmToggleDI;
@@ -55,27 +49,22 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
     private ToggleButton alarmToggleSA;
     private ToggleButton alarmToggleSO;
 
-    private Place start;
-    private Place destination;
-    int PLACE_PICKER_REQUEST = 1;
-    private static final int REQUEST_PLACE_PICKER = 1;
 
     private static AlarmActivity inst;
     AlarmManager alarmManager;
     private PendingIntent pendingIntent;
     TimePicker alarmTimePicker;
     TimePicker arrivelTimePicker;
-    private TextView alarmTextView;
+    private TextView infoTextPrepTime;
     private Context context;
     int i = 0;
 
-    //private EditText prepTime;
 
     Button btn_getPublic;
     Button btn_getCar;
     String str_from;
     String str_to;
-    TextView tv_result1, tv_result2;
+
     private EditText destET;
     private EditText startET;
     Double start_lat;
@@ -86,9 +75,6 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
 
     public static AlarmActivity instance() {
         return inst;
-
-
-
 
     }
 
@@ -103,15 +89,23 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
 
         initialize();
 
-
-
         alarmTimePicker.setIs24HourView(true);
-        //Time choosen for Destination
         arrivelTimePicker.setIs24HourView(true);
         // Get the alarm manager service,
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-
+        //Alarm is ON
         onOff.setChecked(true);
+
+        // set all toggle-buttons to the same listener (this) -> @see onCheckedChanged (line 275)
+        alarmToggleMO.setOnCheckedChangeListener(this);
+        alarmToggleDI.setOnCheckedChangeListener(this);
+        alarmToggleMI.setOnCheckedChangeListener(this);
+        alarmToggleDO.setOnCheckedChangeListener(this);
+        alarmToggleFR.setOnCheckedChangeListener(this);
+        alarmToggleSA.setOnCheckedChangeListener(this);
+        alarmToggleSO.setOnCheckedChangeListener(this);
+
+
         // set the alarm to the time that you picked
         onOff.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -126,7 +120,14 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
                     alarmToggleFR.setClickable(true);
                     alarmToggleSA.setClickable(true);
                     alarmToggleSO.setClickable(true);
+                    Intent off_intent = new Intent(context, AlarmActivity.class);
+                    pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, off_intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    alarmManager.getNextAlarmClock();
+                    Toast.makeText(context, "Alarm is on.", Toast.LENGTH_SHORT).show();
+                    Log.i("Alarm", "Alarm is on");
                 }
+
+                // if Alarm is off, the ToggleButtons are not clickable
                 Log.v("Switch State=", "" + isChecked);
                 if (!onOff.isChecked()) {
                     alarmToggleMO.setClickable(false);
@@ -144,32 +145,18 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
                     alarmToggleSA.setChecked(false);
                     alarmToggleSO.setChecked(false);
 
+                    cancelAlarm();
                     Toast.makeText(context, "Alarm is off.", Toast.LENGTH_SHORT).show();
+                    Log.i("Alarm", "Alarm is off");
                 }
 
             }
         });
 
+        //final Intent alarm_intent = new Intent(this.getApplicationContext(), AlarmActivity.class);
+        //Notifikation that the Alarm clock is on. Turned back to AlarmActivity if clicked
+        // PendingIntent pIntent = PendingIntent.getActivity(this, 0, alarm_intent, 0);
 
-        // set all toggle-buttons to the same listener (this) -> @see onCheckedChanged (line 275)
-        alarmToggleMO.setOnCheckedChangeListener(this);
-        alarmToggleDI.setOnCheckedChangeListener(this);
-        alarmToggleMI.setOnCheckedChangeListener(this);
-        alarmToggleDO.setOnCheckedChangeListener(this);
-        alarmToggleFR.setOnCheckedChangeListener(this);
-        alarmToggleSA.setOnCheckedChangeListener(this);
-        alarmToggleSO.setOnCheckedChangeListener(this);
-       /* prepTime.setKeyListener(new TimeKeyListener() {
-            public final char[] CHARS = new char[]{
-                    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
-            };
-
-            @Override
-            protected char[] getAcceptedChars() {
-                return CHARS;
-            }
-        });
-        */
 
         /**Called when butten get clicked.
          *  This will
@@ -187,12 +174,18 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
                 str_from = removeSpace(startET.getText().toString());
                 str_to = removeSpace(destET.getText().toString());
 
+
+
+                //Fehler bei start und ziel
                 // get the Distance
-                String url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + str_from + "&destinations=" + str_to + "&mode=driving&language=de-DE&avoid=tolls&traffic_model=duration_in_traffic&key=AIzaSyDj5-Q_k24sZQPipJLFlqRM72rsY7PfFmY";
+                String url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + str_from +
+                        "&destinations=" + str_to + "&mode=d&language=de-DE&avoid=tolls&key=AIzaSyDj5-Q_k24sZQPipJLFlqRM72rsY7PfFmY";
                 new DistanceTask(AlarmActivity.this).execute(url);
 
                 // get the Route
-                String urlR = "https://maps.googleapis.com/maps/api/directions/json?origin=" + str_from + "&destination=" + str_to + "&waypoints=" + str_from + "|" + str_to + "&key=AIzaSyAAD5gqRAcoj8bImHJzmSEJpxbS05KK6Cg";
+                String urlR = "https://maps.googleapis.com/maps/api/directions/json?origin=" + str_from +
+                        "&destination=" + str_to +
+                        "&waypoints=" + str_from + "|" + str_to + "&key=AIzaSyAAD5gqRAcoj8bImHJzmSEJpxbS05KK6Cg";
                 new RouteTask(AlarmActivity.this).execute(urlR);
 
                 //show the map
@@ -232,15 +225,20 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
                 str_from = removeSpace(startET.getText().toString());
                 str_to = removeSpace(destET.getText().toString());
                 // get the Distance
-                String url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + str_from + "&destinations=" + str_to + "&mode=transit&language=de-DE&avoid=tolls&traffic_model=duration_in_traffic&key=AIzaSyDj5-Q_k24sZQPipJLFlqRM72rsY7PfFmY";
+                String url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + str_from +
+                        "&destinations=" + str_to +
+                        "&mode=transit&language=de-DE&avoid=tolls&traffic_model=duration_in_traffic&key=AIzaSyDj5-Q_k24sZQPipJLFlqRM72rsY7PfFmY";
                 new DistanceTask(AlarmActivity.this).execute(url);
 
                 // get the Route
-                String urlR = "https://maps.googleapis.com/maps/api/directions/json?origin=" + str_from + "&destination=" + str_to + "&waypoints=" + str_from + "|" + str_to + "&key=AIzaSyAAD5gqRAcoj8bImHJzmSEJpxbS05KK6Cg";
+                String urlR = "https://maps.googleapis.com/maps/api/directions/json?origin=" + str_from +
+                        "&destination=" + str_to + "" +
+                        "&waypoints=" + str_from + "|" + str_to + "&mode=transit&key=AIzaSyAAD5gqRAcoj8bImHJzmSEJpxbS05KK6Cg";
                 new RouteTask(AlarmActivity.this).execute(urlR);
 
                 //show the map
-                Uri gmmIntentUri = Uri.parse("http://maps.google.com/maps?saddr=" + str_from_for_maps + "&daddr=" + str_to_for_maps + "&mode=transit");
+                Uri gmmIntentUri = Uri.parse("http://maps.google.com/maps?saddr=" + str_from_for_maps + "&daddr=" + str_to_for_maps +
+                        "&mode=transit&key=AIzaSyDt9jlNiNfCvnOVNDtUt-8pRtgketBNkyw");
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                 mapIntent.setPackage("com.google.android.apps.maps");
                 startActivity(mapIntent);
@@ -256,8 +254,6 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
         });
 
     }
-
-
 
 
     public void setSupportActionBar(Toolbar toolbar) {
@@ -319,7 +315,7 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
         super.onPause();
     }
 
-
+    /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -355,8 +351,6 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
         int arrMinute;         // Minute for the Destination time
 
 
-
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             // TODO: Set the alarmPicker to a resonable time (e.g. last set alarm)
             alarmHour = alarmTimePicker.getHour();
@@ -380,53 +374,62 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
 
         Log.i(TAG, "Arrival time time set to: " + arrHour + " : " + arrMinute);
         /* Step 3: Check if today was set, and if not, how many days in the future it is. */
-                if (dayIsChecked(dayOfTheWeek)) {   // Today was checked -> Check if time passed
-                    if (!timePassedToday(alarmHour, alarmMinute)) {
-                        Log.i(TAG, "Alarm time did not pass today: Set alarm to today");
-                        alarmDaysInFuture = 0;
-                    } else {
-                        alarmDaysInFuture = getDaysToNextCheckedDay();
-                        Log.i(TAG, "Alarm time already passed today. Next Alarm is " + alarmDaysInFuture + " days in the future");
-                    }
+        if (dayIsChecked(dayOfTheWeek)) {   // Today was checked -> Check if time passed
+            if (!timePassedToday(alarmHour, alarmMinute)) {
+                Log.i(TAG, "Alarm time did not pass today: Set alarm to today");
+                alarmDaysInFuture = 0;
+            } else {
+                alarmDaysInFuture = getDaysToNextCheckedDay();
+                Log.i(TAG, "Alarm time already passed today. Next Alarm is " + alarmDaysInFuture + " days in the future");
+            }
 
-                } else {                            // Today was not checked. See which day is next available
-                    alarmDaysInFuture = getDaysToNextCheckedDay();
-                    Log.i(TAG, "Alarm is " + alarmDaysInFuture + " days in the future");
-                }
+        } else {                            // Today was not checked. See which day is next available
+            alarmDaysInFuture = getDaysToNextCheckedDay();
+            Log.i(TAG, "Alarm is " + alarmDaysInFuture + " days in the future");
+        }
 
 
         /* Step 4: Notify the user about the next set alarm! */
-                if (alarmDaysInFuture == ERROR_NO_DAY_SET) {    // No day was set
-                    Toast.makeText(this, getString(R.string.alarm_set_no_day), Toast.LENGTH_SHORT).show();
-                    return;
+        if (alarmDaysInFuture == ERROR_NO_DAY_SET) {    // No day was set
+            Toast.makeText(this, getString(R.string.alarm_set_no_day), Toast.LENGTH_SHORT).show();
+            return;
 
-                } else if (alarmDaysInFuture == 0) {            // Alarm is today
-                    Toast.makeText(this,
-                            String.format(getString(R.string.alarm_set_time_today), alarmHour, alarmMinute),
-                            Toast.LENGTH_SHORT).show();
+        } else if (alarmDaysInFuture == 0) {            // Alarm is today
+            Toast.makeText(this,
+                    String.format(getString(R.string.alarm_set_time_today), alarmHour, alarmMinute),
+                    Toast.LENGTH_SHORT).show();
 
-                } else {                                        // Alarm is another day
-                    Toast.makeText(this,
-                            String.format(getString(R.string.alarm_set_time_other_day), alarmHour, alarmMinute, alarmDaysInFuture),
-                            Toast.LENGTH_SHORT).show();
-                }
+        } else {                                        // Alarm is another day
+            Toast.makeText(this,
+                    String.format(getString(R.string.alarm_set_time_other_day), alarmHour, alarmMinute, alarmDaysInFuture),
+                    Toast.LENGTH_SHORT).show();
+        }
 
 
         /* Step 5: Set alarm to time with x days in future */
-                    if (arrHour >= alarmHour) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                            setAlarm(alarmHour, alarmMinute, alarmDaysInFuture);
-                        }
+        if (arrHour >= alarmHour) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                setAlarm(alarmHour, alarmMinute, alarmDaysInFuture);
+            }
 
-                    } else {
-                        Toast.makeText(this, "The arrival time is before the alarm time. Pleace Check your Alarm.",
-                                Toast.LENGTH_SHORT).show();
-                    }
+        } else {
+            Toast.makeText(this, "The arrival time is before the alarm time. Pleace Check your Alarm.",
+                    Toast.LENGTH_SHORT).show();
+        }
 
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+
+        builder.setAutoCancel(true)
+                .setWhen(System.currentTimeMillis())
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("Early Bird")
+                .setContentText("Alarm actived!");
+
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(1, builder.build());
 
 
     }
-
 
 
     /**
@@ -513,6 +516,7 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
         Log.w(TAG, "No day was selected. Returning " + ERROR_NO_DAY_SET + " in order to signal this error");
         return ERROR_NO_DAY_SET;
     }
+/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++SETALARM+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
     /**
      * Sets the alarm for a specified hour and minute at a certain day in the week
@@ -521,32 +525,17 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
      * If the date is the current day, daysInFuture has to be 0.</strong>
      * <p>
      * uses: https://developer.android.com/reference/java/util/Calendar.html#roll(int,%20int)
-     *  @param hour         hour of the alarm in 24 hour format
+     *
+     * @param hour         hour of the alarm in 24 hour format
      * @param min          minute of the alarm
      * @param daysInFuture days
-     *
      */
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void setAlarm(int hour, int min, int daysInFuture) {
         final Intent myIntent = new Intent(this.context, AlarmReceiver.class);
-        final Intent myIntent2 = new Intent(this.context, WakeUpActivity.class);
-        //final Intent myIntent3 = this.getIntent();
-
-        //Notifikation that the Alarm clock is on. Turned back to AlarmAktivity if clicked
-        Intent intent1 = new Intent(this.context, AlarmActivity.class);
-        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent1, 0);
-
-        Notification mNotify = new Notification.Builder(this)
-                .setContentText("Early Bird alarm clock is on!")
-                .setSmallIcon(R.drawable.logo)
-                .setContentIntent(pIntent)
-                .setAutoCancel(true)
-                .build();
-
-
-        final NotificationManager mNM = (NotificationManager)
-                getSystemService(NOTIFICATION_SERVICE);
-
+        final Intent wake_up_intent = new Intent(this.context, WakeUpActivity.class);
+        wake_up_intent.putExtra("from", removeSpace(startET.getText().toString()));
+        wake_up_intent.putExtra("to", removeSpace(destET.getText().toString()));
         Calendar alarmTime = Calendar.getInstance(); // no need for a field variable
 
         if (android.os.Build.VERSION.SDK_INT >= 23) {
@@ -569,26 +558,31 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
         if (today + daysInFuture - i == 0) {
             i = 0;
         }
+
         //Alarm is ringing today, if it is set today and time hasn't passed.
         if (dayIsChecked(today) && timePassedToday(hour, min) == false) {
-            AlarmDate.setAlarmText(hour, min, alarmTextView, "heute");
+            AlarmDate.setPrepText( infoTextPrepTime, countPrepTime());
             myIntent.putExtra("extra", "yes");
             myIntent.putExtra("quote id", "0");
             pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             alarmManager.set(AlarmManager.RTC_WAKEUP, alarmTime.getTimeInMillis(), pendingIntent);
-            mNM.notify(0, mNotify);
+            PendingIntent pendingWIntent = PendingIntent.getActivity(AlarmActivity.this, 0, wake_up_intent, PendingIntent.FLAG_ONE_SHOT);
+            ((AlarmManager) getSystemService(ALARM_SERVICE)).set(AlarmManager.RTC_WAKEUP, alarmTime.getTimeInMillis(), pendingWIntent);
+
             //Alarm is ringing today in one week, if it is set today and time has passed
         } else if (dayIsChecked(today) && timePassedToday(hour, min) == true) {
-            AlarmDate.setAlarmText(hour, min, alarmTextView, dayIsCheckedString(today));
+            AlarmDate.setPrepText( infoTextPrepTime, countPrepTime());
             int day = getDaysToNextCheckedDay();
             Log.e("AlarmActivity", String.valueOf(day));
             myIntent.putExtra("extra", "yes");
             myIntent.putExtra("quote id", "0");
             pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             alarmManager.set(AlarmManager.RTC_WAKEUP, alarmTime.getTimeInMillis() + (day * 24), pendingIntent);
-            mNM.notify(0, mNotify);
+            PendingIntent pendingWIntent = PendingIntent.getActivity(AlarmActivity.this, 0, wake_up_intent, PendingIntent.FLAG_ONE_SHOT);
+            ((AlarmManager) getSystemService(ALARM_SERVICE)).set(AlarmManager.RTC_WAKEUP, alarmTime.getTimeInMillis(), pendingWIntent);
+
         } else { //Alarm is ringing on nest checked day of the week, if it isn't set today.
-            AlarmDate.setAlarmText(hour, min, alarmTextView, dayIsCheckedString(today + daysInFuture - i));
+            AlarmDate.setPrepText(infoTextPrepTime, countPrepTime());
             int day = getDaysToNextCheckedDay();
             Log.e("AlarmActivity", String.valueOf(day));
             myIntent.putExtra("extra", "yes");
@@ -596,36 +590,31 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
             pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             alarmManager.set(AlarmManager.RTC_WAKEUP, alarmTime.getTimeInMillis() + (day * 24), pendingIntent);
             Log.e("AlarmActivity", String.valueOf(alarmTime.getTimeInMillis() + (day * 24)));
-            mNM.notify(0, mNotify);
+            PendingIntent pendingWIntent = PendingIntent.getActivity(AlarmActivity.this, 0, wake_up_intent, PendingIntent.FLAG_ONE_SHOT);
+            ((AlarmManager) getSystemService(ALARM_SERVICE)).set(AlarmManager.RTC_WAKEUP, alarmTime.getTimeInMillis(), pendingWIntent);
+
         }
 
+
+        //Intent wuIntent = new Intent(this, WakeUpActivity.class);
+        // startActivity(wuIntent);
 
 
     }
 
-
-    private String dayIsCheckedString(int dayOfTheWeek) {
-
-        switch (dayOfTheWeek) {
-            case Calendar.MONDAY:
-                return "Montag";
-            case Calendar.TUESDAY:
-                return "Dienstag";
-            case Calendar.WEDNESDAY:
-                return "Mittwoch";
-            case Calendar.THURSDAY:
-                return "Donnerstag";
-            case Calendar.FRIDAY:
-                return "Freitag";
-            case Calendar.SATURDAY:
-                return "Samstag";
-            case Calendar.SUNDAY:
-                return "Sonntag";
-        }
-
-        Log.w(TAG, "Checking day " + dayOfTheWeek + " is no valid day!");
-        return "";
+    private int countPrepTime() {
+        return 30;
     }
+
+    public void cancelAlarm() {
+        final Intent myIntent = new Intent(this.context, AlarmReceiver.class);
+        myIntent.putExtra("extra", "yes");
+        myIntent.putExtra("quote id", "0");
+        pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmManager.cancel(pendingIntent);
+
+    }
+
 
     public static String removeSpace(String value) {
         String ValueWithoutSign = String.valueOf(value);
@@ -681,9 +670,7 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
 
     public void initialize() {
 
-        // prepTime = (EditText) findViewById(R.id.editText_PrepTime);
-        //alarm = new AlarmReceiver();
-        alarmTextView = (TextView) findViewById(R.id.infoText);
+        infoTextPrepTime = (TextView) findViewById(R.id.infoTextPrepTime);
         alarmTimePicker = (TimePicker) findViewById(R.id.TimePickerAlarm);
         arrivelTimePicker = (TimePicker) findViewById(R.id.TimePickerDes);
 

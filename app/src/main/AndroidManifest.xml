@@ -53,6 +53,10 @@
             android:label="@string/app_name" >
         </activity>
 
+        <activity
+            android:name=".WakeUpActivity"
+            android:label="@string/app_name" >
+        </activity>
     </application>
 
     <meta-data

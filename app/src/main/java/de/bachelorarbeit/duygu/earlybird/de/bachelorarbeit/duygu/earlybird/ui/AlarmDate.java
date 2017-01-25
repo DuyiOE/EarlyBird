@@ -43,38 +43,13 @@ public class AlarmDate {
     }
 
 
-    public static void setAlarm(TimePicker timePicker, Calendar calendar, TextView alarmTextView, CharSequence tg) {
 
-
-        if (android.os.Build.VERSION.SDK_INT >= 23) {
-            calendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
-            calendar.set(Calendar.MINUTE, timePicker.getMinute());
-        } else {
-            calendar.set(Calendar.MINUTE, timePicker.getCurrentMinute());
-            calendar.set(Calendar.HOUR_OF_DAY, timePicker.getCurrentHour());
-
-        }
-
-
-        final int hour = timePicker.getCurrentHour();
-        final int minute = timePicker.getCurrentMinute();
-
-        String hour_string = String.valueOf(hour);
-        Log.e("AlarmActivity", hour_string);
-        String minute_string = String.valueOf(minute);
-        Log.e("AlarmActivity", minute_string);
-
-
-        setAlarmText(hour, minute, alarmTextView, (String) tg);
-    }
-
-
-    public static TextView setAlarmText(int hour, int minute, TextView text, String day) {
+    public static TextView setPrepText(TextView text, int minute) {
         String minuteS = String.valueOf(minute);
         if (minute < 10) {
             minuteS = "0" + String.valueOf(minute);
         }
-        text.setText("Der Wecker klingelt " + day + " um: " + hour + ":" + minuteS);
+        text.setText("Nach derzeitiger Verkehrslage beträgt deine Vorbereitungszeit " + minuteS +" Minuten.");
         text.setVisibility(View.VISIBLE);
 
         return text;

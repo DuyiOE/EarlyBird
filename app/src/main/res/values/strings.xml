@@ -9,8 +9,8 @@
     <string name="button_Saturday">Sa</string>
     <string name="startAddress">Startadresse, Hausnummer, Stadt</string>
     <string name="destinationAddress">Zieladresse, Hausnummer, Stadt</string>
-    <string name="textTime">Bespiel: 30, für 30 Minuten Vorbereitungszeit!</string>
-    <string name="chooseAlarm">Wähle deine Vorbereitungszeit in Minuten:</string>
+    <string name="textTime"></string>
+    <string name="chooseAlarm">Deine erechnete Vorbereitungszeit beträgt:</string>
     <string name="chooseDestinationTime">Wähle deine Ankunftszeit:</string>
     <string name="infoTextPreparationTime"></string>
     <string name="button_safeDirection">Route Speichern</string>
@@ -38,6 +38,7 @@
     <string name="google_place_API">AIzaSyDt9jlNiNfCvnOVNDtUt-8pRtgketBNkyw</string>
     <string name="OK">Öffentliche Verkehrsmittel</string>
     <string name="PKW">Ich fahre mit dem Auto</string>
+    <string name="shosRoute">Route anzeigen</string>
 
 
 </resources>

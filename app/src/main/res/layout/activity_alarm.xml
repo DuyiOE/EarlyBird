@@ -26,8 +26,9 @@
             android:layout_height="wrap_content"
             android:id="@+id/switchONOFF"
             android:switchMinWidth="75dip"
-            android:layout_gravity="end" />
-
+            android:layout_gravity="end"
+            style="@style/Widget.AppCompat.CompoundButton.Switch"
+            android:switchTextAppearance="@style/PlacePickerTextStyle" />
 
 
         <LinearLayout
@@ -56,8 +57,6 @@
             android:id="@+id/TimePickerAlarm"
             android:orientation="vertical"
             android:layout_height="120dp" />
-
-
 
 
         <LinearLayout
@@ -238,40 +237,14 @@
             <Button
                 android:layout_margin="14dp"
                 android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
                 android:id="@+id/btn_get_public"
                 android:background="@drawable/buttoncolor_icon" />
 
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp">
-
-            <TextView
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:textAppearance="?android:attr/textAppearanceLarge"
-               android:text="@string/chooseAlarm"
-               android:id="@+id/text_vorbereitungszeit"
-               android:textColor="#ffffff"
-               android:textStyle="bold"
-               android:textSize="14sp"
-               android:layout_gravity="bottom"
-               android:layout_margin="4dp" />
-
-           <EditText
-               android:layout_width="match_parent"
-               android:layout_height="match_parent"
-               android:inputType="time"
-               android:hint="@string/textTime"
-               android:ems="15"
-               android:id="@+id/editText_PrepTime"
-               android:textSize="14sp"
-               android:maxLength="3" />
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
 
 
         </LinearLayout>
@@ -302,19 +275,29 @@
         </LinearLayout>
 
 
-
-
-        <TextView
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:text="@string/infoTextPreparationTime"
-            android:id="@+id/infoText"
-            android:visibility="invisible"
-            style="@style/Base.AlertDialog.AppCompat.Light"
-            android:textColor="#e7ff17"
-            android:textSize="12sp"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
-            android:gravity="center_vertical" />
+            android:layout_weight="0.25"
+            android:weightSum="1">
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:text="@string/infoTextPreparationTime"
+                android:id="@+id/infoTextPrepTime"
+                android:visibility="invisible"
+                style="@style/Base.AlertDialog.AppCompat.Light"
+                android:textColor="#e7ff17"
+                android:textSize="12sp"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:gravity="center_vertical" />
+
+
+        </LinearLayout>
 
 
     </LinearLayout>
