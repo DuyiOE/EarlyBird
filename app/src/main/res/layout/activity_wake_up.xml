@@ -10,22 +10,40 @@
         android:background="@drawable/lineare2">
 
         <Button
-            android:text="@string/stop_alarm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/stop_Alarm"
-            android:layout_marginTop="242dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
+            android:id="@+id/show_Map"
+            android:background="@drawable/location_marker"
+            android:layout_marginRight="32dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="27dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="49dp"
-            android:id="@+id/show_Map"
-            android:layout_below="@+id/stop_Alarm"
-            android:layout_centerHorizontal="true"
-            android:text="@string/shosRoute" />
+            android:id="@+id/stop_Alarm"
+            android:background="@drawable/wach_button"
+            android:layout_marginBottom="118dp"
+            android:layout_alignBottom="@+id/show_Map"
+            android:layout_toLeftOf="@+id/show_Map"
+            android:layout_toStartOf="@+id/show_Map"
+            android:layout_marginRight="15dp"
+            android:layout_marginEnd="15dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/logo"
+            android:background="@drawable/logo_backround"
+            android:visibility="visible"
+            android:layout_marginBottom="49dp"
+            android:layout_above="@+id/show_Map"
+            android:layout_alignRight="@+id/show_Map"
+            android:layout_alignEnd="@+id/show_Map" />
+
     </RelativeLayout>
 
 </LinearLayout>

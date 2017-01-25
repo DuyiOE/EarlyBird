@@ -42,14 +42,20 @@ public class WakeUpActivity extends Activity{
         final PendingIntent pIntent = PendingIntent.getBroadcast(this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         final String from;
         final String to;
+        //final String mode;
 
         Intent i_Route = getIntent();
         Bundle extras = i_Route.getExtras();
 
-        from = extras.getString("from");
+        //if mode is chosen, in pro version
+        //mode = extras.getString("mode");
+        //Log.e ("Mode is ", mode);
         to = extras.getString("to");
-        Log.e ("Startadress is ", from);
         Log.e ("Destination is ", to);
+        from = extras.getString("from");
+        Log.e ("Startadress is ", from);
+
+
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
 
@@ -129,7 +135,7 @@ public class WakeUpActivity extends Activity{
         super.onPause();
     }
 
-
+/*
     public void driveNow(){
 
 
@@ -149,6 +155,8 @@ public class WakeUpActivity extends Activity{
 
         mNM.notify(0, mNotify);
         }
+
+        */
 }
 
 

@@ -58,7 +58,7 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
     private TextView infoTextPrepTime;
     private Context context;
     int i = 0;
-
+    //String mode;
 
     Button btn_getPublic;
     Button btn_getCar;
@@ -175,7 +175,6 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
                 str_to = removeSpace(destET.getText().toString());
 
 
-
                 //Fehler bei start und ziel
                 // get the Distance
                 String url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + str_from +
@@ -224,6 +223,7 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
                 String str_from_for_maps = startET.getText().toString();
                 str_from = removeSpace(startET.getText().toString());
                 str_to = removeSpace(destET.getText().toString());
+
                 // get the Distance
                 String url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + str_from +
                         "&destinations=" + str_to +
@@ -533,9 +533,12 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void setAlarm(int hour, int min, int daysInFuture) {
         final Intent myIntent = new Intent(this.context, AlarmReceiver.class);
+        //giving start- and destination address to WakUp-Activity
         final Intent wake_up_intent = new Intent(this.context, WakeUpActivity.class);
-        wake_up_intent.putExtra("from", removeSpace(startET.getText().toString()));
-        wake_up_intent.putExtra("to", removeSpace(destET.getText().toString()));
+        wake_up_intent.putExtra("from", startET.getText().toString());
+        wake_up_intent.putExtra("to", destET.getText().toString());
+
+
         Calendar alarmTime = Calendar.getInstance(); // no need for a field variable
 
         if (android.os.Build.VERSION.SDK_INT >= 23) {
