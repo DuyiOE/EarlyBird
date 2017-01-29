@@ -14,7 +14,7 @@ import java.util.Date;
  * Created by Duygu on 30.11.2016.
  */
 
-public class AlarmDate {
+public class AlarmData {
 
     String today;
     Calendar calendar;
@@ -52,6 +52,23 @@ public class AlarmDate {
         text.setText("Nach derzeitiger Verkehrslage beträgt deine Vorbereitungszeit " + minuteS +" Minuten.");
         text.setVisibility(View.VISIBLE);
 
+        return text;
+    }
+
+    public static TextView setInfoText(TextView text, int minute, boolean earlier,int minute_befor) {
+        String minuteS = String.valueOf(minute);
+        if (minute < 10) {
+            minuteS = "0" + String.valueOf(minute);
+        }
+        if (earlier== true) {
+            text.setText("Du wurdest" + minute_befor + " Minuten früher geweckt da es auf deiner Route Verzögerungen gibt." +
+                    "Nach derzeitiger Verkehrslage, sind es " + minuteS + " Minuten Fahrtzeit.");
+            text.setVisibility(View.VISIBLE);
+        }else{
+            text.setText("Du wurdest zur eingestellten Weckzeit geweckt. Es gibt keine Verzögerungen auf deiner Route." +
+                    "Nach derzeitiger Verkehrslage, sind es " + minuteS + " Minuten Fahrtzeit.");
+            text.setVisibility(View.VISIBLE);
+        }
         return text;
     }
 
@@ -124,7 +141,7 @@ public class AlarmDate {
      }
      }
      }else {
-     for (day = AlarmDate.getIntCurrentDay() + 1; day >= 7; day++) {
+     for (day = AlarmData.getIntCurrentDay() + 1; day >= 7; day++) {
      if (alarmToggleSO.isChecked() && day == 1) {
      return alarmToggleSO;
      } else if (alarmToggleMO.isChecked() && day == 2) {

@@ -57,11 +57,107 @@
             android:id="@+id/TimePickerAlarm"
             android:orientation="vertical"
             android:layout_height="120dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="4dp">
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/chooseDestinationTime"
+                android:id="@+id/text_chooseDestinationTime"
+                android:textStyle="bold"
+                android:textSize="14sp" />
+
+            <TimePicker
+                android:layout_width="wrap_content"
+                android:timePickerMode="spinner"
+                android:orientation="vertical"
+                android:id="@+id/TimePickerDes"
+                android:layout_height="120dp" />
+
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="6dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/chooseDirecton"
+                android:id="@+id/text_Route"
+                android:layout_gravity="center"
+                android:textColor="#ffffff"
+                android:textStyle="bold"
+                android:textSize="14sp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="textPostalAddress"
+                android:hint="@string/startAddress"
+                android:ems="15"
+                android:id="@+id/editText_startAddress"
+                android:textSize="14sp"
+                android:maxLength="35" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="textPostalAddress"
+                android:hint="@string/destinationAddress"
+                android:ems="15"
+                android:id="@+id/editText_destAddress"
+                android:textSize="14sp"
+                android:maxLength="35" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:gravity="center_horizontal"
+            android:weightSum="1">
+
+            <Button
+                android:layout_margin="14dp"
+                android:id="@+id/btn_get_car"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/buttoncolor_car_icon" />
+
+            <Button
+                android:layout_margin="14dp"
+                android:layout_width="48dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_get_public"
+                android:background="@drawable/buttoncolor_icon" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+
+        </LinearLayout>
+
+
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_margin="2dp"
             android:gravity="center_horizontal"
             android:weightSum="1">
@@ -181,101 +277,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_margin="6dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="@string/chooseDirecton"
-                android:id="@+id/text_Route"
-                android:layout_gravity="center"
-                android:textColor="#ffffff"
-                android:textStyle="bold"
-                android:textSize="14sp" />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:inputType="textPostalAddress"
-                android:hint="@string/startAddress"
-                android:ems="15"
-                android:id="@+id/editText_startAddress"
-                android:textSize="14sp"
-                android:maxLength="35" />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:inputType="textPostalAddress"
-                android:hint="@string/destinationAddress"
-                android:ems="15"
-                android:id="@+id/editText_destAddress"
-                android:textSize="14sp"
-                android:maxLength="35" />
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dp"
-            android:gravity="center_horizontal"
-            android:weightSum="1">
-
-            <Button
-                android:layout_margin="14dp"
-                android:id="@+id/btn_get_car"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@drawable/buttoncolor_car_icon" />
-
-            <Button
-                android:layout_margin="14dp"
-                android:layout_width="48dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/btn_get_public"
-                android:background="@drawable/buttoncolor_icon" />
-
-            <Space
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_margin="4dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="@string/chooseDestinationTime"
-                android:id="@+id/text_chooseDestinationTime"
-                android:textStyle="bold"
-                android:textSize="14sp" />
-
-            <TimePicker
-                android:layout_width="wrap_content"
-                android:timePickerMode="spinner"
-                android:orientation="vertical"
-                android:id="@+id/TimePickerDes"
-                android:layout_height="120dp" />
-
-
-        </LinearLayout>
-
-
-        <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -298,7 +299,6 @@
 
 
         </LinearLayout>
-
 
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

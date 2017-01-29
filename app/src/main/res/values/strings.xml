@@ -39,6 +39,7 @@
     <string name="OK">Öffentliche Verkehrsmittel</string>
     <string name="PKW">Ich fahre mit dem Auto</string>
     <string name="shosRoute">Route anzeigen</string>
+    <string name="wake_up_infoText" />
 
 
 </resources>

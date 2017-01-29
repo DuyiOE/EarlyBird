@@ -2,7 +2,6 @@ package de.bachelorarbeit.duygu.earlybird;
 
 import android.app.Activity;
 import android.app.AlarmManager;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -13,21 +12,20 @@ import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
+import android.widget.TextView;
 
-import com.google.android.gms.maps.GoogleMap;
-
-import java.sql.Time;
-import java.util.Calendar;
+import de.bachelorarbeit.duygu.earlybird.de.bachelorarbeit.duygu.earlybird.ui.AlarmData;
 
 /**
  * Created by Duygu on 17.01.2017.
  */
 
-public class WakeUpActivity extends Activity{
+public class WakeUpActivity extends Activity implements DistanceTask.Distance{
     AlarmManager alarmManager;
     int i = 0;
     Context context;
+
+
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -42,6 +40,12 @@ public class WakeUpActivity extends Activity{
         final PendingIntent pIntent = PendingIntent.getBroadcast(this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         final String from;
         final String to;
+        final String departure_time;
+        TextView wake_up_infoText= (TextView)findViewById(R.id.wake_up_infoText);
+        final int minute;
+        final boolean earlier;
+        final int minute_befor;
+
         //final String mode;
 
         Intent i_Route = getIntent();
@@ -54,8 +58,13 @@ public class WakeUpActivity extends Activity{
         Log.e ("Destination is ", to);
         from = extras.getString("from");
         Log.e ("Startadress is ", from);
+        departure_time = extras.getString("departure_time");
+        Log.e ("Time of departure is ", departure_time);
 
-
+        //// TODO: 27.01.2017
+        minute=22; //duration
+        earlier=true;//late, yes or no
+        minute_befor=12; // 12 minutes late
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
 
@@ -68,7 +77,7 @@ public class WakeUpActivity extends Activity{
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(1, builder.build());
 
-
+        AlarmData.setInfoText( wake_up_infoText, minute, earlier, minute_befor);
 
         if (from!=null){
             if(to!=null){
@@ -82,8 +91,22 @@ public class WakeUpActivity extends Activity{
                         sendBroadcast(myIntent);
                         alarmManager.cancel(pIntent);
 
+                        //in Backround
+                        // get the Distance
+                        String url = "https://maps.googleapis.com/maps/api/distancematrix/json?+" +
+                                "origins=" + from +
+                                "&destinations=" + to +
+                                "&mode=d"+
+                                "&language=de-DE"+
+                                "&avoid=tolls"+
+                                "&key=AIzaSyDj5-Q_k24sZQPipJLFlqRM72rsY7PfFmY";
+                        new DistanceTask(WakeUpActivity.this).execute(url);
+
                         //show the map
-                        Uri gmmIntentUri = Uri.parse("http://maps.google.com/maps?saddr=" + from + "&daddr=" + to+ "&mode=d");
+                        Uri gmmIntentUri = Uri.parse("http://maps.google.com/maps?+" +
+                                "saddr=" + from +
+                                "&daddr=" + to+
+                                "&mode=d");
                         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                         mapIntent.setPackage("com.google.android.apps.maps");
                         startActivity(mapIntent);
@@ -133,6 +156,19 @@ public class WakeUpActivity extends Activity{
     @Override
     public void onPause() {
         super.onPause();
+    }
+
+    @Override
+    public void setDouble( String result) {
+        String res[] = result.split(",");
+        Double min = Double.parseDouble(res[0]) / 60;
+        int hr = (int) (min / 60);
+        int minut = (int) (min % 60);
+        int dist = Integer.parseInt(res[1]) / 1000;
+        Log.i("Fahrtzeit:", hr + " Stunden " + minut + " Minuten");
+        Log.i("Entfernung:", + dist + " kilometers");
+
+
     }
 
 /*

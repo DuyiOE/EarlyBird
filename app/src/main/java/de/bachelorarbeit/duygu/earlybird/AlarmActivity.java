@@ -28,7 +28,7 @@ import android.widget.ToggleButton;
 
 import java.util.Calendar;
 
-import de.bachelorarbeit.duygu.earlybird.de.bachelorarbeit.duygu.earlybird.ui.AlarmDate;
+import de.bachelorarbeit.duygu.earlybird.de.bachelorarbeit.duygu.earlybird.ui.AlarmData;
 
 
 /**
@@ -64,13 +64,15 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
     Button btn_getCar;
     String str_from;
     String str_to;
+    long departure_time;
 
     private EditText destET;
     private EditText startET;
     Double start_lat;
     Double start_lng;
     Switch onOff;
-
+    private int duration_hr;
+    private int duration_minute;
 
 
     public static AlarmActivity instance() {
@@ -153,15 +155,12 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
             }
         });
 
-        //final Intent alarm_intent = new Intent(this.getApplicationContext(), AlarmActivity.class);
-        //Notifikation that the Alarm clock is on. Turned back to AlarmActivity if clicked
-        // PendingIntent pIntent = PendingIntent.getActivity(this, 0, alarm_intent, 0);
 
 
-        /**Called when butten get clicked.
+        /**Called when butten with the car icon get clicked.
          *  This will
          * - make a URL Rsponse for Google MAP Distance Matrix
-         * - find the new next alarm time.
+         * - show the route on Google Maps
          */
 
         btn_getCar.setOnClickListener(new View.OnClickListener() {
@@ -175,47 +174,43 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
                 str_to = removeSpace(destET.getText().toString());
 
 
-                //Fehler bei start und ziel
-                // get the Distance
-                String url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + str_from +
-                        "&destinations=" + str_to + "&mode=d&language=de-DE&avoid=tolls&key=AIzaSyDj5-Q_k24sZQPipJLFlqRM72rsY7PfFmY";
+                // get the Distance, for duration in traffic,
+                // real time and traffic model request a Google API Work Client is needed
+                //not available for private usage
+                String url = "https://maps.googleapis.com/maps/api/distancematrix/json?" +
+                        "origins=" + str_from +
+                        "&destinations=" + str_to +
+                        "&mode=d" +
+                        "&language=de-DE" +
+                        "&avoid=tolls" +
+                        "&key=AIzaSyDj5-Q_k24sZQPipJLFlqRM72rsY7PfFmY";
                 new DistanceTask(AlarmActivity.this).execute(url);
 
                 // get the Route
                 String urlR = "https://maps.googleapis.com/maps/api/directions/json?origin=" + str_from +
                         "&destination=" + str_to +
-                        "&waypoints=" + str_from + "|" + str_to + "&key=AIzaSyAAD5gqRAcoj8bImHJzmSEJpxbS05KK6Cg";
+                        "mode=d"+
+                        "&key=AIzaSyAAD5gqRAcoj8bImHJzmSEJpxbS05KK6Cg";
                 new RouteTask(AlarmActivity.this).execute(urlR);
 
                 //show the map
-                Uri gmmIntentUri = Uri.parse("http://maps.google.com/maps?saddr=" + str_from_for_maps + "&daddr=" + str_to_for_maps + "&mode=d");
+                Uri gmmIntentUri = Uri.parse("http://maps.google.com/maps?" +
+                        "saddr=" + str_from_for_maps +
+                        "&daddr=" + str_to_for_maps +
+                        "&mode=d");
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                 mapIntent.setPackage("com.google.android.apps.maps");
                 startActivity(mapIntent);
             }
         });
 
- /*TODO funktionniert nicht, laut Consolse Fehler in der XML Datei acticity_map
-                @Override
-                public void onClick(final View v) {
-                    if("".equals(startET.getText().toString().trim())) {
-                        Toast.makeText(AlarmActivity.this, "Enter the starting point", Toast.LENGTH_SHORT).show();
-                    }
-                    else if("".equals(destET.getText().toString().trim())) {
-                        Toast.makeText(AlarmActivity.this, "Enter the destination point", Toast.LENGTH_SHORT).show();
-                    }
-                    else {
-                        Intent mapIntent = new Intent(AlarmActivity.this, MapActivity.class);
-                        mapIntent.putExtra("FROM", startET.getText().toString().trim());
-                        mapIntent.putExtra("TO", destET.getText().toString().trim());
-                        AlarmActivity.this.startActivity(mapIntent);
-                    }
-                }
 
-
-
-    **/
-        btn_getPublic.setOnClickListener(new View.OnClickListener() {
+        /**Called when butten with the transit icon get clicked.
+         *  This will
+         * - make a URL Rsponse for Google MAP Distance Matrix
+         * - show the route on Google Maps
+         */
+       btn_getPublic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Removing "space" and "-" from Address Text
@@ -224,96 +219,39 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
                 str_from = removeSpace(startET.getText().toString());
                 str_to = removeSpace(destET.getText().toString());
 
-                // get the Distance
-                String url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + str_from +
+                // get the Distance, for duration in traffic,
+                // real time and traffic model request a Google API Work Client is needed
+                //not available for private usage
+                String url = "https://maps.googleapis.com/maps/api/distancematrix/json?" +
+                        "origins=" + str_from +
                         "&destinations=" + str_to +
-                        "&mode=transit&language=de-DE&avoid=tolls&traffic_model=duration_in_traffic&key=AIzaSyDj5-Q_k24sZQPipJLFlqRM72rsY7PfFmY";
+                        "&mode=transit" +
+                        "&language=de-DE&avoid=tolls" +
+                        "&traffic_model=pessimistic" +
+                        "&key=AIzaSyDj5-Q_k24sZQPipJLFlqRM72rsY7PfFmY";
                 new DistanceTask(AlarmActivity.this).execute(url);
 
                 // get the Route
                 String urlR = "https://maps.googleapis.com/maps/api/directions/json?origin=" + str_from +
-                        "&destination=" + str_to + "" +
-                        "&waypoints=" + str_from + "|" + str_to + "&mode=transit&key=AIzaSyAAD5gqRAcoj8bImHJzmSEJpxbS05KK6Cg";
+                        "&destination=" + str_to +
+                        "&mode=transit" +
+                        "&key=AIzaSyAAD5gqRAcoj8bImHJzmSEJpxbS05KK6Cg";
                 new RouteTask(AlarmActivity.this).execute(urlR);
 
                 //show the map
-                Uri gmmIntentUri = Uri.parse("http://maps.google.com/maps?saddr=" + str_from_for_maps + "&daddr=" + str_to_for_maps +
-                        "&mode=transit&key=AIzaSyDt9jlNiNfCvnOVNDtUt-8pRtgketBNkyw");
+                Uri gmmIntentUri = Uri.parse("http://maps.google.com/maps?" +
+                        "saddr=" + str_from_for_maps +
+                        "&daddr=" + str_to_for_maps +
+                        "&mode=transit" +
+                        "&key=AIzaSyDt9jlNiNfCvnOVNDtUt-8pRtgketBNkyw");
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                 mapIntent.setPackage("com.google.android.apps.maps");
                 startActivity(mapIntent);
-
-                /*Intent mapIntent = new Intent(getApplicationContext(), MapActivity.class);
-                mapIntent.setPackage("com.google.android.apps.maps");
-                mapIntent.putExtra("FROM",str_from);
-                mapIntent.putExtra("TO",str_to);
-                startActivity(mapIntent);
-                */
-
             }
-        });
+            });
 
     }
 
-
-    public void setSupportActionBar(Toolbar toolbar) {
-    }
-
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        inst = this;
-    }
-
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        Log.e("AlarmActivity", "on Destroy");
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-        //Toast.makeText(parent.getContext(), "Spinner item 3!" + id, Toast.LENGTH_SHORT).show();
-        i = (int) id;
-    }
-
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
 
     /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -347,12 +285,15 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
         int alarmDaysInFuture;  // Delta for "how many days in the future"
         int alarmHour;          // Hour for the alarm
         int alarmMinute;        // Minute for the alarm
+
+
         int arrHour;            // Hour for the Destination time
         int arrMinute;         // Minute for the Destination time
+        long millis;
 
+        Calendar cal = Calendar.getInstance();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            // TODO: Set the alarmPicker to a resonable time (e.g. last set alarm)
             alarmHour = alarmTimePicker.getHour();
             alarmMinute = alarmTimePicker.getMinute();
         } else {    // deprecated call for Android API < 23
@@ -364,13 +305,15 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
          /*Step 2 Prepare Time of Destination
        */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            // TODO: Set the alarmPicker to a resonable time (e.g. last set alarm)
             arrHour = arrivelTimePicker.getHour();
             arrMinute = arrivelTimePicker.getMinute();
+
+
         } else {    // deprecated call for Android API < 23
             arrHour = arrivelTimePicker.getCurrentHour();
             arrMinute = arrivelTimePicker.getCurrentMinute();
         }
+
 
         Log.i(TAG, "Arrival time time set to: " + arrHour + " : " + arrMinute);
         /* Step 3: Check if today was set, and if not, how many days in the future it is. */
@@ -378,14 +321,17 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
             if (!timePassedToday(alarmHour, alarmMinute)) {
                 Log.i(TAG, "Alarm time did not pass today: Set alarm to today");
                 alarmDaysInFuture = 0;
+                cal.set(Calendar.DATE, Calendar.DAY_OF_MONTH);
             } else {
                 alarmDaysInFuture = getDaysToNextCheckedDay();
                 Log.i(TAG, "Alarm time already passed today. Next Alarm is " + alarmDaysInFuture + " days in the future");
+                cal.set(Calendar.DATE, Calendar.DAY_OF_MONTH+alarmDaysInFuture);
             }
 
         } else {                            // Today was not checked. See which day is next available
             alarmDaysInFuture = getDaysToNextCheckedDay();
             Log.i(TAG, "Alarm is " + alarmDaysInFuture + " days in the future");
+            cal.set(Calendar.DATE, Calendar.DAY_OF_MONTH+alarmDaysInFuture);
         }
 
 
@@ -416,6 +362,11 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
             Toast.makeText(this, "The arrival time is before the alarm time. Pleace Check your Alarm.",
                     Toast.LENGTH_SHORT).show();
         }
+
+        /*Step 6 get Time of departure in millis for Google API Data request
+        subtract duration from the arrival time, turn in ms
+       */
+        departure_time = (arrHour-duration_hr) * 3600000 + (arrMinute-duration_minute)*60000;
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
 
@@ -533,10 +484,12 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void setAlarm(int hour, int min, int daysInFuture) {
         final Intent myIntent = new Intent(this.context, AlarmReceiver.class);
-        //giving start- and destination address to WakUp-Activity
+
+        //giving start- and destination address and time of depature to WakUp-Activity
         final Intent wake_up_intent = new Intent(this.context, WakeUpActivity.class);
         wake_up_intent.putExtra("from", startET.getText().toString());
         wake_up_intent.putExtra("to", destET.getText().toString());
+        wake_up_intent.putExtra("departure_time",String.valueOf(departure_time)); //TODO
 
 
         Calendar alarmTime = Calendar.getInstance(); // no need for a field variable
@@ -564,7 +517,7 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
 
         //Alarm is ringing today, if it is set today and time hasn't passed.
         if (dayIsChecked(today) && timePassedToday(hour, min) == false) {
-            AlarmDate.setPrepText( infoTextPrepTime, countPrepTime());
+            AlarmData.setPrepText( infoTextPrepTime, countPrepTime());
             myIntent.putExtra("extra", "yes");
             myIntent.putExtra("quote id", "0");
             pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -574,7 +527,7 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
 
             //Alarm is ringing today in one week, if it is set today and time has passed
         } else if (dayIsChecked(today) && timePassedToday(hour, min) == true) {
-            AlarmDate.setPrepText( infoTextPrepTime, countPrepTime());
+            AlarmData.setPrepText( infoTextPrepTime, countPrepTime());
             int day = getDaysToNextCheckedDay();
             Log.e("AlarmActivity", String.valueOf(day));
             myIntent.putExtra("extra", "yes");
@@ -585,7 +538,7 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
             ((AlarmManager) getSystemService(ALARM_SERVICE)).set(AlarmManager.RTC_WAKEUP, alarmTime.getTimeInMillis(), pendingWIntent);
 
         } else { //Alarm is ringing on nest checked day of the week, if it isn't set today.
-            AlarmDate.setPrepText(infoTextPrepTime, countPrepTime());
+            AlarmData.setPrepText(infoTextPrepTime, countPrepTime());
             int day = getDaysToNextCheckedDay();
             Log.e("AlarmActivity", String.valueOf(day));
             myIntent.putExtra("extra", "yes");
@@ -604,10 +557,12 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
 
 
     }
-
+    /*count prepTime shows how much time left for preparation
+    * */
     private int countPrepTime() {
         return 30;
     }
+
 
     public void cancelAlarm() {
         final Intent myIntent = new Intent(this.context, AlarmReceiver.class);
@@ -627,48 +582,23 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
         return ValueWithoutSign;
     }
 
-    /**
-     * Click listener for Start and Destination TextView
-     *
-     * @param
-     * @Override public void onClick(View v) {
-     * if (v == startET) {
-     * // Uri gmmIntentUri = Uri.parse("geo:52.5149161,13.4016983?mode=d");
-     * final PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-     * <p>
-     * try {
-     * startActivity(new Intent( AlarmActivity.this,MapActivity.class));
-     * startET.setText(str_from);
-     * } catch (Exception e) {
-     * Log.w(TAG, "Something went wrong with the place picker!" + e);
-     * }
-     * } else if (v == destET) {
-     * PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-     * try {
-     * startActivity(new Intent( AlarmActivity.this,MapActivity.class));
-     * } catch (Exception e) {
-     * Log.w(TAG, "Something went wrong with the place picker!" + e);
-     * }
-     * }
-     * }
-     */
+
     @Override
     public void setDouble(String result) {
         String res[] = result.split(",");
         Double min = Double.parseDouble(res[0]) / 60;
-        int hr = (int) (min / 60);
-        int minut = (int) (min % 60);
+        duration_hr = (int) (min / 60);
+        duration_minute = (int) (min % 60);
         int dist = Integer.parseInt(res[1]) / 1000;
-        Toast.makeText(context, "Momentane Fahrtzeit beträgt: " + hr + " Stunden " + minut + " Minuten", Toast.LENGTH_LONG).show();
+        Toast.makeText(context, "Momentane Fahrtzeit beträgt: " + duration_hr + " Stunden " + duration_minute + " Minuten", Toast.LENGTH_LONG).show();
         Toast.makeText(context, "Die Entfernung beträgt: " + dist + " kilometers", Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
     public void showRoute(String lat_lng) {
         String lal[] = lat_lng.split(",");
-        start_lat = Double.parseDouble(lal[0]);
-        start_lng = Double.parseDouble(lal[1]);
-        Log.d(TAG, "Start Lat,Lng: " + start_lat + "," + start_lng);
+        Log.d(TAG, "Start Lat,Lng: "+lal.toString());
     }
 
     public void initialize() {
@@ -695,6 +625,66 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
         // tv_result2=(TextView) findViewById(R.id.textView_result2);
 
 
+    }
+
+
+    public void setSupportActionBar(Toolbar toolbar) {
+    }
+
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        inst = this;
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        Log.e("AlarmActivity", "on Destroy");
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+        //Toast.makeText(parent.getContext(), "Spinner item 3!" + id, Toast.LENGTH_SHORT).show();
+        i = (int) id;
+    }
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
     }
 
 
