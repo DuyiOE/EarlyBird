@@ -14,4 +14,6 @@
 
     <!-- Zustand NICHT gedrückt. Mit drawable -->
     <item android:state_checked="false" android:drawable="@drawable/icon_public" />
+    <!-- Zustand gedrückt. Mit drawable -->
+    <item android:state_checked="true" android:drawable="@drawable/icon_public_selected" />
 </selector>

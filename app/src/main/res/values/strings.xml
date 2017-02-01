@@ -40,6 +40,7 @@
     <string name="PKW">Ich fahre mit dem Auto</string>
     <string name="shosRoute">Route anzeigen</string>
     <string name="wake_up_infoText" />
+    <string name="earlybird">Early Bird</string>
 
 
 </resources>

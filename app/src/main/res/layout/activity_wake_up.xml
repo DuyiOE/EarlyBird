@@ -9,6 +9,10 @@
         android:layout_height="match_parent"
         android:background="@drawable/lineare2">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
         <TextView
             android:text="@string/wake_up_infoText"
             android:layout_width="wrap_content"
@@ -16,8 +20,27 @@
             android:layout_alignParentTop="true"
             android:layout_marginTop="71dp"
             android:id="@+id/wake_up_infoText"
-            android:layout_alignLeft="@+id/stop_Alarm"
-            android:layout_alignStart="@+id/stop_Alarm" />
+            android:textColor="@color/eb_yellow"
+            android:textSize="18sp"
+            android:textStyle="normal|bold"
+            android:visibility="invisible"
+            android:gravity="center_vertical|center_horizontal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/wake_up_infoText"
+            android:layout_marginTop="20dp"
+            android:id="@+id/wake_up_infoText2"
+            android:visibility="invisible"
+            android:textColor="@color/eb_yellow"
+            android:textSize="18sp"
+            android:textStyle="normal|bold"
+            android:gravity="center_vertical|center_horizontal" />
+
+    </RelativeLayout>
+
+
 
         <Button
             android:layout_width="wrap_content"

@@ -68,16 +68,17 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
 
     private EditText destET;
     private EditText startET;
-    Double start_lat;
-    Double start_lng;
     Switch onOff;
-    private int duration_hr;
-    private int duration_minute;
+    private int duration_hr_now;
+    private int duration_minute_now;
+    private int dist;
+    private int duration_hr_set;
+    private int duration_minute_set;
+    private int time_lag;
 
 
     public static AlarmActivity instance() {
         return inst;
-
     }
 
 
@@ -170,8 +171,8 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
                 String str_from_for_maps = startET.getText().toString();
                 String str_to_for_maps = destET.getText().toString();
                 //Removing "space" and "-" from Address Text
-                str_from = removeSpace(startET.getText().toString());
-                str_to = removeSpace(destET.getText().toString());
+                str_from = AlarmData.removeSpace(startET.getText().toString());
+                str_to = AlarmData.removeSpace(destET.getText().toString());
 
 
                 // get the Distance, for duration in traffic,
@@ -185,6 +186,8 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
                         "&avoid=tolls" +
                         "&key=AIzaSyDj5-Q_k24sZQPipJLFlqRM72rsY7PfFmY";
                 new DistanceTask(AlarmActivity.this).execute(url);
+
+
 
                 // get the Route
                 String urlR = "https://maps.googleapis.com/maps/api/directions/json?origin=" + str_from +
@@ -216,8 +219,8 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
                 //Removing "space" and "-" from Address Text
                 String str_to_for_maps = destET.getText().toString();
                 String str_from_for_maps = startET.getText().toString();
-                str_from = removeSpace(startET.getText().toString());
-                str_to = removeSpace(destET.getText().toString());
+                str_from = AlarmData.removeSpace(startET.getText().toString());
+                str_to = AlarmData.removeSpace(destET.getText().toString());
 
                 // get the Distance, for duration in traffic,
                 // real time and traffic model request a Google API Work Client is needed
@@ -355,7 +358,9 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
         /* Step 5: Set alarm to time with x days in future */
         if (arrHour >= alarmHour) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                setAlarm(alarmHour, alarmMinute, alarmDaysInFuture);
+                time_lag= AlarmData.getRandomMinute();
+                setAlarm(alarmHour, alarmMinute, alarmDaysInFuture,time_lag, arrHour,arrMinute);
+                Log.e ("Random time: ", String.valueOf(time_lag));
             }
 
         } else {
@@ -366,7 +371,7 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
         /*Step 6 get Time of departure in millis for Google API Data request
         subtract duration from the arrival time, turn in ms
        */
-        departure_time = (arrHour-duration_hr) * 3600000 + (arrMinute-duration_minute)*60000;
+        departure_time = (arrHour- duration_hr_now) * 3600000 + (arrMinute- duration_minute_now)*60000;
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
 
@@ -374,7 +379,7 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
                 .setWhen(System.currentTimeMillis())
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle("Early Bird")
-                .setContentText("Alarm actived!");
+                .setContentText("Alarm active!");
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(1, builder.build());
@@ -482,33 +487,38 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
      * @param daysInFuture days
      */
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    private void setAlarm(int hour, int min, int daysInFuture) {
+    private void setAlarm(int hour, int min, int daysInFuture,int time_lag, int arrHour,int arrMinute) {
         final Intent myIntent = new Intent(this.context, AlarmReceiver.class);
 
         //giving start- and destination address and time of depature to WakUp-Activity
         final Intent wake_up_intent = new Intent(this.context, WakeUpActivity.class);
-        wake_up_intent.putExtra("from", startET.getText().toString());
-        wake_up_intent.putExtra("to", destET.getText().toString());
-        wake_up_intent.putExtra("departure_time",String.valueOf(departure_time)); //TODO
+        wake_up_intent.putExtra("str_from", startET.getText().toString());
+        wake_up_intent.putExtra("str_to", destET.getText().toString());
+        wake_up_intent.putExtra("time_lag",String.valueOf(time_lag));
 
+        Toast.makeText(context, "Momentane Fahrtzeit beträgt: " + duration_hr_now + " Stunden " + duration_minute_now + " Minuten", Toast.LENGTH_LONG).show();
+        Toast.makeText(context, "Die Entfernung beträgt: " + dist + " kilometers", Toast.LENGTH_SHORT).show();
+        //safe duration on setting the alarm
+        duration_hr_set=duration_hr_now;
+        duration_minute_set =duration_minute_now;
 
         Calendar alarmTime = Calendar.getInstance(); // no need for a field variable
 
         if (android.os.Build.VERSION.SDK_INT >= 23) {
+            //set alarm Time
             alarmTime.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getHour());
-            alarmTime.set(Calendar.MINUTE, alarmTimePicker.getMinute());
+            alarmTime.set(Calendar.MINUTE, (int)(alarmTimePicker.getMinute()-time_lag));
         } else {
-            alarmTime.set(Calendar.MINUTE, alarmTimePicker.getCurrentMinute());
+            //set time to check the duration 60 minutes before
+            //set Alarm Time
+            alarmTime.set(Calendar.MINUTE, (int)(alarmTimePicker.getCurrentMinute()-time_lag));
             alarmTime.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getCurrentHour());
         }
         Log.d(TAG, "Calendar day before rolling: " + alarmTime.get(Calendar.DAY_OF_YEAR));
         alarmTime.roll(Calendar.DAY_OF_YEAR, daysInFuture);
         Log.d(TAG, "Calendar day: " + alarmTime.get(Calendar.DAY_OF_YEAR));
 
-        /* TODO: Set the alarm here.
-        * My first guess would be setting the date plus adding "daysInFuture" days (or x times 24 hours...)
-        * If the day is today these days are 0 so adding this multiplication should never hurt!
-        */
+
         int today = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
         int i = 7;//setting the right day
         if (today + daysInFuture - i == 0) {
@@ -517,7 +527,7 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
 
         //Alarm is ringing today, if it is set today and time hasn't passed.
         if (dayIsChecked(today) && timePassedToday(hour, min) == false) {
-            AlarmData.setPrepText( infoTextPrepTime, countPrepTime());
+            AlarmData.setPrepText( infoTextPrepTime, countPrepTime(hour,min,arrHour,arrMinute));
             myIntent.putExtra("extra", "yes");
             myIntent.putExtra("quote id", "0");
             pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -527,7 +537,7 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
 
             //Alarm is ringing today in one week, if it is set today and time has passed
         } else if (dayIsChecked(today) && timePassedToday(hour, min) == true) {
-            AlarmData.setPrepText( infoTextPrepTime, countPrepTime());
+            AlarmData.setPrepText( infoTextPrepTime, countPrepTime(hour,min,arrHour,arrMinute));
             int day = getDaysToNextCheckedDay();
             Log.e("AlarmActivity", String.valueOf(day));
             myIntent.putExtra("extra", "yes");
@@ -538,7 +548,7 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
             ((AlarmManager) getSystemService(ALARM_SERVICE)).set(AlarmManager.RTC_WAKEUP, alarmTime.getTimeInMillis(), pendingWIntent);
 
         } else { //Alarm is ringing on nest checked day of the week, if it isn't set today.
-            AlarmData.setPrepText(infoTextPrepTime, countPrepTime());
+            AlarmData.setPrepText(infoTextPrepTime, countPrepTime(hour,min,arrHour,arrMinute));
             int day = getDaysToNextCheckedDay();
             Log.e("AlarmActivity", String.valueOf(day));
             myIntent.putExtra("extra", "yes");
@@ -552,15 +562,35 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
         }
 
 
-        //Intent wuIntent = new Intent(this, WakeUpActivity.class);
-        // startActivity(wuIntent);
+
 
 
     }
-    /*count prepTime shows how much time left for preparation
-    * */
-    private int countPrepTime() {
-        return 30;
+
+    /**
+     *  This method counts how much time left for preparation
+     *
+     * @param alarm_hour
+     * @param alarm_minute
+     * @param arrival_hour
+     * @param arrival_minute
+     *
+     * @return int prep_time
+     */
+    private int countPrepTime(int alarm_hour,int alarm_minute,int arrival_hour,int arrival_minute ) {
+        int alarm_time_in_minutes = alarm_minute + alarm_hour * 60;
+        int arrival_time_in_minutes = (arrival_hour * 60 + arrival_minute);
+        Log.i("Alarm time,arrival time", String.valueOf(alarm_time_in_minutes)+","+  String.valueOf(arrival_time_in_minutes));
+        if (duration_minute_set != 0){
+            int duration_time_in_Minutes = (duration_hr_set * 60 + duration_minute_set);
+            int leaving_time= (arrival_time_in_minutes - duration_time_in_Minutes);
+            int prep_time= (leaving_time-alarm_time_in_minutes);
+            Log.i("prep_time, leavingTime", String.valueOf(prep_time)+","+  String.valueOf(leaving_time));
+            return prep_time;
+
+
+        }else
+        return 0;
     }
 
 
@@ -574,31 +604,26 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
     }
 
 
-    public static String removeSpace(String value) {
-        String ValueWithoutSign = String.valueOf(value);
-        ValueWithoutSign = ValueWithoutSign.replace(" ", "");
-        ValueWithoutSign = ValueWithoutSign.replace("-", "");
-        ValueWithoutSign = ValueWithoutSign.replace(",", "");
-        return ValueWithoutSign;
-    }
 
 
+    /**
+     * convert time of duration from milliseconds to hour and minute
+     * @param result duration in milliseconds
+     */
     @Override
     public void setDouble(String result) {
         String res[] = result.split(",");
         Double min = Double.parseDouble(res[0]) / 60;
-        duration_hr = (int) (min / 60);
-        duration_minute = (int) (min % 60);
-        int dist = Integer.parseInt(res[1]) / 1000;
-        Toast.makeText(context, "Momentane Fahrtzeit beträgt: " + duration_hr + " Stunden " + duration_minute + " Minuten", Toast.LENGTH_LONG).show();
-        Toast.makeText(context, "Die Entfernung beträgt: " + dist + " kilometers", Toast.LENGTH_SHORT).show();
+        duration_hr_now = (int) (min / 60);
+        duration_minute_now = (int) (min % 60);
+        dist = Integer.parseInt(res[1]) / 1000;
 
     }
 
+
     @Override
     public void showRoute(String lat_lng) {
-        String lal[] = lat_lng.split(",");
-        Log.d(TAG, "Start Lat,Lng: "+lal.toString());
+        Log.d(TAG, "Start Lat,Lng: "+ lat_lng);
     }
 
     public void initialize() {
@@ -621,8 +646,7 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
         destET = (EditText) findViewById(R.id.editText_destAddress);
         btn_getCar = (Button) findViewById(R.id.btn_get_car);
         btn_getPublic = (Button) findViewById(R.id.btn_get_public);
-        // tv_result1= (TextView) findViewById(R.id.textView_result1);
-        // tv_result2=(TextView) findViewById(R.id.textView_result2);
+
 
 
     }
@@ -687,5 +711,30 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
         super.onPause();
     }
 
+    /*++++++++++++++++++++++++++++++++++++++future++++++++++++++++++++++++++++++++++++++++++++++++++*/
+    public  int getDurationNow(){
+        str_from = AlarmData.removeSpace(startET.getText().toString());
+        str_to = AlarmData.removeSpace(destET.getText().toString());
 
+        String url = "https://maps.googleapis.com/maps/api/distancematrix/json?" +
+                "origins=" + str_from +
+                "&destinations=" + str_to +
+                "&mode=d" +
+                "&language=de-DE" +
+                "&avoid=tolls" +
+                "&key=AIzaSyDj5-Q_k24sZQPipJLFlqRM72rsY7PfFmY";
+        new DistanceTask(AlarmActivity.this).execute(url);
+
+        return duration_hr_now + duration_minute_now;
+
+    }
+
+    private int checkDuartionTime(int duration_hr_set,int duration_minute_set) {
+        if (duration_hr_now == duration_hr_set && duration_minute_now == duration_minute_set) {
+            return 0;
+        } else {
+            int duration = duration_hr_now * 60 + duration_minute_set;
+            return duration;
+        }
+    }
 }

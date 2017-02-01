@@ -9,6 +9,9 @@ import android.widget.ToggleButton;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Duygu on 30.11.2016.
@@ -16,32 +19,22 @@ import java.util.Date;
 
 public class AlarmData {
 
-    String today;
-    Calendar calendar;
-    ToggleButton togglebutton;
 
 
-    public String getStringCurrentDay() {
 
-        String daysArray[] = {"errorDay", "Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"};
-        int day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
-        String dayofWeek = daysArray[day];
-        Log.d("AlarmActivity", dayofWeek);
-        Log.d("AlarmActivity", String.valueOf(day));
-        return dayofWeek;
-
+    public static int getRandomMinute(){
+        int randomMinutes = (int) (Math.random()*60);
+        return randomMinutes;
 
     }
 
-    public static int getIntCurrentDay() {
-        Calendar calendar = Calendar.getInstance();
-        int day = calendar.get(Calendar.DAY_OF_WEEK);
-        Log.d("AlarmActivity", String.valueOf(day));
-        return day;
-
-
+    public static String removeSpace(String value) {
+        String ValueWithoutSign = String.valueOf(value);
+        ValueWithoutSign = ValueWithoutSign.replace(" ", "");
+        ValueWithoutSign = ValueWithoutSign.replace("-", "");
+        ValueWithoutSign = ValueWithoutSign.replace(",", "");
+        return ValueWithoutSign;
     }
-
 
 
     public static TextView setPrepText(TextView text, int minute) {
@@ -49,121 +42,33 @@ public class AlarmData {
         if (minute < 10) {
             minuteS = "0" + String.valueOf(minute);
         }
-        text.setText("Nach derzeitiger Verkehrslage beträgt deine Vorbereitungszeit " + minuteS +" Minuten.");
-        text.setVisibility(View.VISIBLE);
-
-        return text;
+        if(minute>=0) {
+            text.setText("Nach derzeitiger Verkehrslage beträgt deine Vorbereitungszeit " + minuteS + " Minuten.");
+            text.setVisibility(View.VISIBLE);
+            return text;
+        } else
+            text.setText("Es wurde keine Route ausgewählt! Vorbereitungszeit konnte nicht errechnet werden.");
+            text.setVisibility(View.VISIBLE);
+            return text;
     }
 
-    public static TextView setInfoText(TextView text, int minute, boolean earlier,int minute_befor) {
-        String minuteS = String.valueOf(minute);
-        if (minute < 10) {
-            minuteS = "0" + String.valueOf(minute);
-        }
+    public static TextView setInfoText(TextView text, TextView text2, String duration, boolean earlier,String lag_time) {
+
         if (earlier== true) {
-            text.setText("Du wurdest" + minute_befor + " Minuten früher geweckt da es auf deiner Route Verzögerungen gibt." +
-                    "Nach derzeitiger Verkehrslage, sind es " + minuteS + " Minuten Fahrtzeit.");
+            text.setText("Du wurdest " + lag_time + " Minuten früher geweckt, da es auf deiner Route zu Verzögerungen kommt.");
             text.setVisibility(View.VISIBLE);
+            text2.setText("Nach derzeitiger Verkehrslage, sind es " + duration + " Fahrtzeit.");
+            text2.setVisibility(View.VISIBLE);
         }else{
-            text.setText("Du wurdest zur eingestellten Weckzeit geweckt. Es gibt keine Verzögerungen auf deiner Route." +
-                    "Nach derzeitiger Verkehrslage, sind es " + minuteS + " Minuten Fahrtzeit.");
+            text.setText("Du wurdest zur eingestellten Weckzeit geweckt. Es gibt keine Verzögerungen auf deiner Route.");
             text.setVisibility(View.VISIBLE);
+            text2.setText("Nach derzeitiger Verkehrslage, sind es " + duration + " Fahrtzeit.");
+            text2.setVisibility(View.VISIBLE);
         }
         return text;
     }
 
-    public static void resetAlarm() {
-    }
-
-    public static int getHour() {
-        Date timestamp = new Date();
-        SimpleDateFormat simpleDateFormatH = new SimpleDateFormat("HH");
-        System.out.println("Zeit: " + simpleDateFormatH.format(timestamp));
-        String hour = timestamp.toString();
-        Integer xHour;
-        return xHour = Integer.valueOf(hour);
-    }
-
-    public static int getMiute() {
-        Date timestamp = new Date();
-        SimpleDateFormat simpleDateFormatM = new SimpleDateFormat("mm");
-        System.out.println("Zeit: " + simpleDateFormatM.format(timestamp));
-
-        String minute = timestamp.toString();
-        Integer xMinute;
-        return xMinute = Integer.valueOf(minute);
-    }
-
-    public static int getDay() {
-        int day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
-        return day;
-    }
 
 
-    public static int getHourOfTimePicker(TimePicker timePicker) {
 
-        final int hour = timePicker.getCurrentHour();
-
-        return hour;
-    }
-
-    public static int getMiuteOfTimePicker(TimePicker timePicker) {
-
-        final int minute = timePicker.getCurrentMinute();
-
-        return minute;
-    }
-
-    public static boolean pastTime(TimePicker tp) {
-        if (getHour() >= getHourOfTimePicker(tp)) {
-            if (getMiute() >= getMiuteOfTimePicker(tp)) {
-                return true;
-            }
-        }
-        return false;
-
-    }
-
-    /**   if (alarmToggleSO.isChecked()) {
-     return alarmToggleSO;
-     } else if (alarmToggleMO.isChecked() && day == 2) {
-     return alarmToggleMO;
-     } else if (alarmToggleDI.isChecked() && day == 3) {
-     return alarmToggleDI;
-     } else if (alarmToggleMI.isChecked() && day == 4) {
-     return alarmToggleMI;
-     } else if (alarmToggleDO.isChecked() && day == 5) {
-     return alarmToggleDO;
-     } else if (alarmToggleFR.isChecked() && day == 6) {
-     return alarmToggleFR;
-     } else if (alarmToggleSA.isChecked() && day == 7) {
-     return alarmToggleSA;
-     }
-     }
-     }else {
-     for (day = AlarmData.getIntCurrentDay() + 1; day >= 7; day++) {
-     if (alarmToggleSO.isChecked() && day == 1) {
-     return alarmToggleSO;
-     } else if (alarmToggleMO.isChecked() && day == 2) {
-     return alarmToggleMO;
-     } else if (alarmToggleDI.isChecked() && day == 3) {
-     return alarmToggleDI;
-     } else if (alarmToggleMI.isChecked() && day == 4) {
-     return alarmToggleMI;
-     } else if (alarmToggleDO.isChecked() && day == 5) {
-     return alarmToggleDO;
-     } else if (alarmToggleFR.isChecked() && day == 6) {
-     return alarmToggleFR;
-     } else if (alarmToggleSA.isChecked() && day == 7) {
-     return alarmToggleSA;
-     }else return null;
-
-     }
-     }
-     this.alarmTextView.setText("Kein Tag wurde ausgewählt!");
-     return null;
-
-     return alarmToggleDI;
-     }
-     **/
 }

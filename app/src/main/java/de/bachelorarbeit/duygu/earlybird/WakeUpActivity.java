@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import de.bachelorarbeit.duygu.earlybird.de.bachelorarbeit.duygu.earlybird.ui.AlarmData;
 
@@ -24,6 +25,8 @@ public class WakeUpActivity extends Activity implements DistanceTask.Distance{
     AlarmManager alarmManager;
     int i = 0;
     Context context;
+    private int duration_hr;
+    private int duration_min;
 
 
 
@@ -38,33 +41,27 @@ public class WakeUpActivity extends Activity implements DistanceTask.Distance{
         Button show_Map = (Button) findViewById(R.id.show_Map);
         final Intent myIntent = new Intent(this.getApplicationContext(), AlarmReceiver.class);
         final PendingIntent pIntent = PendingIntent.getBroadcast(this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        final String from;
-        final String to;
-        final String departure_time;
+        final String str_from;
+        final String str_to;
         TextView wake_up_infoText= (TextView)findViewById(R.id.wake_up_infoText);
-        final int minute;
+        TextView wake_up_infoText2 = (TextView)findViewById(R.id.wake_up_infoText2);
         final boolean earlier;
-        final int minute_befor;
+        final String time_lag;
 
-        //final String mode;
+
 
         Intent i_Route = getIntent();
         Bundle extras = i_Route.getExtras();
 
-        //if mode is chosen, in pro version
-        //mode = extras.getString("mode");
-        //Log.e ("Mode is ", mode);
-        to = extras.getString("to");
-        Log.e ("Destination is ", to);
-        from = extras.getString("from");
-        Log.e ("Startadress is ", from);
-        departure_time = extras.getString("departure_time");
-        Log.e ("Time of departure is ", departure_time);
 
-        //// TODO: 27.01.2017
-        minute=22; //duration
-        earlier=true;//late, yes or no
-        minute_befor=12; // 12 minutes late
+        str_from = extras.getString("str_from");
+        Log.e ("Start address is ", str_from);
+        str_to = extras.getString("str_to");
+        Log.e ("Destination is ", str_to);
+        time_lag = extras.getString("time_lag");
+        Log.e ("Random time: ", time_lag);
+
+
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
 
@@ -77,10 +74,40 @@ public class WakeUpActivity extends Activity implements DistanceTask.Distance{
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(1, builder.build());
 
-        AlarmData.setInfoText( wake_up_infoText, minute, earlier, minute_befor);
 
-        if (from!=null){
-            if(to!=null){
+
+        if(time_lag=="0"){
+            earlier=false;
+        }else {
+            earlier = true;
+        }
+
+        if (str_from!=null){
+            if(str_to!=null){
+
+                //in Backround
+                // get the Distance
+                String str_from_rs = AlarmData.removeSpace(str_from);
+                String str_to_rs = AlarmData.removeSpace(str_to);
+                Log.i("Route",str_from_rs+","+str_to_rs);
+
+                String url = "https://maps.googleapis.com/maps/api/distancematrix/json?" +
+                        "origins=" + str_from_rs +
+                        "&destinations=" + str_to_rs +
+                        "&mode=d" +
+                        "&language=de-DE" +
+                        "&avoid=tolls" +
+                        "&key=AIzaSyDj5-Q_k24sZQPipJLFlqRM72rsY7PfFmY";
+                new DistanceTask(WakeUpActivity.this).execute(url);
+
+                int hr = duration_hr;
+                int minute = duration_min;
+                Log.i("Duration hour and min: ", String.valueOf(hr + ", " + minute));
+
+
+                String minute_of_duration= String.valueOf(hr)+" Stunde/n und "+ String.valueOf(minute)+ " Minuten";
+
+                AlarmData.setInfoText( wake_up_infoText,wake_up_infoText2,minute_of_duration, earlier, time_lag);
 
                 show_Map.setOnClickListener(new View.OnClickListener() {
 
@@ -91,21 +118,10 @@ public class WakeUpActivity extends Activity implements DistanceTask.Distance{
                         sendBroadcast(myIntent);
                         alarmManager.cancel(pIntent);
 
-                        //in Backround
-                        // get the Distance
-                        String url = "https://maps.googleapis.com/maps/api/distancematrix/json?+" +
-                                "origins=" + from +
-                                "&destinations=" + to +
-                                "&mode=d"+
-                                "&language=de-DE"+
-                                "&avoid=tolls"+
-                                "&key=AIzaSyDj5-Q_k24sZQPipJLFlqRM72rsY7PfFmY";
-                        new DistanceTask(WakeUpActivity.this).execute(url);
-
                         //show the map
-                        Uri gmmIntentUri = Uri.parse("http://maps.google.com/maps?+" +
-                                "saddr=" + from +
-                                "&daddr=" + to+
+                        Uri gmmIntentUri = Uri.parse("http://maps.google.com/maps?" +
+                                "saddr=" + str_from +
+                                "&daddr=" + str_to+
                                 "&mode=d");
                         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                         mapIntent.setPackage("com.google.android.apps.maps");
@@ -113,6 +129,7 @@ public class WakeUpActivity extends Activity implements DistanceTask.Distance{
                         finish();
                     }
                 });
+
                 stop_alarm.setOnClickListener(new View.OnClickListener() {
 
                     @Override
@@ -129,6 +146,9 @@ public class WakeUpActivity extends Activity implements DistanceTask.Distance{
                 });
             }
         }else{
+
+            AlarmData.setInfoText( wake_up_infoText, wake_up_infoText2, "0", earlier, time_lag);
+
             stop_alarm.setOnClickListener(new View.OnClickListener() {
 
                 @Override
@@ -141,9 +161,23 @@ public class WakeUpActivity extends Activity implements DistanceTask.Distance{
                     WakeUpActivity.super.onDestroy();
                     finish();
 
+                    Toast.makeText(context, "Es wurde keine Route eingeben. Tragen Sie Ihre Route bei Google Maps ein!",Toast.LENGTH_LONG).show();
+
                 }
             });
         }
+
+
+    }
+    @Override
+    public void setDouble( String result) {
+        Log.i("String result",result);
+        String res[] = result.split(",");
+        Double min = Double.parseDouble(res[0]) / 60;
+        duration_hr = (int) (min / 60);
+        duration_min = (int) (min % 60);
+        Log.i("Fahrtzeit:", duration_hr + " Stunden " +duration_min + " Minuten");
+
     }
 
     @Override
@@ -158,41 +192,8 @@ public class WakeUpActivity extends Activity implements DistanceTask.Distance{
         super.onPause();
     }
 
-    @Override
-    public void setDouble( String result) {
-        String res[] = result.split(",");
-        Double min = Double.parseDouble(res[0]) / 60;
-        int hr = (int) (min / 60);
-        int minut = (int) (min % 60);
-        int dist = Integer.parseInt(res[1]) / 1000;
-        Log.i("Fahrtzeit:", hr + " Stunden " + minut + " Minuten");
-        Log.i("Entfernung:", + dist + " kilometers");
 
 
-    }
-
-/*
-    public void driveNow(){
-
-
-        Intent intentW = new Intent(this.getApplicationContext(), MapActivity.class);
-        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intentW, 0);
-
-        final NotificationManager mNM = (NotificationManager)
-                getSystemService(NOTIFICATION_SERVICE);
-
-
-        Notification mNotify = new Notification.Builder(this)
-                .setContentText("Drive now!")
-                .setSmallIcon(R.drawable.logo)
-                .setContentIntent(pIntent)
-                .setAutoCancel(true)
-                .build();
-
-        mNM.notify(0, mNotify);
-        }
-
-        */
 }
 
 

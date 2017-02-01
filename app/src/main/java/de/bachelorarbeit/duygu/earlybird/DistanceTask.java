@@ -33,6 +33,7 @@ public class DistanceTask extends AsyncTask<String, Void, String> {
     public DistanceTask(Context mContext) {
         this.mContext = mContext;
         distance1 = (Distance) mContext;
+
     }
 
     //This function is executed before before "doInBackground(String...params)" is executed to dispaly the progress dialog
@@ -46,7 +47,8 @@ public class DistanceTask extends AsyncTask<String, Void, String> {
 
     }
 
-    //This function is executed after the execution of "doInBackground(String...params)" to dismiss the dispalyed progress dialog and call "setDouble(Double)" defined in "MainActivity.java"
+    //This function is executed after the execution of "doInBackground(String...params)"
+    // to dismiss the dispalyed progress dialog and call "setDouble(Double)" defined in "MainActivity.java"
     @Override
     protected void onPostExecute(String aDouble) {
         super.onPostExecute(aDouble);
