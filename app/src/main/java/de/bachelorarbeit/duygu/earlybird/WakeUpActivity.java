@@ -25,16 +25,17 @@ import de.bachelorarbeit.duygu.earlybird.de.bachelorarbeit.duygu.earlybird.ui.Al
  *
  */
 
-public class WakeUpActivity extends Activity implements DistanceTask.Distance{
+public class WakeUpActivity extends Activity {
     AlarmManager alarmManager;
-    int i = 0;
+
     Context context;
-    private int duration_hr;
-    private int duration_min;
+    private String duration_hr;
+    private String duration_min;
     private boolean earlier;
     private String time_lag;
     TextView wake_up_infoText;
     TextView wake_up_infoText2;
+    int i =0;
 
 
 
@@ -70,7 +71,12 @@ public class WakeUpActivity extends Activity implements DistanceTask.Distance{
         str_to = extras.getString("str_to");
         Log.e ("Destination is ", str_to);
         time_lag = extras.getString("time_lag");
-        Log.e ("Random time: ", time_lag);
+        Log.e ("Random time ", time_lag);
+        duration_hr = extras.getString("duration_hr");
+        Log.e ("Duration hour is ", duration_hr);
+        duration_min = extras.getString("duration_min");
+        Log.e ("Duration Minute is ", duration_min);
+
 
         if(time_lag=="0"){
             earlier=false;
@@ -92,7 +98,11 @@ public class WakeUpActivity extends Activity implements DistanceTask.Distance{
         if (str_from!=null){
             if(str_to!=null){
                 //url request Gooole API, getting the duration now
-                JSONrequest(str_from,str_to);
+
+
+                Log.i("Fahrtzeit:", duration_hr + " Stunden " +duration_min + " Minuten");
+                AlarmData.setInfoText(wake_up_infoText,wake_up_infoText2, duration_hr,
+                        duration_min, earlier, time_lag);
 
                 show_Map.setOnClickListener(new View.OnClickListener() {
 
@@ -134,8 +144,6 @@ public class WakeUpActivity extends Activity implements DistanceTask.Distance{
             }
         }else{
 
-            show_Map.setVisibility(View.INVISIBLE);
-
             stop_alarm.setOnClickListener(new View.OnClickListener() {
 
                 @Override
@@ -149,7 +157,8 @@ public class WakeUpActivity extends Activity implements DistanceTask.Distance{
                     finish();
 
                     Toast.makeText(context, "Es wurde keine Route eingeben. Tragen Sie Ihre Route bei Google Maps ein!",Toast.LENGTH_LONG).show();
-
+                    AlarmData.setInfoText(wake_up_infoText,wake_up_infoText2, String.valueOf(duration_hr),
+                            String.valueOf(duration_min), false, time_lag);
                 }
             });
 
@@ -160,34 +169,10 @@ public class WakeUpActivity extends Activity implements DistanceTask.Distance{
 
     }
 
-    private void JSONrequest(String str_from, String str_to) {
-        //in Backround
-        // get the Distance
-        String str_from_rs = AlarmData.removeSpace(str_from);
-        String str_to_rs = AlarmData.removeSpace(str_to);
-        Log.i("Route",str_from_rs+","+str_to_rs);
 
-        String url = "https://maps.googleapis.com/maps/api/distancematrix/json?" +
-                "origins=" + str_from_rs +
-                "&destinations=" + str_to_rs +
-                "&mode=d" +
-                "&language=de-DE" +
-                "&avoid=tolls" +
-                "&key=AIzaSyDj5-Q_k24sZQPipJLFlqRM72rsY7PfFmY";
-        new DistanceTask(WakeUpActivity.this).execute(url);
-    }
 
-    @Override
-    public void setDouble( String result) {
-        Log.i("String result",result);
-        String res[] = result.split(",");
-        Double min = Double.parseDouble(res[0]) / 60;
-        duration_hr = (int) (min / 60);
-        duration_min = (int) (min % 60);
-        Log.i("Fahrtzeit:", duration_hr + " Stunden " +duration_min + " Minuten");
-        AlarmData.setInfoText(wake_up_infoText,wake_up_infoText2, String.valueOf(duration_hr),
-                String.valueOf(duration_min), earlier, time_lag);
-    }
+
+
 
 
 

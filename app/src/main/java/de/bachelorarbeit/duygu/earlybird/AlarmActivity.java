@@ -179,24 +179,8 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
                 // get the Distance, for duration in traffic,
                 // real time and traffic model request a Google API Work Client is needed
                 //not available for private usage
-                String url = "https://maps.googleapis.com/maps/api/distancematrix/json?" +
-                        "origins=" + str_from +
-                        "&destinations=" + str_to +
-                        "&mode=d" +
-                        "&language=de-DE" +
-                        "&avoid=tolls" +
-                        "&key=AIzaSyDj5-Q_k24sZQPipJLFlqRM72rsY7PfFmY";
-                new DistanceTask(AlarmActivity.this).execute(url);
-
-
-
-                // get the Route
-                String urlR = "https://maps.googleapis.com/maps/api/directions/json?origin=" + str_from +
-                        "&destination=" + str_to +
-                        "mode=d"+
-                        "&key=AIzaSyAAD5gqRAcoj8bImHJzmSEJpxbS05KK6Cg";
-                new RouteTask(AlarmActivity.this).execute(urlR);
-
+                JSONrequestDistance(str_from,str_to);
+                JSONrequestRoute(str_from,str_to);
                 //show the map
                 Uri gmmIntentUri = Uri.parse("http://maps.google.com/maps?" +
                         "saddr=" + str_from_for_maps +
@@ -491,19 +475,22 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
      */
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void setAlarm(int hour, int min, int daysInFuture,int time_lag, int arrHour,int arrMinute) {
-        final Intent myIntent = new Intent(this.context, AlarmReceiver.class);
-
+        final Intent serviceIntent = new Intent(this.context, AlarmReceiver.class);
         //giving start- and destination address and time of depature to WakUp-Activity
-        final Intent wake_up_intent = new Intent(this.context, WakeUpActivity.class);
-        wake_up_intent.putExtra("str_from", startET.getText().toString());
-        wake_up_intent.putExtra("str_to", destET.getText().toString());
-        wake_up_intent.putExtra("time_lag",String.valueOf(time_lag));
+        final Intent wake_upIntent = new Intent(this.context, WakeUpActivity.class);
+
 
         Toast.makeText(context, "Momentane Fahrtzeit beträgt: " + duration_hr_now + " Stunden " + duration_minute_now + " Minuten", Toast.LENGTH_LONG).show();
         Toast.makeText(context, "Die Entfernung beträgt: " + dist + " Kilometer", Toast.LENGTH_SHORT).show();
-        //safe duration on setting the alarm
-        duration_hr_set=duration_hr_now;
-        duration_minute_set =duration_minute_now;
+
+        //safe duration of set alarm
+        duration_hr_set= duration_hr_now;
+        duration_minute_set = duration_minute_now;
+
+        //information for the TextView and MapView of the wake up Activity
+        wake_upIntent.putExtra("str_from", startET.getText().toString());
+        wake_upIntent.putExtra("str_to", destET.getText().toString());
+        wake_upIntent.putExtra("time_lag",String.valueOf(time_lag));
 
         Calendar alarmTime = Calendar.getInstance(); // no need for a field variable
 
@@ -531,11 +518,15 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
         //Alarm is ringing today, if it is set today and time hasn't passed.
         if (dayIsChecked(today) && timePassedToday(hour, min) == false) {
             AlarmData.setPrepText( infoTextPrepTime, countPrepTime(hour,min,arrHour,arrMinute));
-            myIntent.putExtra("extra", "yes");
-            myIntent.putExtra("quote id", "0");
-            pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            serviceIntent.putExtra("extra", "yes");
+            serviceIntent.putExtra("quote id", "0");
+            pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, serviceIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             alarmManager.set(AlarmManager.RTC_WAKEUP, alarmTime.getTimeInMillis(), pendingIntent);
-            PendingIntent pendingWIntent = PendingIntent.getActivity(AlarmActivity.this, 0, wake_up_intent, PendingIntent.FLAG_ONE_SHOT);
+            //alarm window -wake up Activity- starts
+            JSONrequestDistance(str_from,str_to);
+            wake_upIntent.putExtra("duration_hr", String.valueOf(duration_hr_now));
+            wake_upIntent.putExtra("duration_min",String.valueOf(duration_minute_now));
+            PendingIntent pendingWIntent = PendingIntent.getActivity(AlarmActivity.this, 0, wake_upIntent, PendingIntent.FLAG_ONE_SHOT);
             ((AlarmManager) getSystemService(ALARM_SERVICE)).set(AlarmManager.RTC_WAKEUP, alarmTime.getTimeInMillis(), pendingWIntent);
 
             //Alarm is ringing today in one week, if it is set today and time has passed
@@ -543,23 +534,31 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
             AlarmData.setPrepText( infoTextPrepTime, countPrepTime(hour,min,arrHour,arrMinute));
             int day = getDaysToNextCheckedDay();
             Log.e("AlarmActivity", String.valueOf(day));
-            myIntent.putExtra("extra", "yes");
-            myIntent.putExtra("quote id", "0");
-            pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            serviceIntent.putExtra("extra", "yes");
+            serviceIntent.putExtra("quote id", "0");
+            pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, serviceIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             alarmManager.set(AlarmManager.RTC_WAKEUP, alarmTime.getTimeInMillis() + (day * 24), pendingIntent);
-            PendingIntent pendingWIntent = PendingIntent.getActivity(AlarmActivity.this, 0, wake_up_intent, PendingIntent.FLAG_ONE_SHOT);
+            //alarm window -wake up Activity- starts
+            JSONrequestDistance(str_from,str_to);
+            wake_upIntent.putExtra("duration_hr", String.valueOf(duration_hr_now));
+            wake_upIntent.putExtra("duration_min",String.valueOf(duration_minute_now));
+            PendingIntent pendingWIntent = PendingIntent.getActivity(AlarmActivity.this, 0, wake_upIntent, PendingIntent.FLAG_ONE_SHOT);
             ((AlarmManager) getSystemService(ALARM_SERVICE)).set(AlarmManager.RTC_WAKEUP, alarmTime.getTimeInMillis(), pendingWIntent);
 
         } else { //Alarm is ringing on nest checked day of the week, if it isn't set today.
             AlarmData.setPrepText(infoTextPrepTime, countPrepTime(hour,min,arrHour,arrMinute));
             int day = getDaysToNextCheckedDay();
             Log.e("AlarmActivity", String.valueOf(day));
-            myIntent.putExtra("extra", "yes");
-            myIntent.putExtra("quote id", "0");
-            pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            serviceIntent.putExtra("extra", "yes");
+            serviceIntent.putExtra("quote id", "0");
+            pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, serviceIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             alarmManager.set(AlarmManager.RTC_WAKEUP, alarmTime.getTimeInMillis() + (day * 24), pendingIntent);
+            //alarm window -wake up Activity- starts
+            JSONrequestDistance(str_from,str_to);
+            wake_upIntent.putExtra("duration_hr", String.valueOf(duration_hr_now));
+            wake_upIntent.putExtra("duration_min",String.valueOf(duration_minute_now));
             Log.e("AlarmActivity", String.valueOf(alarmTime.getTimeInMillis() + (day * 24)));
-            PendingIntent pendingWIntent = PendingIntent.getActivity(AlarmActivity.this, 0, wake_up_intent, PendingIntent.FLAG_ONE_SHOT);
+            PendingIntent pendingWIntent = PendingIntent.getActivity(AlarmActivity.this, 0, wake_upIntent, PendingIntent.FLAG_ONE_SHOT);
             ((AlarmManager) getSystemService(ALARM_SERVICE)).set(AlarmManager.RTC_WAKEUP, alarmTime.getTimeInMillis(), pendingWIntent);
 
         }
@@ -606,7 +605,36 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
 
     }
 
+    private void JSONrequestDistance(String str_from, String str_to) {
+        //in Backround
+        // get the Distance
+        String str_from_rs = AlarmData.removeSpace(str_from);
+        String str_to_rs = AlarmData.removeSpace(str_to);
+        Log.i("Route",str_from_rs+","+str_to_rs);
 
+        String url = "https://maps.googleapis.com/maps/api/distancematrix/json?" +
+                "origins=" + str_from_rs +
+                "&destinations=" + str_to_rs +
+                "&mode=d" +
+                "&language=de-DE" +
+                "&avoid=tolls" +
+                "&key=AIzaSyDj5-Q_k24sZQPipJLFlqRM72rsY7PfFmY";
+        new DistanceTask(AlarmActivity.this).execute(url);
+    }
+
+
+
+    // get the Route
+    private void JSONrequestRoute(String str_from, String str_to) {
+        String str_from_rs = AlarmData.removeSpace(str_from);
+        String str_to_rs = AlarmData.removeSpace(str_to);
+        String urlR = "https://maps.googleapis.com/maps/api/directions/json?" +
+                "origin=" + str_from_rs +
+                "&destination=" + str_to_rs +
+                "mode=d" +
+                "&key=AIzaSyAAD5gqRAcoj8bImHJzmSEJpxbS05KK6Cg";
+        new RouteTask(AlarmActivity.this).execute(urlR);
+    }
 
 
     /**

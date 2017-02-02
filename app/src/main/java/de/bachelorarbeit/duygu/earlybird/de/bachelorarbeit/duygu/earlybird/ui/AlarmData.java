@@ -60,7 +60,7 @@ public class AlarmData {
             text2.setText("Nach derzeitiger Verkehrslage, sind es " + hr_duration+" Stunde/n und "+ min_duration + " Minuten Fahrtzeit.");
             text2.setVisibility(View.VISIBLE);
         }else{
-            text.setText("Du wurdest zur eingestellten Weckzeit geweckt. Es gibt keine Verzögerungen auf deiner Route.");
+            text.setText("Du wurdest Pünktlich geweckt! Es gibt keine Verzögerungen auf deiner Route.");
             text.setVisibility(View.VISIBLE);
             text2.setText("Nach derzeitiger Verkehrslage, sind es " + hr_duration+" Stunde/n und "+ min_duration  + " Minuten Fahrtzeit.");
             text2.setVisibility(View.VISIBLE);

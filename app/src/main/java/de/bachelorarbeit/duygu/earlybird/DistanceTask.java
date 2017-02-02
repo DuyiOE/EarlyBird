@@ -26,7 +26,6 @@ import java.net.URL;
 public class DistanceTask extends AsyncTask<String, Void, String> {
     ProgressDialog pd;
     Context mContext;
-    Double duration;
     Distance distance1;
 
     //constructor is used to get the context.

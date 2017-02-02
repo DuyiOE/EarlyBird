@@ -20,7 +20,7 @@
             android:layout_alignParentTop="true"
             android:layout_marginTop="71dp"
             android:id="@+id/wake_up_infoText"
-            android:textColor="@color/eb_yellow"
+            android:textColor="@android:color/white"
             android:textSize="18sp"
             android:textStyle="normal|bold"
             android:visibility="invisible"
@@ -33,7 +33,7 @@
             android:layout_marginTop="20dp"
             android:id="@+id/wake_up_infoText2"
             android:visibility="invisible"
-            android:textColor="@color/eb_yellow"
+            android:textColor="@android:color/white"
             android:textSize="18sp"
             android:textStyle="normal|bold"
             android:gravity="center_vertical|center_horizontal" />

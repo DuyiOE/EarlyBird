@@ -28,7 +28,6 @@ public class RouteTask extends AsyncTask<String, Void, String> {
 
     ProgressDialog pd;
     Context rContext;
-    Double lat_lng;
     RouteS route1;
 
     //constructor is used to get the context.
