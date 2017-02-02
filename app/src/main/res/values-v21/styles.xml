@@ -1,1 +1,25 @@
-<resources></resources>
+<resources>
+
+        <style name="base" parent="Base.Theme.AppCompat">
+                <item name="android:layout_width">wrap_content</item>
+                <item name="android:layout_height">fill_parent</item>
+                <item name="android:autoText">true</item>
+                <item name="android:background">@color/eb_white</item>
+                <item name="android:layout_weight">1</item>
+                <item name="android:colorAccent">@color/eb_green</item>
+        </style>
+
+        <style name="OOSwitch" parent="Theme.AppCompat.Light">
+                <!-- active thumb & track color (30% transparency) -->
+                <item name="colorControlActivated">#06d80d</item>
+
+                <!-- inactive thumb color -->
+                <item name="colorSwitchThumbNormal">#e95454</item>
+
+                <!-- inactive track color (30% transparency) -->
+                <item name="android:colorForeground">@color/eb_red</item>
+                <item name="android:textColorPrimaryInverse">@android:color/primary_text_dark_nodisable</item>
+                <item name="android:windowBackground">@android:color/holo_blue_dark</item>
+                <item name="android:statusBarColor">@color/eb_grey</item>
+        </style>
+</resources>

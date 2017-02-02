@@ -126,7 +126,7 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
                     Intent off_intent = new Intent(context, AlarmActivity.class);
                     pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, off_intent, PendingIntent.FLAG_UPDATE_CURRENT);
                     alarmManager.getNextAlarmClock();
-                    Toast.makeText(context, "Alarm is on.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Alarm ist an.", Toast.LENGTH_SHORT).show();
                     Log.i("Alarm", "Alarm is on");
                 }
 
@@ -149,8 +149,9 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
                     alarmToggleSO.setChecked(false);
 
                     cancelAlarm();
-                    Toast.makeText(context, "Alarm is off.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Alarm ist aus.", Toast.LENGTH_SHORT).show();
                     Log.i("Alarm", "Alarm is off");
+                    infoTextPrepTime.setVisibility(View.INVISIBLE);
                 }
 
             }
@@ -219,6 +220,7 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
                 //Removing "space" and "-" from Address Text
                 String str_to_for_maps = destET.getText().toString();
                 String str_from_for_maps = startET.getText().toString();
+
                 str_from = AlarmData.removeSpace(startET.getText().toString());
                 str_to = AlarmData.removeSpace(destET.getText().toString());
 
@@ -235,7 +237,8 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
                 new DistanceTask(AlarmActivity.this).execute(url);
 
                 // get the Route
-                String urlR = "https://maps.googleapis.com/maps/api/directions/json?origin=" + str_from +
+                String urlR = "https://maps.googleapis.com/maps/api/directions/json?" +
+                        "origin=" + str_from +
                         "&destination=" + str_to +
                         "&mode=transit" +
                         "&key=AIzaSyAAD5gqRAcoj8bImHJzmSEJpxbS05KK6Cg";
@@ -364,7 +367,7 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
             }
 
         } else {
-            Toast.makeText(this, "The arrival time is before the alarm time. Pleace Check your Alarm.",
+            Toast.makeText(this, "Die Weckzeit ist nach der Ankunftszeit. Bitte prüfe deine Weckeinstellungen.",
                     Toast.LENGTH_SHORT).show();
         }
 
@@ -497,7 +500,7 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
         wake_up_intent.putExtra("time_lag",String.valueOf(time_lag));
 
         Toast.makeText(context, "Momentane Fahrtzeit beträgt: " + duration_hr_now + " Stunden " + duration_minute_now + " Minuten", Toast.LENGTH_LONG).show();
-        Toast.makeText(context, "Die Entfernung beträgt: " + dist + " kilometers", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "Die Entfernung beträgt: " + dist + " Kilometer", Toast.LENGTH_SHORT).show();
         //safe duration on setting the alarm
         duration_hr_set=duration_hr_now;
         duration_minute_set =duration_minute_now;

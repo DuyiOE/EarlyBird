@@ -21,8 +21,8 @@ import java.net.URL;
  * Created by Duygu on 10.01.2017.
  */
 
-/*The instance of this class is called by "MainActivty",to get the time taken reach the destination from Google Distance Matrix API in background.
-  This class contains interface "Geo" to call the function setDouble(String) defined in "MainActivity.class" to display the result.*/
+/*The instance of this class is called by "Alarmctivty",to get the time taken reach the destination from Google Distance Matrix API in background.
+  This class contains interface "Geo" to call the function setDouble(String) defined in "AlarmActivity.class" to display the result.*/
 public class DistanceTask extends AsyncTask<String, Void, String> {
     ProgressDialog pd;
     Context mContext;
@@ -48,7 +48,7 @@ public class DistanceTask extends AsyncTask<String, Void, String> {
     }
 
     //This function is executed after the execution of "doInBackground(String...params)"
-    // to dismiss the dispalyed progress dialog and call "setDouble(Double)" defined in "MainActivity.java"
+    // to dismiss the dispalyed progress dialog and call "setDouble(Double)" defined in "AlarmActivity.java"
     @Override
     protected void onPostExecute(String aDouble) {
         super.onPostExecute(aDouble);

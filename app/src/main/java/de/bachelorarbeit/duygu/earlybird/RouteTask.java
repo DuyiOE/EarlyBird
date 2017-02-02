@@ -95,7 +95,7 @@ public class RouteTask extends AsyncTask<String, Void, String> {
 
                 return "Start:"+object_start.getString("lat") + "," + object_start.getString("lng")+
                         "Ziel:"+object_end.getString("lat") + "," + object_end.getString("lng");
-                //Fehler bei der Ausgabe, kommt nicht an die Zieadresse ran TODO
+
             }
 
         } catch (MalformedURLException e) {

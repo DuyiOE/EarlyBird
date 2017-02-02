@@ -19,6 +19,10 @@ import de.bachelorarbeit.duygu.earlybird.de.bachelorarbeit.duygu.earlybird.ui.Al
 
 /**
  * Created by Duygu on 17.01.2017.
+ * This class need the intents start address, destination address,
+ * time lag which is random for now, from the AlarmActivity to start the WakeUp- Window
+ * The user can cancel the alarm or look for the route with Google Maps
+ *
  */
 
 public class WakeUpActivity extends Activity implements DistanceTask.Distance{
@@ -27,6 +31,13 @@ public class WakeUpActivity extends Activity implements DistanceTask.Distance{
     Context context;
     private int duration_hr;
     private int duration_min;
+    private boolean earlier;
+    private String time_lag;
+    TextView wake_up_infoText;
+    TextView wake_up_infoText2;
+
+
+
 
 
 
@@ -35,18 +46,18 @@ public class WakeUpActivity extends Activity implements DistanceTask.Distance{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wake_up);
         this.context = this;
-
+        wake_up_infoText= (TextView)findViewById(R.id.wake_up_infoText);
+        wake_up_infoText2 = (TextView)findViewById(R.id.wake_up_infoText2);
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         Button stop_alarm = (Button) findViewById(R.id.stop_Alarm);
-        Button show_Map = (Button) findViewById(R.id.show_Map);
+        final Button show_Map = (Button) findViewById(R.id.show_Map);
         final Intent myIntent = new Intent(this.getApplicationContext(), AlarmReceiver.class);
         final PendingIntent pIntent = PendingIntent.getBroadcast(this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         final String str_from;
         final String str_to;
-        TextView wake_up_infoText= (TextView)findViewById(R.id.wake_up_infoText);
-        TextView wake_up_infoText2 = (TextView)findViewById(R.id.wake_up_infoText2);
-        final boolean earlier;
-        final String time_lag;
+
+
+
 
 
 
@@ -61,7 +72,11 @@ public class WakeUpActivity extends Activity implements DistanceTask.Distance{
         time_lag = extras.getString("time_lag");
         Log.e ("Random time: ", time_lag);
 
-
+        if(time_lag=="0"){
+            earlier=false;
+        }else {
+            earlier = true;
+        }
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
 
@@ -74,40 +89,10 @@ public class WakeUpActivity extends Activity implements DistanceTask.Distance{
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(1, builder.build());
 
-
-
-        if(time_lag=="0"){
-            earlier=false;
-        }else {
-            earlier = true;
-        }
-
         if (str_from!=null){
             if(str_to!=null){
-
-                //in Backround
-                // get the Distance
-                String str_from_rs = AlarmData.removeSpace(str_from);
-                String str_to_rs = AlarmData.removeSpace(str_to);
-                Log.i("Route",str_from_rs+","+str_to_rs);
-
-                String url = "https://maps.googleapis.com/maps/api/distancematrix/json?" +
-                        "origins=" + str_from_rs +
-                        "&destinations=" + str_to_rs +
-                        "&mode=d" +
-                        "&language=de-DE" +
-                        "&avoid=tolls" +
-                        "&key=AIzaSyDj5-Q_k24sZQPipJLFlqRM72rsY7PfFmY";
-                new DistanceTask(WakeUpActivity.this).execute(url);
-
-                int hr = duration_hr;
-                int minute = duration_min;
-                Log.i("Duration hour and min: ", String.valueOf(hr + ", " + minute));
-
-
-                String minute_of_duration= String.valueOf(hr)+" Stunde/n und "+ String.valueOf(minute)+ " Minuten";
-
-                AlarmData.setInfoText( wake_up_infoText,wake_up_infoText2,minute_of_duration, earlier, time_lag);
+                //url request Gooole API, getting the duration now
+                JSONrequest(str_from,str_to);
 
                 show_Map.setOnClickListener(new View.OnClickListener() {
 
@@ -127,6 +112,7 @@ public class WakeUpActivity extends Activity implements DistanceTask.Distance{
                         mapIntent.setPackage("com.google.android.apps.maps");
                         startActivity(mapIntent);
                         finish();
+
                     }
                 });
 
@@ -142,12 +128,13 @@ public class WakeUpActivity extends Activity implements DistanceTask.Distance{
                         WakeUpActivity.super.onDestroy();
                         finish();
 
+
                     }
                 });
             }
         }else{
 
-            AlarmData.setInfoText( wake_up_infoText, wake_up_infoText2, "0", earlier, time_lag);
+            show_Map.setVisibility(View.INVISIBLE);
 
             stop_alarm.setOnClickListener(new View.OnClickListener() {
 
@@ -165,10 +152,31 @@ public class WakeUpActivity extends Activity implements DistanceTask.Distance{
 
                 }
             });
+
         }
 
 
+
+
     }
+
+    private void JSONrequest(String str_from, String str_to) {
+        //in Backround
+        // get the Distance
+        String str_from_rs = AlarmData.removeSpace(str_from);
+        String str_to_rs = AlarmData.removeSpace(str_to);
+        Log.i("Route",str_from_rs+","+str_to_rs);
+
+        String url = "https://maps.googleapis.com/maps/api/distancematrix/json?" +
+                "origins=" + str_from_rs +
+                "&destinations=" + str_to_rs +
+                "&mode=d" +
+                "&language=de-DE" +
+                "&avoid=tolls" +
+                "&key=AIzaSyDj5-Q_k24sZQPipJLFlqRM72rsY7PfFmY";
+        new DistanceTask(WakeUpActivity.this).execute(url);
+    }
+
     @Override
     public void setDouble( String result) {
         Log.i("String result",result);
@@ -177,8 +185,12 @@ public class WakeUpActivity extends Activity implements DistanceTask.Distance{
         duration_hr = (int) (min / 60);
         duration_min = (int) (min % 60);
         Log.i("Fahrtzeit:", duration_hr + " Stunden " +duration_min + " Minuten");
-
+        AlarmData.setInfoText(wake_up_infoText,wake_up_infoText2, String.valueOf(duration_hr),
+                String.valueOf(duration_min), earlier, time_lag);
     }
+
+
+
 
     @Override
     public void onDestroy() {

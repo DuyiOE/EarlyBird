@@ -42,27 +42,27 @@ public class AlarmData {
         if (minute < 10) {
             minuteS = "0" + String.valueOf(minute);
         }
-        if(minute>=0) {
+        if(minute>=00) {
             text.setText("Nach derzeitiger Verkehrslage beträgt deine Vorbereitungszeit " + minuteS + " Minuten.");
             text.setVisibility(View.VISIBLE);
             return text;
         } else
-            text.setText("Es wurde keine Route ausgewählt! Vorbereitungszeit konnte nicht errechnet werden.");
+            text.setText("Die Vorbereitungszeit konnte nicht errechnet werden. Es wurde keine Route ausgewählt oder der Ankunftszeitpunkt liegt vor der Weckzeit!");
             text.setVisibility(View.VISIBLE);
             return text;
     }
 
-    public static TextView setInfoText(TextView text, TextView text2, String duration, boolean earlier,String lag_time) {
+    public static TextView setInfoText(TextView text, TextView text2, String hr_duration,String min_duration, boolean earlier,String lag_time) {
 
         if (earlier== true) {
             text.setText("Du wurdest " + lag_time + " Minuten früher geweckt, da es auf deiner Route zu Verzögerungen kommt.");
             text.setVisibility(View.VISIBLE);
-            text2.setText("Nach derzeitiger Verkehrslage, sind es " + duration + " Fahrtzeit.");
+            text2.setText("Nach derzeitiger Verkehrslage, sind es " + hr_duration+" Stunde/n und "+ min_duration + " Minuten Fahrtzeit.");
             text2.setVisibility(View.VISIBLE);
         }else{
             text.setText("Du wurdest zur eingestellten Weckzeit geweckt. Es gibt keine Verzögerungen auf deiner Route.");
             text.setVisibility(View.VISIBLE);
-            text2.setText("Nach derzeitiger Verkehrslage, sind es " + duration + " Fahrtzeit.");
+            text2.setText("Nach derzeitiger Verkehrslage, sind es " + hr_duration+" Stunde/n und "+ min_duration  + " Minuten Fahrtzeit.");
             text2.setVisibility(View.VISIBLE);
         }
         return text;

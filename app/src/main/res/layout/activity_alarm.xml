@@ -27,8 +27,7 @@
             android:id="@+id/switchONOFF"
             android:switchMinWidth="75dip"
             android:layout_gravity="end"
-            style="@style/Widget.AppCompat.CompoundButton.Switch"
-            android:switchTextAppearance="@style/PlacePickerTextStyle" />
+            android:theme="@style/EBCompactLight" />
 
 
         <LinearLayout
@@ -134,14 +133,14 @@
                 android:id="@+id/btn_get_car"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:background="@drawable/buttoncolor_car_icon" />
+                android:background="@drawable/button_icon_car" />
 
             <Button
                 android:layout_margin="14dp"
                 android:layout_width="48dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/btn_get_public"
-                android:background="@drawable/buttoncolor_icon" />
+                android:background="@drawable/button_icon_transit" />
 
             <Space
                 android:layout_width="wrap_content"
