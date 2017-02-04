@@ -55,7 +55,7 @@ public class RouteTask extends AsyncTask<String, Void, String> {
             route1.showRoute(lat_lang);
             pd.dismiss();
         } else
-            Toast.makeText(rContext, "Versuches es nochmal! Prüfe deine Eingabe auf Fehler.", Toast.LENGTH_SHORT).show();
+           // Toast.makeText(rContext, "Versuches es nochmal! Prüfe deine Eingabe auf Fehler.", Toast.LENGTH_SHORT).show();
         pd.cancel();
     }
 

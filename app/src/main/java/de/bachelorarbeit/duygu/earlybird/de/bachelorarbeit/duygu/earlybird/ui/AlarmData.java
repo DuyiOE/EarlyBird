@@ -27,6 +27,23 @@ public class AlarmData {
         return randomMinutes;
 
     }
+    public static int getRandomMinuteSmall(){
+        int randomMinutes = (int) (Math.random()*10);
+        return randomMinutes;
+
+    }
+
+    public static int getRandomDurationMinute(){
+        int minL = getRandomMinute();
+        int minS = getRandomMinuteSmall();
+        int i=getRandomMinute();
+        if(i%2==0){
+            return minL-minS;
+        }else{
+            return minL+minS;
+        }
+
+    }
 
     public static String removeSpace(String value) {
         String ValueWithoutSign = String.valueOf(value);
