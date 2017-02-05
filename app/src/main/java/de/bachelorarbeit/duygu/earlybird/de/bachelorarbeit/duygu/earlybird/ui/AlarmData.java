@@ -1,10 +1,17 @@
-package de.bachelorarbeit.duygu.earlybird.de.bachelorarbeit.duygu.earlybird.util;
+package de.bachelorarbeit.duygu.earlybird.de.bachelorarbeit.duygu.earlybird.ui;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.ToggleButton;
 
-import de.bachelorarbeit.duygu.earlybird.AlarmActivity;
-import de.bachelorarbeit.duygu.earlybird.RouteTask;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Duygu on 30.11.2016.
@@ -37,8 +44,6 @@ public class AlarmData {
         }
 
     }
-
-
 
     public static String removeSpace(String value) {
         String ValueWithoutSign = String.valueOf(value);

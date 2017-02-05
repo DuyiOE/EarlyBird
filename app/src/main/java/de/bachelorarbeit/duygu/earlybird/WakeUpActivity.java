@@ -15,7 +15,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import de.bachelorarbeit.duygu.earlybird.de.bachelorarbeit.duygu.earlybird.util.AlarmData;
+import de.bachelorarbeit.duygu.earlybird.de.bachelorarbeit.duygu.earlybird.ui.AlarmData;
 
 /**
  * Created by Duygu on 17.01.2017.

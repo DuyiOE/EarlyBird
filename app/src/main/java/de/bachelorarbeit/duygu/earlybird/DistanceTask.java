@@ -22,7 +22,7 @@ import java.net.URL;
  */
 
 /*The instance of this class is called by "Alarmctivty",to get the time taken reach the destination from Google Distance Matrix API in background.
-  This class contains setDouble(String) defined in "AlarmActivity.class" to display the result.*/
+  This class contains interface "Geo" to call the function setDouble(String) defined in "AlarmActivity.class" to display the result.*/
 public class DistanceTask extends AsyncTask<String, Void, String> {
     ProgressDialog pd;
     Context mContext;
