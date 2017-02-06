@@ -1,11 +1,13 @@
 package de.bachelorarbeit.duygu.earlybird;
 
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.app.NotificationCompat;
 import android.util.Log;
-import android.widget.CompoundButton;
 
 
 /**
@@ -18,6 +20,8 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
+
+
         String state = intent.getExtras().getString("extra");
         Log.e("AlarmActivity", "In the receiver with " + state);
 
@@ -27,8 +31,9 @@ public class AlarmReceiver extends BroadcastReceiver {
         Intent serviceIntent = new Intent(context, AlarmService.class);
         serviceIntent.putExtra("extra", state);
         serviceIntent.putExtra("quote id", q_id);
-
         context.startService(serviceIntent);
+
+
     }
 
 

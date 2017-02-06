@@ -1,17 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="fill_parent"
-android:layout_height="fill_parent"
-android:background="@android:drawable/dialog_holo_light_frame"
-android:layout_gravity="center"
-android:id="@+id/lin_lay"
-android:gravity="center"
-android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_gravity="center"
+    android:id="@+id/lin_lay"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:background="@color/eb_yellow">
 
-<ImageView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:id="@+id/logo"
-    android:background="@drawable/logo"
-    android:visibility="visible" />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/logo"
+        android:background="@drawable/logo_backround"
+        android:visibility="visible" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/startText"
+        android:text="@string/earlybird"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:fontFamily="cursive"
+        android:textColor="@color/common_google_signin_btn_text_dark_focused"
+        android:textSize="38sp"
+        tools:textStyle="bold" />
+
+
 </LinearLayout>

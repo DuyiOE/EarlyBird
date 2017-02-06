@@ -3,8 +3,8 @@
 
     <!-- Zustand, während des drückens. Geometrische Form mit runden Ecken, Schwarzem Rahmen und Verlauf -->
     <item android:state_pressed="true">
-        <shape android:shape="rectangle">
-            <corners android:radius="3dip" />
+        <shape android:shape="ring">
+            <corners android:radius="60dip" />
             <stroke android:width="1dip" android:color="#000000" />
 
             <gradient android:angle="-90" android:startColor="#e7ff17" android:endColor="#06d80d" />
@@ -12,8 +12,9 @@
     </item>
 
     <!-- Zustand gedrückt. Mit drawable -->
-    <item android:state_checked="true" android:drawable="@drawable/togglebutton_enabled" />
+    <item android:state_checked="true" android:drawable="@drawable/location_marker_flat" />
 
-    <!-- Zustand NICHT gedrückt. Mit drawable -->
-    <item android:state_checked="false" android:drawable="@drawable/togglebutton_disabled" />
+    <!-- Zustand gedrückt. Mit drawable -->
+    <item android:state_checked="false" android:drawable="@drawable/location_marker_flat" />
+
 </selector>

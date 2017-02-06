@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="eb_red">#e95454</color>
-    <color name="eb_blue">#76c9f9</color>
-    <color name="eb_yellow">#fdff91</color>
-    <color name="eb_green">#88f4a3</color>
+    <color name="eb_blue">#e6256ae0</color>
+    <color name="eb_yellow">#fffca3</color>
+    <color name="eb_yellow2">#fffca3</color>
+    <color name="eb_green">#32994c</color>
     <color name="eb_grey">#686868</color>
     <color name="eb_white">#ffffff</color>
     <color name="eb_rosered">#701d2c</color>
+    <color name="accent_material_light_1">#06d80d</color>
 </resources>

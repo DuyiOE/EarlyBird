@@ -2,18 +2,18 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- Zustand, während des drückens. Geometrische Form mit runden Ecken, Schwarzem Rahmen und Verlauf -->
-    <item android:state_pressed="true">
-        <shape android:shape="rectangle">
-            <corners android:radius="3dip" />
+    <item android:state_pressed="false">
+        <shape android:shape="ring">
+            <corners android:radius="60dip" />
             <stroke android:width="1dip" android:color="#000000" />
 
-            <gradient android:angle="-90" android:startColor="#e7ff17" android:endColor="#06d80d" />
+            <gradient android:angle="-90" android:startColor="#fffca3" android:endColor="#134515" />
         </shape>
     </item>
 
     <!-- Zustand gedrückt. Mit drawable -->
-    <item android:state_checked="true" android:drawable="@drawable/togglebutton_enabled" />
+    <item android:state_checked="true" android:drawable="@drawable/wach_button" />
 
     <!-- Zustand NICHT gedrückt. Mit drawable -->
-    <item android:state_checked="false" android:drawable="@drawable/togglebutton_disabled" />
+    <item android:state_checked="false" android:drawable="@drawable/wach_button" />
 </selector>

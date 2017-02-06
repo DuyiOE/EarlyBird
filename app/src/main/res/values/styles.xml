@@ -36,5 +36,29 @@
         <item name="android:textColor">@android:color/black</item>
         <item name="android:textColorHint">@android:color/darker_gray</item>
     </style>
+    <style name="OOSwitch" parent="Theme.AppCompat.Light">
+        <!-- active thumb & track color (30% transparency) -->
+        <item name="colorControlActivated">#06d80d</item>
+
+        <!-- inactive thumb color -->
+        <item name="colorSwitchThumbNormal">#e95454</item>
+
+        <!-- inactive track color (30% transparency) -->
+        <item name="android:colorForeground">@color/eb_red</item>
+        <item name="android:textColorPrimaryInverse">@android:color/primary_text_dark_nodisable</item>
+        <item name="android:windowBackground">@android:color/holo_blue_dark</item>
+    </style>
+    <style name="AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="EBCompactLight" parent="Theme.AppCompat.Light.NoActionBar" >
+        <item name="colorAccent">@color/accent_material_light_1</item>
+        <item name="colorPrimary">@android:color/darker_gray</item>
+        <item name="android:colorForeground">@android:color/holo_red_dark</item>
+        <item name="android:textColorPrimary">@color/accent</item>
+        <item name="android:textColorSecondaryInverse">@color/eb_yellow</item>
+    </style>
+
 
 </resources>
