@@ -22,7 +22,7 @@ import java.util.Random;
 public class AlarmService extends Service {
 
     private boolean isRunning;
-    MediaPlayer mMediaPlayer;;
+    MediaPlayer mMediaPlayer;
     private int startId;
 
     @Override

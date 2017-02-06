@@ -27,12 +27,9 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.util.Calendar;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import de.bachelorarbeit.duygu.earlybird.de.bachelorarbeit.duygu.earlybird.ui.AlarmData;
 
-import static java.lang.Thread.currentThread;
 import static java.lang.Thread.interrupted;
 import static java.lang.Thread.sleep;
 
@@ -510,23 +507,22 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
         // check the duration 60 minutes before
             for(int x=0;x<11;x++) {
                 if (Calendar.HOUR_OF_DAY >= hour - 1) {
-                    AlarmData.setPrepText(infoTextPrepTime, countPrepTime(hour,min,arrHour,arrMinute));
-                    run();
+                    //run();
                     if (Calendar.MINUTE >= alarmTime.get(Calendar.MINUTE)){
                         interrupted();
                     }
                 }
             }
 
-
+            time_lag = AlarmData.getRandomDurationMinute();
             if (android.os.Build.VERSION.SDK_INT >= 23) {
             //set alarm Time
             alarmTime.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getHour());
-            alarmTime.set(Calendar.MINUTE, (int)(alarmTimePicker.getMinute()-time_lag));
+            alarmTime.set(Calendar.MINUTE, alarmTimePicker.getMinute()-time_lag);
 
         } else {
             //set Alarm Time
-            alarmTime.set(Calendar.MINUTE, (int)(alarmTimePicker.getCurrentMinute()-time_lag));
+            alarmTime.set(Calendar.MINUTE, alarmTimePicker.getCurrentMinute()-time_lag);
             alarmTime.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getCurrentHour());
         }
         Log.d(TAG, "Calendar day before rolling: " + alarmTime.get(Calendar.DAY_OF_YEAR));
@@ -543,9 +539,9 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
 
         //Alarm is ringing today, if it is set today and time hasn't passed.
         if (dayIsChecked(today) && timePassedToday(hour, min) == false) {
+            AlarmData.setPrepText(infoTextPrepTime, calculatePrepTime(hour,min,arrHour,arrMinute));
             serviceIntent.putExtra("extra", "yes");
             serviceIntent.putExtra("quote id", "0");
-
             pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, serviceIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             alarmManager.set(AlarmManager.RTC_WAKEUP, alarmTime.getTimeInMillis(), pendingIntent);
             Log.i("time lag",String.valueOf(time_lag));
@@ -557,6 +553,7 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
 
             //Alarm is ringing today in one week, if it is set today and time has passed
         } else if (dayIsChecked(today) && timePassedToday(hour, min) == true) {
+            AlarmData.setPrepText(infoTextPrepTime, calculatePrepTime(hour,min,arrHour,arrMinute));
             int day = getDaysToNextCheckedDay();
             Log.e("AlarmActivity", String.valueOf(day));
             serviceIntent.putExtra("extra", "yes");
@@ -572,11 +569,11 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
             ((AlarmManager) getSystemService(ALARM_SERVICE)).set(AlarmManager.RTC_WAKEUP, alarmTime.getTimeInMillis(), pendingWIntent);
 
         } else { //Alarm is ringing on nest checked day of the week, if it isn't set today.
+            AlarmData.setPrepText(infoTextPrepTime, calculatePrepTime(hour,min,arrHour,arrMinute));
             int day = getDaysToNextCheckedDay();
             Log.e("AlarmActivity", String.valueOf(day));
             serviceIntent.putExtra("extra", "yes");
             serviceIntent.putExtra("quote id", "0");
-            alarmTime.set(Calendar.MINUTE, (int)(alarmTimePicker.getMinute()-time_lag));
             pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, serviceIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             alarmManager.set(AlarmManager.RTC_WAKEUP, alarmTime.getTimeInMillis() + (day * 24), pendingIntent);
             Log.i("time lag",String.valueOf(time_lag));
@@ -602,17 +599,23 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
      * @param arrival_hour
      * @param arrival_minute
      *
+     *
      * @return int prep_time
      */
-    private int countPrepTime(int alarm_hour,int alarm_minute,int arrival_hour,int arrival_minute ) {
+    private int calculatePrepTime(int alarm_hour,int alarm_minute,int
+            arrival_hour,int arrival_minute ) {
         int alarm_time_in_minutes = alarm_minute + alarm_hour * 60;
         int arrival_time_in_minutes = (arrival_hour * 60 + arrival_minute);
-        Log.i("Alarm time,arrival time", String.valueOf(alarm_time_in_minutes)+","+  String.valueOf(arrival_time_in_minutes));
+        Log.i("Alarm time,arrival time", String.valueOf(alarm_time_in_minutes)
+                +","+  String.valueOf(arrival_time_in_minutes));
         if (duration_minute_set != 0){
-            int duration_time_in_Minutes = (duration_hr_set * 60 + duration_minute_set);
-            int leaving_time= (arrival_time_in_minutes - duration_time_in_Minutes);
+            int duration_time_in_Minutes = (duration_hr_set * 60
+                    + duration_minute_set);
+            int leaving_time= (arrival_time_in_minutes -
+                    duration_time_in_Minutes);
             int prep_time= (leaving_time-alarm_time_in_minutes);
-            Log.i("prep_time, leavingTime", String.valueOf(prep_time)+","+  String.valueOf(leaving_time));
+            Log.i("prep_time, leavingTime", String.valueOf(prep_time)
+                    +","+  String.valueOf(leaving_time));
             return prep_time;
 
 
@@ -783,28 +786,31 @@ public class AlarmActivity extends Activity implements AdapterView.OnItemSelecte
      * calculate time lag
      * if is duration >=duration now , time_lag is 0;
      */
-    public void beginToCheck(){;
-        JSONrequestDistance(str_from,str_to);
-        int duration_now = (duration_hr_now*60)+ duration_minute_now +
-                AlarmData.getRandomDurationMinute();
-        int duration = duration_hr_set*60 + duration_minute_set;
-        if (duration <= duration_now){
-            time_lag = duration_now-duration; // time lag + alarm time = new alarm time
-        }else{
-            time_lag = 0;                     //old alarme time
-        }
-        Log.i("Time_lag", String.valueOf(time_lag));
-    }
+    public int getTimeLag(String str_from,String str_to,int duration_hr_set,int duration_minute_set){
+        AlarmData.removeSpace(str_from);
+        AlarmData.removeSpace(str_to);
 
+        int duration_now = (duration_hr_set * 60) + duration_minute_set + AlarmData.getRandomDurationMinute();
+        int duration =(duration_hr_set+60) +duration_minute_set;
+            int time_lag;
+            if (duration <= duration_now) {
+                time_lag = duration_now - duration; // time lag + alarm time = new alarm time
+            } else {
+                    time_lag = 0;                     //old alarme time
+                }
+                Log.i("Time_lag", String.valueOf(time_lag));
+                return time_lag;
+
+            }
 
     public void run() {
             try {
-                sleep(5000);
+                sleep(5000); //for testing
                 //sleep(300000);
             }
             catch(InterruptedException e) {
             }
-            beginToCheck();
+            getTimeLag(str_from,str_to,duration_hr_set,duration_hr_set);
         }
 
 

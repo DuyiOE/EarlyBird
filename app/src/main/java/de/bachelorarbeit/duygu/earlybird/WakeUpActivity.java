@@ -78,11 +78,7 @@ public class WakeUpActivity extends Activity {
         Log.e ("Duration Minute is ", duration_min);
 
 
-        if(time_lag=="0"){
-            earlier=false;
-        }else {
-            earlier = true;
-        }
+        earlier = time_lag != "0";
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
 
